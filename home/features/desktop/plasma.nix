@@ -17,7 +17,7 @@
     # via flanking expanding spacers, right cluster pinned to the right.
     panels = [{
       location = "bottom";
-      floating = false;
+      floating = true;       # stock-KDE float; auto-hides on fullscreen apps
       height = 44;
       widgets = [
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
