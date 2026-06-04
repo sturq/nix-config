@@ -72,9 +72,13 @@
     targets.kmscon.enable = false;
   };
 
-  # Let adw-gtk3 own GTK apps so all GTK programs look libadwaita-dark.
-  # Stylix still themes Qt/KDE/foot/firefox/etc. via the sturq-palette.
+  # Let adw-gtk3 own GTK apps. Disable Stylix's KDE target so Plasma keeps
+  # the stock BreezeDark look — Stylix maps base05=white into a near-white
+  # KDE Color background, which produced a light panel even with polarity=dark.
   home-manager.sharedModules = [
-    { stylix.targets.gtk.enable = false; }
+    {
+      stylix.targets.gtk.enable = false;
+      stylix.targets.kde.enable = false;
+    }
   ];
 }
