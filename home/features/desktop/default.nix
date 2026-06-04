@@ -1,6 +1,8 @@
 { pkgs, lib, ... }: {
-  # User-level desktop config: apps + GTK theming (adw-gtk3 for all GTK apps).
-  # Plasma side gets themed by Stylix automatically.
+  imports = [ ./plasma.nix ];
+
+  # User-level desktop config: apps + GTK theming. Plasma is owned by
+  # plasma-manager (./plasma.nix).
 
   home.packages = with pkgs; [
     firefox
@@ -12,8 +14,8 @@
     imv
   ];
 
-  # adw-gtk3-dark + Tela-circle-dark icons. No font override here — apps that
-  # have their own font preference (Firefox, etc.) keep using it.
+  # adw-gtk3-dark + Tela-circle-dark icons. No font override here — apps
+  # that have their own font preference (Firefox, etc.) keep using it.
   gtk = {
     enable = true;
     theme = {
@@ -28,82 +30,4 @@
 
   # Prefer dark color scheme — libadwaita & GTK4 apps honor this.
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-
-  # Plasma's KIconLoader ignores [Icons] in /etc/xdg/kdeglobals at session
-  # start, so push the icon theme + empty task-launcher pins on every login.
-  # Tela-circle-dark + zero pinned apps. Idempotent.
-  home.file.".local/bin/sturq-plasma-tweaks" = {
-    executable = true;
-    text = ''
-      #!${pkgs.bash}/bin/bash
-      ${pkgs.kdePackages.plasma-workspace}/libexec/plasma-changeicons Tela-circle-dark
-      # Clear pinned launchers from the icontasks widget on the bottom panel.
-      cfg="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
-      for n in $(${pkgs.gnugrep}/bin/grep -B2 "plugin=org.kde.plasma.icontasks" "$cfg" 2>/dev/null \
-                  | ${pkgs.gnugrep}/bin/grep -oE "\[Applets\]\[[0-9]+\]" \
-                  | ${pkgs.gnugrep}/bin/grep -oE "[0-9]+"); do
-        ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file "$cfg" \
-          --group Containments --group 2 --group Applets --group "$n" \
-          --group Configuration --group General --key launchers ""
-      done
-    '';
-  };
-
-  xdg.configFile."autostart/sturq-plasma-tweaks.desktop".text = ''
-    [Desktop Entry]
-    Type=Application
-    Name=sturq plasma tweaks
-    Exec=sh -c "$HOME/.local/bin/sturq-plasma-tweaks"
-    X-KDE-AutostartScript=true
-    OnlyShowIn=KDE;
-  '';
-
-  # Plasma power policy: never sleep on AC, only on battery.
-  xdg.configFile."powerdevilrc".text = ''
-    [AC]
-    icon=battery-charging
-
-    [AC][SuspendAndShutdown]
-    AutoSuspendAction=0
-    LidAction=0
-    PowerButtonAction=14
-
-    [AC][Display]
-    TurnOffDisplayWhenIdle=false
-
-    [Battery]
-    icon=battery-060
-
-    [Battery][SuspendAndShutdown]
-    AutoSuspendAction=1
-    AutoSuspendIdleTimeoutSec=900
-    LidAction=1
-
-    [Battery][Display]
-    TurnOffDisplayWhenIdle=true
-    TurnOffDisplayIdleTimeoutSec=600
-
-    [LowBattery]
-    icon=battery-low
-
-    [LowBattery][SuspendAndShutdown]
-    AutoSuspendAction=2
-    AutoSuspendIdleTimeoutSec=300
-  '';
-
-  # Screen-lock policy: on AC the screen *only locks* (no suspend, no display
-  # off — see powerdevilrc above). On battery: lock + suspend.
-  # Lockscreen background = solid OLED-mantle #060709 (no wallpaper image).
-  xdg.configFile."kscreenlockerrc".text = ''
-    [Daemon]
-    Autolock=true
-    LockOnResume=true
-    Timeout=10
-
-    [Greeter]
-    WallpaperPlugin=org.kde.color
-
-    [Greeter][Wallpaper][org.kde.color][General]
-    Color=6,7,9
-  '';
 }

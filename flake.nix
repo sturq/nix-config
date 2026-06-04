@@ -21,6 +21,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Declarative Plasma 6 configuration (panels, shortcuts, kdeglobals…).
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # Cross-platform: macOS, Android, WSL
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin";
@@ -38,9 +45,9 @@
   };
 
   outputs = { self, nixpkgs, home-manager, nix-flatpak, disko, stylix,
-              nix-darwin, nix-on-droid, nixos-wsl, ... }@inputs:
+              plasma-manager, nix-darwin, nix-on-droid, nixos-wsl, ... }@inputs:
     let
-      # ---- Full NixOS host (Linux, dwl Wayland desktop) ----
+      # ---- Full NixOS host (Linux, KDE Plasma 6 Wayland desktop) ----
       # hwConfig: defaults to ./hosts/${hostName}/hardware-configuration.nix.
       # Pass an explicit path for hosts that share hardware with another host.
       mkHost = hostName: { hwConfig ? ./hosts/${hostName}/hardware-configuration.nix }: nixpkgs.lib.nixosSystem {
@@ -57,6 +64,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs; };
+              sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
               users.sturq = import ./home/sturq/nixos.nix;
               backupFileExtension = "hm-backup";
             };
@@ -86,6 +94,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs; };
+              sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
               users.sturq = import ./home/sturq/nixos.nix;
               backupFileExtension = "hm-backup";
             };

@@ -1,6 +1,8 @@
 { pkgs, ... }: {
-  # Stylix → system-wide theming. One color scheme + one wallpaper →
-  # GTK, Qt, console, swaybar, foot, mako, firefox, regreet all auto-themed.
+  # Stylix → system-wide theming. One color scheme + one wallpaper that
+  # downstream Stylix targets pick up. Plasma + GTK targets are off (handled
+  # by plasma-manager + adw-gtk3), so Stylix here only owns wallpaper, cursor,
+  # the base16 palette source, and a few outliers (Firefox, etc.).
   # Scheme: sturq-palette OLED (https://github.com/sturq/sturq-palette).
   # Inlined here so we don't depend on a network fetch during rebuild.
 
@@ -42,9 +44,8 @@
       size = 24;
     };
 
-    # Fonts — DejaVu fallback so apps with their own font preference
-    # (Firefox, foot, etc.) keep using it instead of being globally overridden.
-    # Roboto Flex is applied ONLY to Plasma slots via /etc/xdg/kdeglobals.
+    # Fonts — DejaVu fallback so apps with their own font preference keep
+    # using it. Roboto Flex is applied ONLY to Plasma slots via plasma-manager.
     fonts = {
       monospace = {
         package = pkgs.dejavu_fonts;

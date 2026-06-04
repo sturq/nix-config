@@ -1,6 +1,7 @@
 { pkgs, ... }: {
-  # KDE Plasma 6 (Wayland) + SDDM + KWin tiling.
-  # Bindings match GlazeWM 1:1 — config files sync-able between Linux + Windows.
+  # KDE Plasma 6 (Wayland) + SDDM. Per-user Plasma configuration (theme,
+  # panel, hotkeys, kdeglobals) is owned by plasma-manager — see
+  # home/features/desktop/plasma.nix.
 
   services.desktopManager.plasma6.enable = true;
 
@@ -9,22 +10,20 @@
     wayland.enable = true;
   };
 
-  # KWin Polonium → i3/GlazeWM-style tiling layer on top of stock KWin.
-  # Installed via plasma-store-installable + autoloaded from sturq's KWin config.
   environment.systemPackages = with pkgs; [
     kdePackages.kdeconnect-kde
     kdePackages.kcalc
     kdePackages.filelight
     kdePackages.kate
     kdePackages.partitionmanager
-    # GTK apps inside Plasma should pick adw-gtk3 + sturq-palette colors:
+    # GTK apps inside Plasma should pick adw-gtk3:
     adw-gtk3
     # Pixel-style circular icon set + libadwaita companions.
     tela-circle-icon-theme
     morewaita-icon-theme
   ];
 
-  # Drop GNOME defaults that Plasma doesn't need but NixOS sometimes pulls in.
+  # Drop KDE defaults we don't want.
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     elisa            # music player
     khelpcenter      # help docs
@@ -52,37 +51,7 @@
   fonts.packages = with pkgs; [
     dejavu_fonts
     nerd-fonts.roboto-mono
-    roboto-flex        # used by Plasma slots via /etc/xdg/kdeglobals
+    roboto-flex        # used by Plasma via plasma-manager
     material-symbols   # icon font for apps that want it
   ];
-
-  # Force Plasma into Breeze Dark by default for every login. Static
-  # sturq-palette: lavender accent #B9C5EE, Tela-circle icons, Roboto Flex
-  # applied only to Plasma's own font slots.
-  environment.etc."xdg/kdeglobals".text = ''
-    [General]
-    ColorScheme=BreezeDark
-    AccentColor=185,197,238
-    font=Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
-    menuFont=Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
-    toolBarFont=Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
-    smallestReadableFont=Roboto Flex,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
-    fixed=DejaVu Sans Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,0
-
-    [Icons]
-    Theme=Tela-circle-dark
-
-    [KDE]
-    LookAndFeelPackage=org.kde.breezedark.desktop
-    SingleClick=false
-    AnimationDurationFactor=0.5
-
-    [WM]
-    activeFont=Roboto Flex,11,-1,5,500,0,0,0,0,0,0,0,0,0,0,1
-  '';
-
-  # KWin has built-in window tiling on Plasma 6 — bound to Meta+T (tile
-  # editor) + drag-to-edge by default. For full i3/GlazeWM-style tiling, the
-  # user can install Polonium or Kröhnkite from Plasma Discover; not packaged
-  # in nixpkgs upstream.
 }

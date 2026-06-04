@@ -3,7 +3,7 @@
     # hardware-configuration.nix imported by flake (mkHost / mkInstaller)
     ../../modules/base.nix
     ../../modules/desktop
-    ../../modules/desktop/autologin.nix  # dev convenience — skip tuigreet
+    ../../modules/desktop/autologin.nix  # dev convenience — skip SDDM prompt
     ../../modules/intel-laptop.nix
     ../../modules/stylix.nix
     ../../modules/tailscale.nix

@@ -1,5 +1,5 @@
 { ... }: {
-  # Full Linux desktop — CLI + dwl (Wayland, suckless-style).
+  # Full Linux desktop — CLI + KDE Plasma 6 (Wayland).
   imports = [
     ../features/cli
     ../features/desktop

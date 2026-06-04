@@ -5,7 +5,7 @@
 sturq's multi-platform Nix flake — NixOS, nix-darwin, nix-on-droid, NixOS-WSL.
 One repo, one `flake.lock`, every machine reproducible from `git pull`.
 
-![hp250 — Sway + Waybar + Stylix](./screenshots/desktop.png)
+![hp250 — Plasma 6 + KWin + Stylix](./screenshots/desktop.png)
 
 </div>
 
@@ -161,5 +161,5 @@ with identical bindings lives at [`sturq/win-glazewm`](https://github.com/sturq/
 - [nix-darwin](https://github.com/nix-darwin/nix-darwin)
 - [NixOS-WSL](https://github.com/nix-community/NixOS-WSL)
 - [nix-flatpak](https://github.com/gmodena/nix-flatpak)
-- [Sway](https://github.com/swaywm/sway), [Waybar](https://github.com/Alexays/Waybar), [ReGreet](https://github.com/rharish101/ReGreet)
+- [plasma-manager](https://github.com/nix-community/plasma-manager) — declarative Plasma 6 config
 - Structural inspiration: [Misterio77/nix-config](https://github.com/Misterio77/nix-config)
