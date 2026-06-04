@@ -46,5 +46,8 @@
 
     # 5% transparency on terminal is the Pro look.
     opacity.terminal = 0.95;
+
+    # Disable targets with stale upstream NixOS options on unstable.
+    targets.kmscon.enable = false;
   };
 }
