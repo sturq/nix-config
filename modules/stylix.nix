@@ -8,30 +8,24 @@
     enable = true;
     polarity = "dark";
 
-    base16Scheme = pkgs.writeText "sturq-oled.yaml" ''
-      system: "base16"
-      name: "Sturq OLED"
-      author: "sturq"
-      slug: "sturq-oled"
-      variant: "dark"
-      palette:
-        base00: "060709"
-        base01: "2A3042"
-        base02: "384058"
-        base03: "46506E"
-        base04: "9CA7CE"
-        base05: "FFFFFF"
-        base06: "D8DCE9"
-        base07: "C2CAE5"
-        base08: "EEB9BD"
-        base09: "EECFB9"
-        base0A: "EEE5B9"
-        base0B: "B9EEB9"
-        base0C: "B9EEE5"
-        base0D: "B9C5EE"
-        base0E: "DCB9EE"
-        base0F: "EEC0B9"
-    '';
+    base16Scheme = {
+      base00 = "060709";  # mantle    — default bg (OLED-friendly)
+      base01 = "2A3042";  # base      — lighter bg
+      base02 = "384058";  # surface0  — selection
+      base03 = "46506E";  # surface1  — comments
+      base04 = "9CA7CE";  # overlay2  — dim fg
+      base05 = "FFFFFF";  # text      — default fg
+      base06 = "D8DCE9";  # subtext1
+      base07 = "C2CAE5";  # subtext0
+      base08 = "EEB9BD";  # red
+      base09 = "EECFB9";  # peach
+      base0A = "EEE5B9";  # yellow
+      base0B = "B9EEB9";  # green
+      base0C = "B9EEE5";  # teal
+      base0D = "B9C5EE";  # lavender / primary
+      base0E = "DCB9EE";  # mauve
+      base0F = "EEC0B9";  # maroon
+    };
 
     # Wallpaper — gradient generated from sturq-palette (base → mantle).
     image = pkgs.runCommand "wallpaper.png" {
