@@ -13,14 +13,15 @@
       };
     };
 
-    # Windows-11-style panel: Start + tasks centered as a group via flanking
-    # spacers; system tray + clock + show-desktop on the right.
+    # Windows-11-style panel: Start + pager + tasks centered (via the panel's
+    # built-in center alignment), an expanding spacer, then the right cluster
+    # (system tray + clock + show-desktop) pinned to the right edge.
     panels = [{
       location = "bottom";
       floating = false;
       height = 44;
+      alignment = "center";
       widgets = [
-        { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
         "org.kde.plasma.kickoff"
         {
           name = "org.kde.plasma.pager";
