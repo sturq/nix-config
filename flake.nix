@@ -15,6 +15,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # System-wide theming via base16 + wallpaper sampling.
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Cross-platform: macOS, Android, WSL
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin";
@@ -31,7 +37,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-flatpak, disko,
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, disko, stylix,
               nix-darwin, nix-on-droid, nixos-wsl, ... }@inputs:
     let
       # ---- Full NixOS host (Linux, dwl Wayland desktop) ----
@@ -44,6 +50,7 @@
           ./hosts/${hostName}
           hwConfig
           nix-flatpak.nixosModules.nix-flatpak
+          stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -72,6 +79,7 @@
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
           nix-flatpak.nixosModules.nix-flatpak
+          stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           {
             home-manager = {

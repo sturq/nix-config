@@ -1,8 +1,8 @@
 { ... }: {
-  # Optional: bypass tuigreet, drop sturq straight into dwl on boot.
-  # Useful for VMs / test machines. Remove the import for prod.
+  # Optional: skip tuigreet, drop sturq straight into sway on boot.
+  # Useful for dev / VM hosts. Remove the import for prod.
   services.greetd.settings.initial_session = {
-    command = "dwl-start";
+    command = "sway";
     user = "sturq";
   };
 }

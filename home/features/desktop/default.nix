@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   imports = [
-    ./theming.nix
+    ./sway.nix
+    ./waybar.nix
   ];
 
   # Desktop applications (user-level via home-manager).

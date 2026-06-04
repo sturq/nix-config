@@ -5,6 +5,7 @@
     ../../modules/desktop
     ../../modules/desktop/autologin.nix  # dev convenience — skip tuigreet
     ../../modules/intel-laptop.nix
+    ../../modules/stylix.nix
     ../../modules/tailscale.nix
   ];
 
