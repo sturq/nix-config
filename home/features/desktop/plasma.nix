@@ -39,6 +39,8 @@
           name = "org.kde.plasma.systemtray";
           config.General = {
             # Order shown left → right (Win11-style): battery, audio, wifi.
+            # Plasma 6 renamed extraItems → shownItems; both written for safety.
+            shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
             extraItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
             # Everything else collapses into the popup arrow.
             hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod";
