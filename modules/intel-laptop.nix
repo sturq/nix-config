@@ -52,11 +52,14 @@
   # NOTE: lid/idle policy left for the host to decide.
 
   # Kernel params for max savings when battery — TLP toggles ASPM at runtime.
+  # NOTE: do NOT add `nvme.noacpi=1` here — breaks NVMe init on HP 250 G9
+  # and drops the system to emergency mode with "Timed out waiting for
+  # /dev/disk/by-uuid/...". Other Intel laptops may or may not tolerate it;
+  # if you want it on a specific host, set it in that host's default.nix.
   boot.kernelParams = [
     "i915.enable_psr=1"
     "i915.enable_fbc=1"
     "pcie_aspm=force"
-    "nvme.noacpi=1"
     "mem_sleep_default=deep"
   ];
 }

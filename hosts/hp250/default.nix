@@ -10,7 +10,10 @@
   ];
 
   boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 3;
+  # Keep 10 generations in the bootmenu — plenty of rollback room if a switch
+  # breaks boot (e.g. a bad kernel param drops the system to emergency mode).
+  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.systemd-boot.editor = true;  # press `e` at bootmenu to edit cmdline (manual recovery)
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
