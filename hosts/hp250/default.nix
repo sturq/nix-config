@@ -17,7 +17,9 @@
     efiSupport = true;
     useOSProber = true;     # scan + add Windows etc. to GRUB menu
     configurationLimit = 10;
-    default = "saved";      # remembers last selected entry
+    # Always boot the newest NixOS generation. We do *not* use `saved` here
+    # because the saved-choice can drift to an old gen during rollback testing.
+    default = 0;
   };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
