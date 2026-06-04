@@ -1,0 +1,11 @@
+# Editor cruft
+*.swp
+*.bak
+.direnv/
+result
+result-*
+
+# Per-machine hardware-configs are placeholders in git, overwritten by
+# install.sh at install time. We KEEP the placeholders so `nix flake check`
+# evaluates everywhere. If you want to commit a real one for reinstall
+# convenience, just `git add -f hosts/<host>/hardware-configuration.nix`.
