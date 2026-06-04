@@ -42,20 +42,21 @@
       size = 24;
     };
 
-    # Fonts — Roboto Flex everywhere = Android 16 system font.
-    # Mono falls back to DejaVu Sans Mono so terminals/editors stay legible.
+    # Fonts — DejaVu fallback so apps with their own font preference
+    # (Firefox, foot, etc.) keep using it instead of being globally overridden.
+    # Roboto Flex is applied ONLY to Plasma slots via /etc/xdg/kdeglobals.
     fonts = {
       monospace = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
       };
       sansSerif = {
-        package = pkgs.roboto-flex;
-        name = "Roboto Flex";
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Sans";
       };
       serif = {
-        package = pkgs.roboto-flex;
-        name = "Roboto Flex";
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Serif";
       };
       sizes = {
         applications = 11;

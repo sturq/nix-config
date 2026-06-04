@@ -12,7 +12,8 @@
     imv
   ];
 
-  # adw-gtk3-dark + Tela-circle-dark icons = Android-16-ish GTK side.
+  # adw-gtk3-dark + Tela-circle-dark icons. No font override here — apps that
+  # have their own font preference (Firefox, etc.) keep using it.
   gtk = {
     enable = true;
     theme = {
@@ -22,11 +23,6 @@
     iconTheme = {
       name = "Tela-circle-dark";
       package = pkgs.tela-circle-icon-theme;
-    };
-    font = {
-      name = "Roboto Flex";
-      package = pkgs.roboto-flex;
-      size = 11;
     };
   };
 
@@ -68,10 +64,17 @@
 
   # Screen-lock policy: on AC the screen *only locks* (no suspend, no display
   # off — see powerdevilrc above). On battery: lock + suspend.
+  # Lockscreen background = solid OLED-mantle #060709 (no wallpaper image).
   xdg.configFile."kscreenlockerrc".text = ''
     [Daemon]
     Autolock=true
     LockOnResume=true
     Timeout=10
+
+    [Greeter]
+    WallpaperPlugin=org.kde.color
+
+    [Greeter][Wallpaper][org.kde.color][General]
+    Color=6,7,9
   '';
 }
