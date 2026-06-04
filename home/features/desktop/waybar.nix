@@ -5,6 +5,54 @@
     enable = true;
     systemd.enable = true;  # autostart with the Wayland session
 
+    # Override Stylix's auto-theming: bar = wallpaper base color (#2A3042),
+    # accent = palette primary (#B9C5EE).
+    style = ''
+      * {
+        font-family: 'JetBrainsMono Nerd Font Mono', monospace;
+        font-size: 12px;
+        min-height: 0;
+      }
+      window#waybar {
+        background: #2A3042;
+        color: #FFFFFF;
+        border: none;
+      }
+      #workspaces button {
+        padding: 2px 10px;
+        color: #9CA7CE;
+        background: transparent;
+        border-radius: 4px;
+        margin: 4px 2px;
+      }
+      #workspaces button.focused,
+      #workspaces button.active {
+        background: #B9C5EE;
+        color: #2A3042;
+      }
+      #workspaces button:hover {
+        background: #46506E;
+        color: #FFFFFF;
+        box-shadow: none;
+        text-shadow: none;
+      }
+      #window {
+        color: #C2CAE5;
+        padding: 0 8px;
+      }
+      #clock,
+      #battery,
+      #network,
+      #pulseaudio,
+      #tray {
+        padding: 0 10px;
+        color: #FFFFFF;
+      }
+      #battery.warning   { color: #EEE5B9; }
+      #battery.critical  { color: #EEB9BD; }
+      #network.disconnected { color: #EEB9BD; }
+    '';
+
     settings.mainBar = {
       layer = "top";
       position = "top";
