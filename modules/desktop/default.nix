@@ -73,7 +73,6 @@
     Theme=Tela-circle-dark
 
     [KDE]
-    LookAndFeelPackage=org.kde.breezedark.desktop
     SingleClick=false
     AnimationDurationFactor=0.5
 
