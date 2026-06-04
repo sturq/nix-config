@@ -35,7 +35,26 @@
           };
         }
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
-        "org.kde.plasma.systemtray"
+        # Tray-1 (left): overflow-only — loads everything except the 3 status
+        # icons via extraItems and hides them all, so it renders just the ^.
+        {
+          name = "org.kde.plasma.systemtray";
+          config.General = {
+            extraItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
+            shownItems = "";
+            hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
+          };
+        }
+        # Tray-2 (right): only the 3 status icons via extraItems. Empty
+        # hiddenItems means no overflow arrow renders here.
+        {
+          name = "org.kde.plasma.systemtray";
+          config.General = {
+            extraItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
+            shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
+            hiddenItems = "";
+          };
+        }
         {
           name = "org.kde.plasma.digitalclock";
           config.Appearance = {
