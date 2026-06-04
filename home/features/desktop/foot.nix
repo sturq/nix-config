@@ -5,7 +5,7 @@
     enable = true;
     settings = {
       main = {
-        font = "monospace:size=12";
+        font = lib.mkForce "monospace:size=12";
         pad = "8x8";
       };
       colors = lib.mkForce {
