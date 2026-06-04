@@ -2,16 +2,12 @@
   services.tailscale = {
     enable = true;
     openFirewall = true;
-    # "client"  = nur joining
-    # "server"  = als exit-node verfügbar
-    # "both"    = beide
+    # "client" = join only, "server" = act as exit node, "both" = either.
     useRoutingFeatures = "client";
-
-    # Auto-connect: nach Install einmalig `sudo tailscale up`
-    # (Tailscale-State persistiert in /var/lib/tailscale)
+    # First-time auth: run `sudo tailscale up` once after install.
+    # State persists in /var/lib/tailscale.
   };
 
-  # Tailscale auf Linux braucht das, damit das Netz korrekt funktioniert
-  # (verhindert dass DNS-Anfragen den Tailnet-Resolver umgehen)
+  # Required on Linux so DNS queries don't bypass the Tailnet resolver.
   networking.firewall.checkReversePath = "loose";
 }

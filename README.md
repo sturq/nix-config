@@ -35,10 +35,14 @@ One repo, one `flake.lock`, every machine reproducible from `git pull`.
 | `nixosConfigurations.hp250` | HP 250 G9 (Intel i5-1235U) — active dev laptop |
 | `nixosConfigurations.vivobook` | ASUS Vivobook S 14 M5406WA (AMD Strix Point) |
 | `nixosConfigurations.vm` | Proxmox test VM (auto-login) |
+| `nixosConfigurations.laptop` | Generic laptop — deploy to any Intel/AMD laptop |
+| `nixosConfigurations.desktop` | Generic desktop tower |
 | `nixosConfigurations.wsl` | NixOS-WSL inside Windows |
 | `nixosConfigurations.hp250-install` | Disko + nixos-anywhere variant for hp250 |
 | `nixosConfigurations.vivobook-install` | Disko + nixos-anywhere variant for vivobook |
 | `nixosConfigurations.vm-install` | Disko + nixos-anywhere variant for vm |
+| `nixosConfigurations.laptop-install` | Disko + nixos-anywhere variant — any laptop |
+| `nixosConfigurations.desktop-install` | Disko + nixos-anywhere variant — any desktop |
 | `darwinConfigurations.macbook` | Apple Silicon (aarch64-darwin) |
 | `darwinConfigurations.macbook-intel` | Intel Macs (x86_64-darwin) |
 | `nixOnDroidConfigurations.phone` | Android (Termux + nix-on-droid) |
@@ -89,39 +93,46 @@ sudo nixos-rebuild --rollback switch
 ```
 flake.nix                      Composition root. Inputs + mkHost/mkInstaller/...
 
-hosts/
-  hp250/                       HP 250 G9 (active dev)
-  vivobook/                    ASUS Vivobook (placeholder hardware-config)
-  vm/                          Proxmox test VM
-  wsl/                         NixOS-WSL
-  macbook/                     nix-darwin
-  phone/                       nix-on-droid
+hosts/                         Per-machine config. Imports modules directly,
+                               adds host-specific bits (hostname, dual-boot, …).
+  hp250/                       HP 250 G9 — Intel laptop, Windows dual-boot.
+  vivobook/                    ASUS Vivobook S 14 — AMD Strix Point laptop.
+  vm/                          Proxmox test VM.
+  laptop/  desktop/            Generic hosts for fresh nixos-anywhere installs
+                               on any laptop / desktop tower.
+  wsl/                         NixOS-WSL.
+  macbook/                     nix-darwin.
+  phone/                       nix-on-droid.
 
-modules/                       System-level reusable modules.
-  base.nix                     Boot, network, locale, user, nix settings.
-  desktop/
-    default.nix                Plasma 6 + SDDM + pipewire + xdg-portal-kde +
-                               system fonts. KWin handles tiling natively.
-    autologin.nix              Optional: SDDM autologin straight into Plasma.
-  intel-laptop.nix             Intel laptop tuning (PSR, ASPM, deep sleep, …).
-  amd-laptop.nix               AMD Zen 5 tuning (asusd, amd_pstate, charge limit).
-  tailscale.nix                Tailscale service.
-  stylix.nix                   sturq-palette via Stylix (Bibata cursor + fonts).
+modules/                       Reusable system modules.
+  base.nix                     Boot loader, network, locale, user, nix.
+  stylix.nix                   sturq-palette via Stylix (wallpaper + cursor +
+                               fonts + downstream Firefox/Konsole theming).
   disko.nix                    Generic BTRFS layout for mkInstaller.
+  desktop/
+    plasma6/
+      default.nix              Plasma 6 + SDDM + pipewire + xdg-portal-kde.
+      autologin.nix            Optional: SDDM autologin straight into Plasma.
+  hardware/
+    laptop.nix                 Opinionated laptop tweaks (TLP, lid, brightness).
+    desktop.nix                Opinionated desktop tweaks (perf governor, no idle).
+  features/
+    tailscale.nix              Tailscale service.
+    flatpak.nix                Generic Flatpak support via nix-flatpak.
+    steam.nix                  Steam + remote-play firewall opening.
+    dualboot-grub.nix          Swap systemd-boot for GRUB + os-prober.
+    dev-defaults.nix           SSH passwords + initial sturq/root passwords.
 
-home/
+home/                          home-manager configs.
   sturq/                       Per-platform entry points.
-    nixos.nix                  Linux: imports cli + desktop features.
+    nixos.nix                  Linux: imports cli + plasma6 features.
     cli.nix                    CLI-only: just cli features (WSL/servers).
     darwin.nix                 macOS: cli + Mac bits.
   features/
     cli/                       Shared CLI — shell, git, ssh, direnv, tools,
                                nix-cli, claude-code. Used on every platform.
-    desktop/
-      default.nix              GUI apps (firefox, keepassxc, yazi, helix, mpv,
-                               zathura, imv).
     plasma6/
-      default.nix              Imports config.nix + adds apps.
+      default.nix              Imports config.nix + adds GUI apps.
       config.nix               plasma-manager: panel layout, hotkeys, kdeglobals,
                                lockscreen, powerdevil.
 ```
