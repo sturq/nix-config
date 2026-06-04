@@ -29,6 +29,19 @@
   # Prefer dark color scheme — libadwaita & GTK4 apps honor this.
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
+  # Plasma's KIconLoader ignores [Icons] in /etc/xdg/kdeglobals at session
+  # start, so push the icon theme on every login via plasma-changeicons.
+  # First run writes Tela-circle-dark to ~/.config/kdeglobals where Plasma
+  # actually reads it from. Idempotent.
+  xdg.configFile."autostart/sturq-icons.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=Apply Tela-circle-dark icons
+    Exec=${pkgs.kdePackages.plasma-workspace}/libexec/plasma-changeicons Tela-circle-dark
+    X-KDE-AutostartScript=true
+    OnlyShowIn=KDE;
+  '';
+
   # Plasma power policy: never sleep on AC, only on battery.
   xdg.configFile."powerdevilrc".text = ''
     [AC]
