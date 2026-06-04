@@ -27,12 +27,13 @@
       base0F = "EEC0B9";  # maroon
     };
 
-    # Wallpaper — solid sturq-palette base (#060709, OLED-mantle).
-    # The primary lavender #B9C5EE shows up as the Plasma accent instead.
+    # Wallpaper — solid sturq-palette base (#2A3042, midnight navy).
+    # Matches the Android home-screen wallpaper. Primary lavender #B9C5EE
+    # shows up as the Plasma accent instead.
     image = pkgs.runCommand "wallpaper.png" {
       buildInputs = [ pkgs.imagemagick ];
     } ''
-      magick -size 1920x1080 xc:'#060709' $out
+      magick -size 1920x1080 xc:'#2A3042' $out
     '';
 
     cursor = {
