@@ -19,9 +19,9 @@
     kdePackages.partitionmanager
     # GTK apps inside Plasma should pick adw-gtk3 + sturq-palette colors:
     adw-gtk3
-    # Android 16 / Pixel Launcher visual stack:
-    tela-circle-icon-theme   # circular Pixel-style icons
-    morewaita-icon-theme     # libadwaita / Material companions
+    # Pixel-style circular icon set + libadwaita companions.
+    tela-circle-icon-theme
+    morewaita-icon-theme
   ];
 
   # Drop GNOME defaults that Plasma doesn't need but NixOS sometimes pulls in.
@@ -52,13 +52,13 @@
   fonts.packages = with pkgs; [
     dejavu_fonts
     nerd-fonts.roboto-mono
-    roboto-flex        # Android 16 system font (variable)
-    material-symbols   # Material You icon font
+    roboto-flex        # used by Plasma slots via /etc/xdg/kdeglobals
+    material-symbols   # icon font for apps that want it
   ];
 
-  # Force Plasma into Breeze Dark by default for every login. Locks Material-You
-  # accent (lavender #B9C5EE, from sturq-palette) and the Tela-circle icon set
-  # which together approximate Android 16 / Pixel.
+  # Force Plasma into Breeze Dark by default for every login. Static
+  # sturq-palette: lavender accent #B9C5EE, Tela-circle icons, Roboto Flex
+  # applied only to Plasma's own font slots.
   environment.etc."xdg/kdeglobals".text = ''
     [General]
     ColorScheme=BreezeDark
