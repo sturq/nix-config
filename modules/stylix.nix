@@ -41,17 +41,19 @@
     };
 
     fonts = {
+      # Same fonts GrapheneOS / AOSP ship as system defaults: Roboto family.
+      # Roboto Mono is patched as Nerd Font so waybar icons keep working.
       monospace = {
-        package = pkgs.nerd-fonts.jetbrains-mono;
-        name = "JetBrainsMono Nerd Font Mono";
+        package = pkgs.nerd-fonts.roboto-mono;
+        name = "RobotoMono Nerd Font Mono";
       };
       sansSerif = {
-        package = pkgs.inter;
-        name = "Inter";
+        package = pkgs.roboto;
+        name = "Roboto";
       };
       serif = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Serif";
+        package = pkgs.roboto-slab;
+        name = "Roboto Slab";
       };
       sizes = {
         applications = 11;

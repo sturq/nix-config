@@ -30,8 +30,9 @@
   hardware.graphics.enable = true;
 
   fonts.packages = with pkgs; [
-    inter
-    nerd-fonts.jetbrains-mono
+    roboto
+    roboto-slab
+    nerd-fonts.roboto-mono
   ];
 
   # System-wide Wayland helpers (the rest of the suckless-style stack).

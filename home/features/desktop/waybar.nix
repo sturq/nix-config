@@ -9,7 +9,7 @@
     # accent = palette primary (#B9C5EE).
     style = ''
       * {
-        font-family: 'JetBrainsMono Nerd Font Mono', monospace;
+        font-family: 'RobotoMono Nerd Font Mono', monospace;
         font-size: 12px;
         min-height: 0;
       }
