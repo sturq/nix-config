@@ -36,7 +36,22 @@
         }
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
         "org.kde.plasma.systemtray"
-        "org.kde.plasma.digitalclock"
+        {
+          name = "org.kde.plasma.digitalclock";
+          config.Appearance = {
+            use24hFormat = "2";              # 2 = 24h
+            showSeconds = "2";               # 2 = always in panel
+            showDate = "true";
+            dateFormat = "custom";
+            customDateFormat = "d/M/yyyy";   # 5/6/2026
+            autoFontAndSize = "false";
+            fontFamily = "Roboto Flex";
+            fontWeight = "400";
+            boldText = "false";
+            italicText = "false";
+            fontSize = "9";
+          };
+        }
         "org.kde.plasma.showdesktop"
       ];
     }];
