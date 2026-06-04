@@ -13,15 +13,15 @@
       };
     };
 
-    # Windows-11-style panel: Start (left), tasks (centered via flanking
-    # spacers), system tray + clock + show-desktop (right). No pinned launchers.
+    # Windows-11-style panel: Start + tasks centered as a group via flanking
+    # spacers; system tray + clock + show-desktop on the right.
     panels = [{
       location = "bottom";
       floating = false;
       height = 44;
       widgets = [
-        "org.kde.plasma.kickoff"
         "org.kde.plasma.panelspacer"
+        "org.kde.plasma.kickoff"
         {
           name = "org.kde.plasma.icontasks";
           config.General = {
