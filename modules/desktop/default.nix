@@ -50,4 +50,21 @@
     dejavu_fonts
     nerd-fonts.roboto-mono
   ];
+
+  # Force Plasma into Breeze Dark by default for every login.
+  # Stylix overrides the color values but the look-and-feel package selection
+  # itself is locked here so nothing falls back to light.
+  environment.etc."xdg/kdeglobals".text = ''
+    [General]
+    ColorScheme=BreezeDark
+
+    [KDE]
+    LookAndFeelPackage=org.kde.breezedark.desktop
+    SingleClick=false
+  '';
+
+  # KWin has built-in window tiling on Plasma 6 — bound to Meta+T (tile
+  # editor) + drag-to-edge by default. For full i3/GlazeWM-style tiling, the
+  # user can install Polonium or Kröhnkite from Plasma Discover; not packaged
+  # in nixpkgs upstream.
 }
