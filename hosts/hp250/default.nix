@@ -29,9 +29,11 @@
   networking.hostName = "hp250";
 
   # Dev machine — never auto-suspend, ignore lid close.
-  services.logind.lidSwitch = "ignore";
-  services.logind.lidSwitchExternalPower = "ignore";
-  services.logind.settings.Login.IdleAction = "ignore";
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+    IdleAction = "ignore";
+  };
 
   services.openssh = {
     enable = true;
