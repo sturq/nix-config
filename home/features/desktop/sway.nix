@@ -8,7 +8,7 @@ in
     config = {
       inherit modifier;
       terminal = "foot";
-      menu = "wmenu-run";
+      menu = "fuzzel";
       defaultWorkspace = "workspace number 1";
 
       input."type:touchpad" = {
@@ -27,9 +27,9 @@ in
       keybindings = {
         # ── Windows-native essentials ─────────────────────────────
         "${modifier}+Return"       = "exec foot";                  # Win+Enter → terminal
-        "${modifier}+r"            = "exec wmenu-run";             # Win+R → run
+        "${modifier}+r"            = "exec fuzzel";             # Win+R → run
         "${modifier}+e"            = "exec foot -e yazi";          # Win+E → files
-        "${modifier}+l"            = "exec swaylock -f";           # Win+L → lock
+        "${modifier}+Ctrl+l"       = "exec swaylock -f";           # Win+Ctrl+L → lock (Win+L is system-reserved on Windows)
         "${modifier}+q"            = "kill";                       # Win+Q → close window
         "Mod1+F4"                  = "kill";                       # Alt+F4 → close window
         "${modifier}+Shift+q"      = "exit";                       # Win+Shift+Q → logout sway

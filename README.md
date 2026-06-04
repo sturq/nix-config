@@ -20,13 +20,15 @@ One repo, one `flake.lock`, every machine reproducible from `git pull`.
 - **Stylix** with the [sturq-palette](https://github.com/sturq/sturq-palette)
   OLED scheme — system-wide theming for GTK, Qt, foot, mako, firefox,
   regreet, waybar, all auto-themed from one base16 attrset
-- **Suckless-spirit Wayland helpers** — foot (terminal), wmenu (launcher),
-  swaylock (pure-black lockscreen), grim+slurp (screenshots), mako
-  (notifications), wob (volume OSD), wl-clipboard, swayidle, brightnessctl
+- **Wayland-native helpers** — foot (terminal, OLED-black + Tango colors),
+  fuzzel (launcher), swaylock (pure-black lockscreen), grim+slurp
+  (screenshots), mako (notifications), wob (volume OSD), wl-clipboard,
+  swayidle, brightnessctl
 - **Disko + nixos-anywhere** for declarative fresh installs from any other
   Linux box (kexec-bootstrap works on existing NixOS too)
-- **Battery tuning** on hp250 — `i915 PSR/FBC`, aggressive PCIe ASPM,
-  `mem_sleep_default=deep`, thermald + power-profiles-daemon, WiFi powersave
+- **TLP auto-switching** on hp250 — full `performance` governor + CPU
+  boost on AC, `powersave` + ASPM `powersupersave` + WiFi pwr-mgmt on
+  battery. Plus kernel-level: i915 PSR/FBC, deep S3 sleep, thermald
 - **Tailscale** baked in — `sudo tailscale up` and the host joins the tailnet
 - **Steam + Sober (Flatpak Roblox)** declared in `hosts/hp250/default.nix`
 
@@ -127,7 +129,8 @@ home/
                                zathura, imv, pavucontrol.
       sway.nix                 Sway keybinds (Win-key MODKEY) + layout + bars=[]
                                (waybar autostarts via systemd).
-      waybar.nix               Waybar layout + modules (Stylix themes colors).
+      waybar.nix               Waybar — CPU/mem/disk/netspeed/audio/battery/clock.
+      foot.nix                 Foot terminal — OLED-black bg + Tango ANSI palette.
       swaylock.nix             Pure-black lockscreen with sturq-palette accent.
 ```
 
@@ -138,9 +141,9 @@ home/
 | Hotkey | Action |
 |---|---|
 | Win + Enter | Foot terminal |
-| Win + R | wmenu launcher |
+| Win + R | fuzzel launcher |
 | Win + E | yazi file manager (in foot) |
-| Win + L | swaylock |
+| Win + Ctrl + L | swaylock (Win+L alone is system-reserved on Windows) |
 | Win + Q · Alt + F4 | Close window |
 | Win + Shift + Q | Exit Sway |
 | Win + Tab · Alt + Tab | Focus next window |

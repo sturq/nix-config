@@ -3,6 +3,7 @@
     ./sway.nix
     ./waybar.nix
     ./swaylock.nix
+    ./foot.nix
   ];
 
   # Desktop applications (user-level via home-manager).

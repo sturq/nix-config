@@ -27,11 +27,11 @@
       base0F = "EEC0B9";  # maroon
     };
 
-    # Wallpaper — gradient generated from sturq-palette (base → mantle).
+    # Wallpaper — solid sturq-palette primary (#B9C5EE). No gradient.
     image = pkgs.runCommand "wallpaper.png" {
       buildInputs = [ pkgs.imagemagick ];
     } ''
-      magick -size 1920x1080 gradient:'#2A3042-#060709' $out
+      magick -size 1920x1080 xc:'#B9C5EE' $out
     '';
 
     cursor = {
@@ -40,20 +40,22 @@
       size = 24;
     };
 
+    # Fonts — Stylix REQUIRES these, but we pass safe DejaVu fallbacks so apps
+    # that have their own font preference (Firefox, foot, etc.) keep using it
+    # instead of being globally overridden. Only waybar opts into Roboto Mono
+    # via its own CSS.
     fonts = {
-      # Same fonts GrapheneOS / AOSP ship as system defaults: Roboto family.
-      # Roboto Mono is patched as Nerd Font so waybar icons keep working.
       monospace = {
-        package = pkgs.nerd-fonts.roboto-mono;
-        name = "RobotoMono Nerd Font Mono";
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Sans Mono";
       };
       sansSerif = {
-        package = pkgs.roboto;
-        name = "Roboto";
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Sans";
       };
       serif = {
-        package = pkgs.roboto-slab;
-        name = "Roboto Slab";
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Serif";
       };
       sizes = {
         applications = 11;

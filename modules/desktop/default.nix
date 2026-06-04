@@ -29,23 +29,23 @@
 
   hardware.graphics.enable = true;
 
+  # Fonts: DejaVu (Stylix fallback, system-wide) + RobotoMono Nerd (waybar only).
   fonts.packages = with pkgs; [
-    roboto
-    roboto-slab
+    dejavu_fonts
     nerd-fonts.roboto-mono
   ];
 
-  # System-wide Wayland helpers (the rest of the suckless-style stack).
+  # System-wide Wayland helpers — all native Wayland.
   environment.systemPackages = with pkgs; [
-    foot           # terminal
-    wmenu          # app launcher (replaces dmenu)
-    swaylock       # screen locker
-    swayidle       # idle timeout (used if user wants auto-lock)
-    grim           # screenshot
-    slurp          # region picker
-    wl-clipboard   # wl-copy / wl-paste
-    mako           # notifications
-    wob            # volume/brightness OSD
-    brightnessctl  # XF86 brightness keys helper
+    foot           # terminal — Wayland-native
+    fuzzel         # app launcher — modern Wayland-native (replaces wmenu/dmenu)
+    swaylock       # screen locker — Wayland-native
+    swayidle       # idle timeout — Wayland-native
+    grim           # screenshot — Wayland-native
+    slurp          # region picker — Wayland-native
+    wl-clipboard   # wl-copy / wl-paste — Wayland-native
+    mako           # notifications — Wayland-native
+    wob            # volume/brightness OSD — Wayland-native
+    brightnessctl  # XF86 brightness key helper (platform-agnostic, no Wayland alt needed)
   ];
 }

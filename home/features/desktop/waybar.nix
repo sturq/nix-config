@@ -1,12 +1,9 @@
 { pkgs, ... }: {
-  # Waybar — the pretty Pro Sway/Hyprland status bar.
-  # Stylix auto-themes colors+fonts; this file only defines layout+modules.
+  # Waybar — top bar with useful stats (no SSID — nobody cares which AP).
   programs.waybar = {
     enable = true;
-    systemd.enable = true;  # autostart with the Wayland session
+    systemd.enable = true;
 
-    # Override Stylix's auto-theming: bar = wallpaper base color (#2A3042),
-    # accent = palette primary (#B9C5EE).
     style = ''
       * {
         font-family: 'RobotoMono Nerd Font Mono', monospace;
@@ -40,14 +37,14 @@
         color: #C2CAE5;
         padding: 0 8px;
       }
-      #clock,
-      #battery,
-      #network,
-      #pulseaudio,
-      #tray {
+      #cpu, #memory, #disk, #network, #pulseaudio, #battery, #clock, #tray {
         padding: 0 10px;
         color: #FFFFFF;
       }
+      #cpu.high      { color: #EEE5B9; }
+      #cpu.critical  { color: #EEB9BD; }
+      #memory.high   { color: #EEE5B9; }
+      #memory.critical { color: #EEB9BD; }
       #battery.warning   { color: #EEE5B9; }
       #battery.critical  { color: #EEB9BD; }
       #network.disconnected { color: #EEB9BD; }
@@ -61,32 +58,37 @@
 
       modules-left   = [ "sway/workspaces" "sway/mode" ];
       modules-center = [ "sway/window" ];
-      modules-right  = [ "pulseaudio" "network" "battery" "clock" "tray" ];
+      modules-right  = [ "cpu" "memory" "disk" "network" "pulseaudio" "battery" "clock" "tray" ];
 
       "sway/workspaces" = {
         disable-scroll = true;
         all-outputs = true;
       };
-      "sway/window".max-length = 60;
+      "sway/window".max-length = 50;
 
-      clock = {
-        format = "  {:%a %d %b  %H:%M}";
-        tooltip-format = "<tt>{calendar}</tt>";
+      cpu = {
+        interval = 5;
+        format = "  {usage}%";
+        states = { high = 70; critical = 90; };
       };
 
-      battery = {
-        format = "{icon}  {capacity}%";
-        format-charging = "  {capacity}%";
-        format-icons = [ "" "" "" "" "" ];
-        states = {
-          warning = 25;
-          critical = 10;
-        };
+      memory = {
+        interval = 5;
+        format = "  {percentage}%";
+        tooltip-format = "{used:0.1f}G / {total:0.1f}G";
+        states = { high = 70; critical = 90; };
+      };
+
+      disk = {
+        interval = 60;
+        format = "  {percentage_used}%";
+        path = "/";
       };
 
       network = {
-        format-wifi = "  {essid} ({signalStrength}%)";
-        format-ethernet = "  {ifname}";
+        interval = 3;
+        format-wifi = "  {bandwidthDownBits} ↓ {bandwidthUpBits} ↑";
+        format-ethernet = "  {bandwidthDownBits} ↓ {bandwidthUpBits} ↑";
         format-disconnected = "⚠  offline";
         tooltip-format = "{ifname}: {ipaddr}";
       };
@@ -96,6 +98,18 @@
         format-muted = "  muted";
         format-icons = { default = [ "" "" "" ]; };
         on-click = "pavucontrol";
+      };
+
+      battery = {
+        format = "{icon}  {capacity}%";
+        format-charging = "  {capacity}%";
+        format-icons = [ "" "" "" "" "" ];
+        states = { warning = 25; critical = 10; };
+      };
+
+      clock = {
+        format = "  {:%a %d %b  %H:%M}";
+        tooltip-format = "<tt>{calendar}</tt>";
       };
 
       tray.spacing = 8;
