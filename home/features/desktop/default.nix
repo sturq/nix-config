@@ -2,6 +2,7 @@
   imports = [
     ./sway.nix
     ./waybar.nix
+    ./swaylock.nix
   ];
 
   # Desktop applications (user-level via home-manager).
