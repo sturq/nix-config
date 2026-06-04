@@ -30,14 +30,30 @@
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
   # Plasma's KIconLoader ignores [Icons] in /etc/xdg/kdeglobals at session
-  # start, so push the icon theme on every login via plasma-changeicons.
-  # First run writes Tela-circle-dark to ~/.config/kdeglobals where Plasma
-  # actually reads it from. Idempotent.
-  xdg.configFile."autostart/sturq-icons.desktop".text = ''
+  # start, so push the icon theme + empty task-launcher pins on every login.
+  # Tela-circle-dark + zero pinned apps. Idempotent.
+  home.file.".local/bin/sturq-plasma-tweaks" = {
+    executable = true;
+    text = ''
+      #!${pkgs.bash}/bin/bash
+      ${pkgs.kdePackages.plasma-workspace}/libexec/plasma-changeicons Tela-circle-dark
+      # Clear pinned launchers from the icontasks widget on the bottom panel.
+      cfg="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
+      for n in $(${pkgs.gnugrep}/bin/grep -B2 "plugin=org.kde.plasma.icontasks" "$cfg" 2>/dev/null \
+                  | ${pkgs.gnugrep}/bin/grep -oE "\[Applets\]\[[0-9]+\]" \
+                  | ${pkgs.gnugrep}/bin/grep -oE "[0-9]+"); do
+        ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 --file "$cfg" \
+          --group Containments --group 2 --group Applets --group "$n" \
+          --group Configuration --group General --key launchers ""
+      done
+    '';
+  };
+
+  xdg.configFile."autostart/sturq-plasma-tweaks.desktop".text = ''
     [Desktop Entry]
     Type=Application
-    Name=Apply Tela-circle-dark icons
-    Exec=${pkgs.kdePackages.plasma-workspace}/libexec/plasma-changeicons Tela-circle-dark
+    Name=sturq plasma tweaks
+    Exec=sh -c "$HOME/.local/bin/sturq-plasma-tweaks"
     X-KDE-AutostartScript=true
     OnlyShowIn=KDE;
   '';
