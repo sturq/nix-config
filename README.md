@@ -16,7 +16,7 @@ One repo, one `flake.lock`, every machine reproducible from `git pull`.
 - **KDE Plasma 6 (Wayland)** + **SDDM** greeter
 - **Stylix** with the [sturq-palette](https://github.com/sturq/sturq-palette)
   OLED scheme — base16-based theming for Qt/KDE/foot/firefox/etc.
-- **adw-gtk3-dark** for every GTK app — libadwaita-style dark across the GTK side
+- **plasma-manager** — declarative panel layout, hotkeys, kdeglobals, lock, power
 - **GRUB + os-prober** — automatic Windows dual-boot detection
 - **Disko + nixos-anywhere** for declarative fresh installs from any other
   Linux box (kexec-bootstrap works on existing NixOS too)
@@ -119,7 +119,11 @@ home/
                                nix-cli, claude-code. Used on every platform.
     desktop/
       default.nix              GUI apps (firefox, keepassxc, yazi, helix, mpv,
-                               zathura, imv) + adw-gtk3-dark GTK theme.
+                               zathura, imv).
+    plasma6/
+      default.nix              Imports config.nix + adds apps.
+      config.nix               plasma-manager: panel layout, hotkeys, kdeglobals,
+                               lockscreen, powerdevil.
 ```
 
 ---

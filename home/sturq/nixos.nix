@@ -2,7 +2,7 @@
   # Full Linux desktop — CLI + KDE Plasma 6 (Wayland).
   imports = [
     ../features/cli
-    ../features/desktop
+    ../features/plasma6
   ];
 
   home.username = "sturq";

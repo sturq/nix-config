@@ -2,7 +2,7 @@
   imports = [
     # hardware-configuration.nix imported by flake (mkHost / mkInstaller)
     ../../modules/base.nix
-    ../../modules/desktop
+    ../../modules/plasma6
     ../../modules/amd-laptop.nix
     ../../modules/tailscale.nix
   ];

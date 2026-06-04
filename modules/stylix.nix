@@ -1,8 +1,8 @@
 { pkgs, ... }: {
   # Stylix → system-wide theming. One color scheme + one wallpaper that
   # downstream Stylix targets pick up. Plasma + GTK targets are off (handled
-  # by plasma-manager + adw-gtk3), so Stylix here only owns wallpaper, cursor,
-  # the base16 palette source, and a few outliers (Firefox, etc.).
+  # by plasma-manager), so Stylix here owns wallpaper, cursor, fonts,
+  # the base16 palette source, and downstream targets (Firefox, Konsole, …).
   # Scheme: sturq-palette OLED (https://github.com/sturq/sturq-palette).
   # Inlined here so we don't depend on a network fetch during rebuild.
 

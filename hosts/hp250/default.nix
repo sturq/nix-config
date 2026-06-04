@@ -2,8 +2,8 @@
   imports = [
     # hardware-configuration.nix imported by flake (mkHost / mkInstaller)
     ../../modules/base.nix
-    ../../modules/desktop
-    ../../modules/desktop/autologin.nix  # dev convenience — skip SDDM prompt
+    ../../modules/plasma6
+    ../../modules/plasma6/autologin.nix  # dev convenience — skip SDDM prompt
     ../../modules/intel-laptop.nix
     ../../modules/stylix.nix
     ../../modules/tailscale.nix
