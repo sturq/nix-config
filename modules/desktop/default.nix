@@ -19,6 +19,9 @@
     kdePackages.partitionmanager
     # GTK apps inside Plasma should pick adw-gtk3 + sturq-palette colors:
     adw-gtk3
+    # Android 16 / Pixel Launcher visual stack:
+    tela-circle-icon-theme   # circular Pixel-style icons
+    morewaita-icon-theme     # libadwaita / Material companions
   ];
 
   # Drop GNOME defaults that Plasma doesn't need but NixOS sometimes pulls in.
@@ -49,18 +52,33 @@
   fonts.packages = with pkgs; [
     dejavu_fonts
     nerd-fonts.roboto-mono
+    roboto-flex        # Android 16 system font (variable)
+    material-symbols   # Material You icon font
   ];
 
-  # Force Plasma into Breeze Dark by default for every login.
-  # Stylix overrides the color values but the look-and-feel package selection
-  # itself is locked here so nothing falls back to light.
+  # Force Plasma into Breeze Dark by default for every login. Locks Material-You
+  # accent (lavender #B9C5EE, from sturq-palette) and the Tela-circle icon set
+  # which together approximate Android 16 / Pixel.
   environment.etc."xdg/kdeglobals".text = ''
     [General]
     ColorScheme=BreezeDark
+    AccentColor=185,197,238
+    font=Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+    menuFont=Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+    toolBarFont=Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+    smallestReadableFont=Roboto Flex,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+    fixed=DejaVu Sans Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,0
+
+    [Icons]
+    Theme=Tela-circle-dark
 
     [KDE]
     LookAndFeelPackage=org.kde.breezedark.desktop
     SingleClick=false
+    AnimationDurationFactor=0.5
+
+    [WM]
+    activeFont=Roboto Flex,11,-1,5,500,0,0,0,0,0,0,0,0,0,0,1
   '';
 
   # KWin has built-in window tiling on Plasma 6 — bound to Meta+T (tile

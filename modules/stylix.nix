@@ -40,22 +40,20 @@
       size = 24;
     };
 
-    # Fonts — Stylix REQUIRES these, but we pass safe DejaVu fallbacks so apps
-    # that have their own font preference (Firefox, foot, etc.) keep using it
-    # instead of being globally overridden. Only waybar opts into Roboto Mono
-    # via its own CSS.
+    # Fonts — Roboto Flex everywhere = Android 16 system font.
+    # Mono falls back to DejaVu Sans Mono so terminals/editors stay legible.
     fonts = {
       monospace = {
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans Mono";
       };
       sansSerif = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans";
+        package = pkgs.roboto-flex;
+        name = "Roboto Flex";
       };
       serif = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Serif";
+        package = pkgs.roboto-flex;
+        name = "Roboto Flex";
       };
       sizes = {
         applications = 11;

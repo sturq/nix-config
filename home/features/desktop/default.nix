@@ -12,7 +12,7 @@
     imv
   ];
 
-  # adw-gtk3-dark for every GTK app — matches the Plasma dark side visually.
+  # adw-gtk3-dark + Tela-circle-dark icons = Android-16-ish GTK side.
   gtk = {
     enable = true;
     theme = {
@@ -20,8 +20,13 @@
       package = pkgs.adw-gtk3;
     };
     iconTheme = {
-      name = "Adwaita";
-      package = pkgs.adwaita-icon-theme;
+      name = "Tela-circle-dark";
+      package = pkgs.tela-circle-icon-theme;
+    };
+    font = {
+      name = "Roboto Flex";
+      package = pkgs.roboto-flex;
+      size = 11;
     };
   };
 
