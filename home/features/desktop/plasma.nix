@@ -35,15 +35,24 @@
           };
         }
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
+        # Two systemtray instances side-by-side:
+        # 1) Overflow-only: every default tray item is hidden → renders just
+        #    the ^ arrow on the LEFT.
+        # 2) Status-only: battery + volume + wifi visible, nothing else
+        #    loaded → no second arrow on its right side.
+        # Both render at systemtray icon size, so icons stay small.
         {
           name = "org.kde.plasma.systemtray";
           config.General = {
-            # Win11-style notification area: battery, audio, wifi pinned
-            # always visible (shownItems overrides Passive state).
-            # Everything else lives behind the overflow arrow — SNI apps
-            # like Steam land there too.
-            shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
+            shownItems = "";
             hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
+          };
+        }
+        {
+          name = "org.kde.plasma.systemtray";
+          config.General = {
+            shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
+            hiddenItems = "";
           };
         }
         {
