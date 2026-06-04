@@ -67,4 +67,10 @@
     # Disable targets with stale upstream NixOS options on unstable.
     targets.kmscon.enable = false;
   };
+
+  # Disable Stylix's swaylock theming everywhere — we do it ourselves
+  # (pure-black lockscreen, sturq-palette accent for unlock ring).
+  home-manager.sharedModules = [
+    { stylix.targets.swaylock.enable = false; }
+  ];
 }
