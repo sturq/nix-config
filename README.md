@@ -5,7 +5,7 @@
 sturq's multi-platform Nix flake — NixOS, nix-darwin, nix-on-droid, NixOS-WSL.
 One repo, one `flake.lock`, every machine reproducible from `git pull`.
 
-![dwl on hp250](./screenshots/dwl-boot.png)
+![hp250 — Sway + Waybar + Stylix](./screenshots/desktop.png)
 
 </div>
 
@@ -13,19 +13,22 @@ One repo, one `flake.lock`, every machine reproducible from `git pull`.
 
 ## Stack
 
-- **dwl** Wayland compositor (= dwm for Wayland) with a custom `config.h`
-  (Win-key MODKEY + Windows-native hotkeys)
-- **Suckless-spirit Wayland tools** — somebar (status), wmenu (launcher),
-  foot (terminal), swaylock, grim+slurp (screenshots), mako, wob,
-  wl-clipboard, swayidle, brightnessctl
-- **greetd + tuigreet** login greeter (~50 MB, no Wayland session for login)
-- **adw-gtk3-dark** + Adwaita-Qt theming so GTK + Qt apps look consistent
-- **Battery tuning** baked in — `i915 PSR/FBC`, aggressive PCIe ASPM,
+- **Sway** (Wayland tiling compositor) — configured purely via
+  `home-manager.wayland.windowManager.sway`, no C/config.h
+- **Waybar** — top status bar (workspaces · title · audio · WiFi · battery · clock)
+- **ReGreet** — modern GTK4 graphical greeter (runs via cage; replaced tuigreet)
+- **Stylix** with the [sturq-palette](https://github.com/sturq/sturq-palette)
+  OLED scheme — system-wide theming for GTK, Qt, foot, mako, firefox,
+  regreet, waybar, all auto-themed from one base16 attrset
+- **Suckless-spirit Wayland helpers** — foot (terminal), wmenu (launcher),
+  swaylock (pure-black lockscreen), grim+slurp (screenshots), mako
+  (notifications), wob (volume OSD), wl-clipboard, swayidle, brightnessctl
+- **Disko + nixos-anywhere** for declarative fresh installs from any other
+  Linux box (kexec-bootstrap works on existing NixOS too)
+- **Battery tuning** on hp250 — `i915 PSR/FBC`, aggressive PCIe ASPM,
   `mem_sleep_default=deep`, thermald + power-profiles-daemon, WiFi powersave
-- **Tailscale** — `sudo tailscale up` and the host joins the tailnet
+- **Tailscale** baked in — `sudo tailscale up` and the host joins the tailnet
 - **Steam + Sober (Flatpak Roblox)** declared in `hosts/hp250/default.nix`
-- **disko + nixos-anywhere** for fresh installs from any other Linux
-  (incl. existing NixOS — kexec)
 
 ---
 
@@ -37,54 +40,50 @@ One repo, one `flake.lock`, every machine reproducible from `git pull`.
 | `nixosConfigurations.vivobook` | ASUS Vivobook S 14 M5406WA (AMD Strix Point) |
 | `nixosConfigurations.vm` | Proxmox test VM (auto-login) |
 | `nixosConfigurations.wsl` | NixOS-WSL inside Windows |
-| `nixosConfigurations.hp250-install` | disko + nixos-anywhere variant for hp250 |
-| `nixosConfigurations.vivobook-install` | disko + nixos-anywhere variant for vivobook |
-| `nixosConfigurations.vm-install` | disko + nixos-anywhere variant for vm |
+| `nixosConfigurations.hp250-install` | Disko + nixos-anywhere variant for hp250 |
+| `nixosConfigurations.vivobook-install` | Disko + nixos-anywhere variant for vivobook |
+| `nixosConfigurations.vm-install` | Disko + nixos-anywhere variant for vm |
 | `darwinConfigurations.macbook` | Apple Silicon (aarch64-darwin) |
 | `darwinConfigurations.macbook-intel` | Intel Macs (x86_64-darwin) |
 | `nixOnDroidConfigurations.phone` | Android (Termux + nix-on-droid) |
 
 ---
 
-## Fresh install (disko + nixos-anywhere)
+## Fresh install (Disko + nixos-anywhere)
 
-Works on any Linux target (including existing NixOS — kexec is used).
+Works on any Linux target (including a running NixOS — kexec is used).
 
 ```sh
-# From your dev machine, target is a freshly booted Linux with SSH access:
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#hp250-install \
   root@<target-ip>
 ```
 
-Disko applies the layout from `modules/disko/generic.nix`:
+Disko applies the layout from `modules/disko.nix`:
 1 G ESP + BTRFS root with subvolumes `@root @home @nix @snap @swap` +
 zstd compression + 16 G swapfile. No LUKS.
 
-Override disk path per install variant in `flake.nix` if the target uses
-SATA (`/dev/sda`), VM (`/dev/vda`), or eMMC (`/dev/mmcblk0`).
+Disk path defaults to `/dev/sda`; the per-host installer outputs in
+`flake.nix` set it to the right device (`/dev/nvme0n1` for hp250 +
+vivobook, `/dev/vda` for vm).
 
 ---
 
 ## Daily use
 
 ```sh
-# Edit, rebuild, push.
 cd /etc/nixos
 $EDITOR hosts/hp250/default.nix
 sudo nixos-rebuild switch --flake .#hp250
 git add -A && git commit -m "..." && git push
 
-# Or via nh (friendlier wrapper, piped through nix-output-monitor):
-sudo nh os switch /etc/nixos
-
-# Update inputs.
+# Update inputs
 nix flake update
 sudo nixos-rebuild switch --flake .#hp250
 
-# Rollback if a switch breaks something.
+# Rollback
 sudo nixos-rebuild --rollback switch
-# (or pick an older generation in the systemd-boot menu at boot)
+# (or pick an older generation in the systemd-boot menu)
 ```
 
 ---
@@ -92,39 +91,71 @@ sudo nixos-rebuild --rollback switch
 ## Layout
 
 ```
-flake.nix                    Composition root. Inputs + mkHost/mkInstaller/...
+flake.nix                      Composition root. Inputs + mkHost/mkInstaller/...
 
 hosts/
-  hp250/                     HP 250 G9 (active dev)
-  vivobook/                  ASUS Vivobook (placeholder hardware-config)
-  vm/                        Proxmox test VM
-  wsl/                       NixOS-WSL
-  macbook/                   nix-darwin
-  phone/                     nix-on-droid
+  hp250/                       HP 250 G9 (active dev)
+  vivobook/                    ASUS Vivobook (placeholder hardware-config)
+  vm/                          Proxmox test VM
+  wsl/                         NixOS-WSL
+  macbook/                     nix-darwin
+  phone/                       nix-on-droid
 
-modules/                     System-level reusable modules.
-  base.nix                   Boot, network, locale, user, nix settings.
+modules/                       System-level reusable modules.
+  base.nix                     Boot, network, locale, user, nix settings.
   desktop/
-    default.nix              dwl + suckless Wayland stack + greetd.
-    config.h                 dwl keybinds (Win-key MODKEY).
-    autologin.nix            Optional: skip greeter, drop straight into dwl.
-  intel-laptop.nix           Intel laptop tuning (PSR, ASPM, deep sleep, …).
-  amd-laptop.nix             AMD laptop tuning (asusd, amd_pstate, charge limit).
-  tailscale.nix              Tailscale service.
-  disko.nix                  BTRFS layout used by mkInstaller / nixos-anywhere.
+    default.nix                programs.sway + greetd + regreet + pipewire +
+                               xdg-portal-wlr + system Wayland helpers.
+    autologin.nix              Optional: skip greeter, drop into Sway.
+  intel-laptop.nix             Intel laptop tuning (PSR, ASPM, deep sleep, …).
+  amd-laptop.nix               AMD Zen 5 tuning (asusd, amd_pstate, charge limit).
+  tailscale.nix                Tailscale service.
+  stylix.nix                   sturq-palette via Stylix (Bibata cursor +
+                               JetBrains Mono Nerd + Inter + gradient wallpaper).
+  disko.nix                    Generic BTRFS layout for mkInstaller.
 
 home/
-  sturq/                     Per-platform entry points.
-    nixos.nix                Linux: imports cli + desktop features.
-    cli.nix                  CLI-only: imports cli features only (WSL/servers).
-    darwin.nix               macOS: cli + Mac bits.
+  sturq/                       Per-platform entry points.
+    nixos.nix                  Linux: imports cli + desktop features.
+    cli.nix                    CLI-only: just cli features (WSL/servers).
+    darwin.nix                 macOS: cli + Mac bits.
   features/
-    cli/                     Shared CLI (shell, git, ssh, direnv, tools, nix,
-                             claude-code) — used on every platform.
+    cli/                       Shared CLI — shell, git, ssh, direnv, tools,
+                               nix-cli, claude-code. Used on every platform.
     desktop/
-      default.nix            Apps (Firefox, KeePassXC, yazi, helix, mpv, …).
-      theming.nix            adw-gtk3-dark + Adwaita-Qt + cursor + icons.
+      default.nix              Apps: firefox, keepassxc, yazi, helix, mpv,
+                               zathura, imv, pavucontrol.
+      sway.nix                 Sway keybinds (Win-key MODKEY) + layout + bars=[]
+                               (waybar autostarts via systemd).
+      waybar.nix               Waybar layout + modules (Stylix themes colors).
+      swaylock.nix             Pure-black lockscreen with sturq-palette accent.
 ```
+
+---
+
+## Keybinds (Sway, Win-key = MODKEY)
+
+| Hotkey | Action |
+|---|---|
+| Win + Enter | Foot terminal |
+| Win + R | wmenu launcher |
+| Win + E | yazi file manager (in foot) |
+| Win + L | swaylock |
+| Win + Q · Alt + F4 | Close window |
+| Win + Shift + Q | Exit Sway |
+| Win + Tab · Alt + Tab | Focus next window |
+| Win + 1..9 | Workspace 1..9 |
+| Win + Shift + 1..9 | Move window to workspace |
+| Win + ← / → / ↓ | Resize |
+| Win + ↑ | Toggle fullscreen |
+| Win + Space · Win + F | Toggle floating |
+| Win + D / T / M | Layouts (split / split / tabbed) |
+| Win + H/J/K | Focus left/down/up (vi-style) |
+| Print | Full screenshot → `~/Pictures` |
+| Shift + Print | Region screenshot → `~/Pictures` |
+| Win + Shift + S | Region → clipboard (Win10-style) |
+| XF86Audio* | wpctl volume / mute |
+| XF86MonBrightness* | brightnessctl |
 
 ---
 
@@ -139,14 +170,23 @@ home/
 
 ---
 
+## Mirrors
+
+- Windows tiling equivalent: [`sturq/win-glazewm`](https://github.com/sturq/win-glazewm)
+  (GlazeWM + Zebar, same keybinds, same palette)
+- Palette source: [`sturq/sturq-palette`](https://github.com/sturq/sturq-palette)
+
+---
+
 ## Credits
 
-- [nix-community/home-manager](https://github.com/nix-community/home-manager)
-- [nix-community/disko](https://github.com/nix-community/disko)
-- [nix-community/nixos-anywhere](https://github.com/nix-community/nixos-anywhere)
-- [nix-community/nix-on-droid](https://github.com/nix-community/nix-on-droid)
-- [nix-darwin/nix-darwin](https://github.com/nix-darwin/nix-darwin)
-- [nix-community/NixOS-WSL](https://github.com/nix-community/NixOS-WSL)
-- [gmodena/nix-flatpak](https://github.com/gmodena/nix-flatpak)
-- [dwl](https://codeberg.org/dwl/dwl), [somebar](https://sr.ht/~djpohly/somebar)
+- [home-manager](https://github.com/nix-community/home-manager)
+- [Stylix](https://github.com/danth/stylix)
+- [disko](https://github.com/nix-community/disko)
+- [nixos-anywhere](https://github.com/nix-community/nixos-anywhere)
+- [nix-on-droid](https://github.com/nix-community/nix-on-droid)
+- [nix-darwin](https://github.com/nix-darwin/nix-darwin)
+- [NixOS-WSL](https://github.com/nix-community/NixOS-WSL)
+- [nix-flatpak](https://github.com/gmodena/nix-flatpak)
+- [Sway](https://github.com/swaywm/sway), [Waybar](https://github.com/Alexays/Waybar), [ReGreet](https://github.com/rharish101/ReGreet)
 - Structural inspiration: [Misterio77/nix-config](https://github.com/Misterio77/nix-config)
