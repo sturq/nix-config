@@ -20,8 +20,12 @@
       floating = false;
       height = 44;
       widgets = [
-        { name = "org.kde.plasma.panelspacer"; config.General.expanding = true; }
+        { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
         "org.kde.plasma.kickoff"
+        {
+          name = "org.kde.plasma.pager";
+          config.General.showWindowIcons = "true";
+        }
         {
           name = "org.kde.plasma.icontasks";
           config.General = {
@@ -30,24 +34,33 @@
             showOnlyCurrentDesktop = "true";
           };
         }
-        { name = "org.kde.plasma.panelspacer"; config.General.expanding = true; }
+        { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
         "org.kde.plasma.systemtray"
         "org.kde.plasma.digitalclock"
         "org.kde.plasma.showdesktop"
       ];
     }];
 
-    # Windows-style global shortcuts. Most are Plasma defaults already; the
-    # extras here add Win+E (Files), Win+R (run), Win+I (Settings).
+    # Windows-style global shortcuts.
     shortcuts = {
+      # App launchers
       "services/org.kde.dolphin.desktop"."_launch" = "Meta+E";
       "services/org.kde.krunner.desktop"."_launch" = "Meta+R";
       "services/systemsettings.desktop"."_launch" = "Meta+I";
+
+      # Windows behaviour
       "kwin"."Show Desktop" = "Meta+D";
       "kwin"."Window Maximize" = "Meta+Up";
       "kwin"."Window Minimize" = "Meta+Down";
+      "kwin"."Overview" = "Meta+Tab";              # Win11 Task View
       "ksmserver"."Lock Session" = [ "Meta+L" "Screensaver" ];
       "plasmashell"."show emoji selector" = "Meta+.";
+
+      # Virtual desktops — Win11 bindings
+      "kwin"."Switch One Desktop to the Left"  = "Meta+Ctrl+Left";
+      "kwin"."Switch One Desktop to the Right" = "Meta+Ctrl+Right";
+      "kwin"."Add Virtual Desktop"             = "Meta+Ctrl+D";
+      "kwin"."Remove Virtual Desktop"          = "Meta+Ctrl+F4";
     };
 
     configFile = {
