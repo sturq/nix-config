@@ -35,20 +35,7 @@
           };
         }
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
-        {
-          name = "org.kde.plasma.systemtray";
-          config.General = {
-            # Win11-style notification area: battery, audio, wifi pinned
-            # always visible (shownItems overrides Passive state).
-            # Everything else lives behind the overflow arrow — SNI apps
-            # like Steam land there too.
-            # NOTE: Plasma 6 hard-codes the overflow ^ position to the right
-            # of the visible items. No stock config flips it to the left
-            # without exploding the icon sizes.
-            shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
-            hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
-          };
-        }
+        "org.kde.plasma.systemtray"
         {
           name = "org.kde.plasma.digitalclock";
           config.Appearance = {
