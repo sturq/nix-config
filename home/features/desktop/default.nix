@@ -14,14 +14,11 @@
     imv
   ];
 
-  # adw-gtk3-dark + Tela-circle-dark icons. No font override here — apps
-  # that have their own font preference (Firefox, etc.) keep using it.
+  # GTK icon theme = Tela-circle-dark. The GTK theme itself is owned by
+  # Stylix (sturq-palette base16). No font override — apps with their own
+  # font (Firefox, etc.) keep using it.
   gtk = {
     enable = true;
-    theme = {
-      name = "adw-gtk3-dark";
-      package = pkgs.adw-gtk3;
-    };
     iconTheme = {
       name = "Tela-circle-dark";
       package = pkgs.tela-circle-icon-theme;

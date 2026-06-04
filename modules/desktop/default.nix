@@ -16,8 +16,6 @@
     kdePackages.filelight
     kdePackages.kate
     kdePackages.partitionmanager
-    # GTK apps inside Plasma should pick adw-gtk3:
-    adw-gtk3
     # Pixel-style circular icon set + libadwaita companions.
     tela-circle-icon-theme
     morewaita-icon-theme
