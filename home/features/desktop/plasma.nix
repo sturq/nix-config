@@ -41,26 +41,40 @@
       ];
     }];
 
-    # Windows-style global shortcuts.
+    # Windows-style global shortcuts — modelled on Windows 11 defaults.
     shortcuts = {
       # App launchers
-      "services/org.kde.dolphin.desktop"."_launch" = "Meta+E";
-      "services/org.kde.krunner.desktop"."_launch" = "Meta+R";
-      "services/systemsettings.desktop"."_launch" = "Meta+I";
+      "services/org.kde.dolphin.desktop"."_launch"           = "Meta+E";
+      "services/org.kde.krunner.desktop"."_launch"           = [ "Meta+R" "Meta+S" ];
+      "services/systemsettings.desktop"."_launch"            = "Meta+I";
+      "services/org.kde.spectacle.desktop"."_launch"         = "Meta+Shift+S";
+      "services/org.kde.plasma-systemmonitor.desktop"."_launch" = "Ctrl+Shift+Escape";
 
-      # Windows behaviour
-      "kwin"."Show Desktop" = "Meta+D";
-      "kwin"."Window Maximize" = "Meta+Up";
-      "kwin"."Window Minimize" = "Meta+Down";
-      "kwin"."Overview" = "Meta+Tab";              # Win11 Task View
+      # Windows / KWin
+      "kwin"."Show Desktop"          = "Meta+D";
+      "kwin"."Window Maximize"       = "Meta+Up";
+      "kwin"."Window Minimize"       = "Meta+Down";
+      "kwin"."Window Quick Tile Left"  = "Meta+Left";
+      "kwin"."Window Quick Tile Right" = "Meta+Right";
+      "kwin"."Overview"              = "Meta+Tab";   # Win11 Task View
+      "kwin"."Walk Through Windows"  = "Alt+Tab";
+
+      # Lock / power
       "ksmserver"."Lock Session" = [ "Meta+L" "Screensaver" ];
+
+      # Plasma extras
       "plasmashell"."show emoji selector" = "Meta+.";
+      "plasmashell"."manage activities"   = "Meta+Q";
+      "plasmashell"."clipboard_action"    = "Meta+V";
 
       # Virtual desktops — Win11 bindings
       "kwin"."Switch One Desktop to the Left"  = "Meta+Ctrl+Left";
       "kwin"."Switch One Desktop to the Right" = "Meta+Ctrl+Right";
       "kwin"."Add Virtual Desktop"             = "Meta+Ctrl+D";
       "kwin"."Remove Virtual Desktop"          = "Meta+Ctrl+F4";
+
+      # Display
+      "kded6"."display"                = "Meta+P";   # Win+P display switch
     };
 
     configFile = {
