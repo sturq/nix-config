@@ -1,9 +1,10 @@
-{ ... }: {
+{ lib, ... }: {
   # Pure-black lockscreen with sturq-palette accent for the unlock ring.
+  # mkForce overrides Stylix's auto-themed swaylock colors.
   programs.swaylock = {
     enable = true;
     settings = {
-      color = "000000";
+      color = lib.mkForce "000000";
       daemonize = true;
       ignore-empty-password = true;
       show-failed-attempts = true;
