@@ -52,7 +52,11 @@
             fontSize = "9";
           };
         }
-        "org.kde.plasma.showdesktop"
+        # Win11-style "Show Desktop" sliver at the right edge: a thin
+        # non-expanding spacer that's just narrow enough to look like the
+        # invisible strip on Windows 11. Click action via the Meta+D
+        # global shortcut (see `shortcuts` below).
+        { name = "org.kde.plasma.panelspacer"; config.General = { expanding = "false"; length = "6"; }; }
       ];
     }];
 
