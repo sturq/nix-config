@@ -1,8 +1,10 @@
 { ... }: {
-  # Optional: skip tuigreet, drop sturq straight into sway on boot.
-  # Useful for dev / VM hosts. Remove the import for prod.
-  services.greetd.settings.initial_session = {
-    command = "sway";
-    user = "sturq";
+  # Optional: SDDM autologin straight into Plasma for the sturq user.
+  # Remove this import for prod hosts; the regular SDDM greeter takes over.
+  services.displayManager = {
+    autoLogin = {
+      enable = true;
+      user = "sturq";
+    };
   };
 }

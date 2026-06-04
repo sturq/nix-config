@@ -13,22 +13,16 @@ One repo, one `flake.lock`, every machine reproducible from `git pull`.
 
 ## Stack
 
-- **Sway** (Wayland tiling compositor) — configured purely via
-  `home-manager.wayland.windowManager.sway`, no C/config.h
-- **Waybar** — top status bar (workspaces · title · audio · WiFi · battery · clock)
-- **ReGreet** — modern GTK4 graphical greeter (runs via cage; replaced tuigreet)
+- **KDE Plasma 6 (Wayland)** + **SDDM** greeter
 - **Stylix** with the [sturq-palette](https://github.com/sturq/sturq-palette)
-  OLED scheme — system-wide theming for GTK, Qt, foot, mako, firefox,
-  regreet, waybar, all auto-themed from one base16 attrset
-- **Wayland-native helpers** — foot (terminal, OLED-black + Tango colors),
-  fuzzel (launcher), swaylock (pure-black lockscreen), grim+slurp
-  (screenshots), mako (notifications), wob (volume OSD), wl-clipboard,
-  swayidle, brightnessctl
+  OLED scheme — base16-based theming for Qt/KDE/foot/firefox/etc.
+- **adw-gtk3-dark** for every GTK app — libadwaita-style dark across the GTK side
+- **GRUB + os-prober** — automatic Windows dual-boot detection
 - **Disko + nixos-anywhere** for declarative fresh installs from any other
   Linux box (kexec-bootstrap works on existing NixOS too)
-- **TLP auto-switching** on hp250 — full `performance` governor + CPU
-  boost on AC, `powersave` + ASPM `powersupersave` + WiFi pwr-mgmt on
-  battery. Plus kernel-level: i915 PSR/FBC, deep S3 sleep, thermald
+- **TLP auto-switching** on hp250 — full `performance` governor + CPU boost
+  on AC, `powersave` + ASPM `powersupersave` + WiFi pwr-mgmt on battery.
+  Plus kernel-level: i915 PSR/FBC, deep S3 sleep, thermald
 - **Tailscale** baked in — `sudo tailscale up` and the host joins the tailnet
 - **Steam + Sober (Flatpak Roblox)** declared in `hosts/hp250/default.nix`
 
@@ -106,14 +100,13 @@ hosts/
 modules/                       System-level reusable modules.
   base.nix                     Boot, network, locale, user, nix settings.
   desktop/
-    default.nix                programs.sway + greetd + regreet + pipewire +
-                               xdg-portal-wlr + system Wayland helpers.
-    autologin.nix              Optional: skip greeter, drop into Sway.
+    default.nix                Plasma 6 + SDDM + pipewire + xdg-portal-kde +
+                               system fonts. KWin handles tiling natively.
+    autologin.nix              Optional: SDDM autologin straight into Plasma.
   intel-laptop.nix             Intel laptop tuning (PSR, ASPM, deep sleep, …).
   amd-laptop.nix               AMD Zen 5 tuning (asusd, amd_pstate, charge limit).
   tailscale.nix                Tailscale service.
-  stylix.nix                   sturq-palette via Stylix (Bibata cursor +
-                               JetBrains Mono Nerd + Inter + gradient wallpaper).
+  stylix.nix                   sturq-palette via Stylix (Bibata cursor + fonts).
   disko.nix                    Generic BTRFS layout for mkInstaller.
 
 home/
@@ -125,40 +118,17 @@ home/
     cli/                       Shared CLI — shell, git, ssh, direnv, tools,
                                nix-cli, claude-code. Used on every platform.
     desktop/
-      default.nix              Apps: firefox, keepassxc, yazi, helix, mpv,
-                               zathura, imv, pavucontrol.
-      sway.nix                 Sway keybinds (Win-key MODKEY) + layout + bars=[]
-                               (waybar autostarts via systemd).
-      waybar.nix               Waybar — CPU/mem/disk/netspeed/audio/battery/clock.
-      foot.nix                 Foot terminal — OLED-black bg + Tango ANSI palette.
-      swaylock.nix             Pure-black lockscreen with sturq-palette accent.
+      default.nix              GUI apps (firefox, keepassxc, yazi, helix, mpv,
+                               zathura, imv) + adw-gtk3-dark GTK theme.
 ```
 
 ---
 
-## Keybinds (Sway, Win-key = MODKEY)
+## Keybinds
 
-| Hotkey | Action |
-|---|---|
-| Win + Enter | Foot terminal |
-| Win + R | fuzzel launcher |
-| Win + E | yazi file manager (in foot) |
-| Win + L | swaylock (Windows handles Win+L natively; same UX on both) |
-| Win + Q · Alt + F4 | Close window |
-| Win + Shift + Q | Exit Sway |
-| Win + Tab · Alt + Tab | Focus next window |
-| Win + 1..9 | Workspace 1..9 |
-| Win + Shift + 1..9 | Move window to workspace |
-| Win + ← / → / ↓ | Resize |
-| Win + ↑ | Toggle fullscreen |
-| Win + Space · Win + F | Toggle floating |
-| Win + D / T / M | Layouts (split / split / tabbed) |
-| Win + H/J/K | Focus left/down/up (vi-style) |
-| Print | Full screenshot → `~/Pictures` |
-| Shift + Print | Region screenshot → `~/Pictures` |
-| Win + Shift + S | Region → clipboard (Win10-style) |
-| XF86Audio* | wpctl volume / mute |
-| XF86MonBrightness* | brightnessctl |
+Plasma 6 defaults already match GlazeWM closely (Win+arrows to snap, Win+L
+lock, Win+E Dolphin, Win+1..4 virtual desktops). The cross-platform mirror
+with identical bindings lives at [`sturq/win-glazewm`](https://github.com/sturq/win-glazewm).
 
 ---
 

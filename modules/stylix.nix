@@ -72,9 +72,9 @@
     targets.kmscon.enable = false;
   };
 
-  # Disable Stylix's swaylock theming everywhere — we do it ourselves
-  # (pure-black lockscreen, sturq-palette accent for unlock ring).
+  # Let adw-gtk3 own GTK apps so all GTK programs look libadwaita-dark.
+  # Stylix still themes Qt/KDE/foot/firefox/etc. via the sturq-palette.
   home-manager.sharedModules = [
-    { stylix.targets.swaylock.enable = false; }
+    { stylix.targets.gtk.enable = false; }
   ];
 }

@@ -1,21 +1,30 @@
-{ pkgs, ... }: {
-  imports = [
-    ./sway.nix
-    ./waybar.nix
-    ./swaylock.nix
-    ./foot.nix
+{ pkgs, lib, ... }: {
+  # User-level desktop config: apps + GTK theming (adw-gtk3 for all GTK apps).
+  # Plasma side gets themed by Stylix automatically.
+
+  home.packages = with pkgs; [
+    firefox
+    keepassxc
+    yazi
+    helix
+    zathura
+    mpv
+    imv
   ];
 
-  # Desktop applications (user-level via home-manager).
-  # Suckless-spirit picks: minimal, vim-keys where possible, Wayland-native.
-  home.packages = with pkgs; [
-    firefox          # browser (no realistic minimal alternative for daily use)
-    keepassxc        # password manager
-    yazi             # terminal file manager (vim-keys, fast)
-    helix            # modal editor (single binary, sane defaults)
-    zathura          # PDF viewer (minimal, vim-keys)
-    mpv              # video player (suckless-spirit, scriptable)
-    imv              # image viewer (Wayland-native, vim-keys)
-    pavucontrol      # audio mixer GUI
-  ];
+  # adw-gtk3-dark for every GTK app — matches the Plasma dark side visually.
+  gtk = {
+    enable = true;
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
+    iconTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
+  };
+
+  # Prefer dark color scheme — libadwaita & GTK4 apps honor this.
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 }

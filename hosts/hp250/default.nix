@@ -9,13 +9,20 @@
     ../../modules/tailscale.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  # Keep 10 generations in the bootmenu — plenty of rollback room if a switch
-  # breaks boot (e.g. a bad kernel param drops the system to emergency mode).
-  boot.loader.systemd-boot.configurationLimit = 10;
-  boot.loader.systemd-boot.editor = true;  # press `e` at bootmenu to edit cmdline (manual recovery)
+  # GRUB + os-prober — detects Windows dual-boot automatically.
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub = {
+    enable = true;
+    device = "nodev";       # EFI, GRUB doesn't go on a partition
+    efiSupport = true;
+    useOSProber = true;     # scan + add Windows etc. to GRUB menu
+    configurationLimit = 10;
+    default = "saved";      # remembers last selected entry
+  };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
+  # Allow os-prober to read other-OS partitions for boot-menu generation.
+  nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "hp250";
 

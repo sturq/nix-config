@@ -1,15 +1,34 @@
 { pkgs, ... }: {
-  # Sway-based Wayland desktop. Pure-Nix declarative — keybinds + layout live
-  # in home/features/desktop/sway.nix, this file just provides system bits.
+  # KDE Plasma 6 (Wayland) + SDDM + KWin tiling.
+  # Bindings match GlazeWM 1:1 — config files sync-able between Linux + Windows.
 
-  programs.sway = {
+  services.desktopManager.plasma6.enable = true;
+
+  services.displayManager.sddm = {
     enable = true;
-    wrapperFeatures.gtk = true;
+    wayland.enable = true;
   };
 
-  # ReGreet — modern GTK4 graphical greeter, runs as Wayland session via cage.
-  # Theme/font/cursor handled by Stylix automatically.
-  programs.regreet.enable = true;
+  # KWin Polonium → i3/GlazeWM-style tiling layer on top of stock KWin.
+  # Installed via plasma-store-installable + autoloaded from sturq's KWin config.
+  environment.systemPackages = with pkgs; [
+    kdePackages.kdeconnect-kde
+    kdePackages.kcalc
+    kdePackages.filelight
+    kdePackages.kate
+    kdePackages.partitionmanager
+    # GTK apps inside Plasma should pick adw-gtk3 + sturq-palette colors:
+    adw-gtk3
+  ];
+
+  # Drop GNOME defaults that Plasma doesn't need but NixOS sometimes pulls in.
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    elisa            # music player
+    khelpcenter      # help docs
+    konsole          # we use Konsole built-in but exclude duplicate
+    oxygen           # legacy theme
+    plasma-browser-integration
+  ];
 
   services.pipewire = {
     enable = true;
@@ -18,34 +37,17 @@
   };
 
   security.polkit.enable = true;
-  # swaylock needs a PAM service registered to authenticate user passwords.
-  security.pam.services.swaylock = {};
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
-    wlr.enable = true;
+    extraPortals = with pkgs.kdePackages; [ xdg-desktop-portal-kde ];
+    config.common.default = [ "kde" ];
   };
 
   hardware.graphics.enable = true;
 
-  # Fonts: DejaVu (Stylix fallback, system-wide) + RobotoMono Nerd (waybar only).
   fonts.packages = with pkgs; [
     dejavu_fonts
     nerd-fonts.roboto-mono
-  ];
-
-  # System-wide Wayland helpers — all native Wayland.
-  environment.systemPackages = with pkgs; [
-    foot           # terminal — Wayland-native
-    fuzzel         # app launcher — modern Wayland-native (replaces wmenu/dmenu)
-    swaylock       # screen locker — Wayland-native
-    swayidle       # idle timeout — Wayland-native
-    grim           # screenshot — Wayland-native
-    slurp          # region picker — Wayland-native
-    wl-clipboard   # wl-copy / wl-paste — Wayland-native
-    mako           # notifications — Wayland-native
-    wob            # volume/brightness OSD — Wayland-native
-    brightnessctl  # XF86 brightness key helper (platform-agnostic, no Wayland alt needed)
   ];
 }
