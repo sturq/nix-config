@@ -35,20 +35,17 @@
           };
         }
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
-        # Systemtray only renders the overflow ^ (everything is "hidden" →
-        # popup behind the arrow). The 3 always-visible status icons
-        # (volume, wifi, battery) are added as standalone widgets AFTER the
-        # tray — that puts the arrow to the LEFT of them, Win11-style.
         {
           name = "org.kde.plasma.systemtray";
           config.General = {
-            shownItems = "";
-            hiddenItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement,org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
+            # Win11-style notification area: battery, audio, wifi pinned
+            # always visible (shownItems overrides Passive state).
+            # Everything else lives behind the overflow arrow — SNI apps
+            # like Steam land there too.
+            shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
+            hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
           };
         }
-        "org.kde.plasma.volume"
-        "org.kde.plasma.networkmanagement"
-        "org.kde.plasma.battery"
         {
           name = "org.kde.plasma.digitalclock";
           config.Appearance = {
