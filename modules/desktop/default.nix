@@ -8,22 +8,8 @@
   };
 
   # ReGreet — modern GTK4 graphical greeter, runs as Wayland session via cage.
-  # Standard sway-pro choice. Theme inherits adw-gtk3-dark via gtk settings.
-  programs.regreet = {
-    enable = true;
-    settings = {
-      GTK = {
-        application_prefer_dark_theme = true;
-        cursor_theme_name = "Adwaita";
-        font_name = "Inter 14";
-        icon_theme_name = "Adwaita";
-        theme_name = "adw-gtk3-dark";
-      };
-      background = {
-        color = "#111111";
-      };
-    };
-  };
+  # Theme/font/cursor handled by Stylix automatically.
+  programs.regreet.enable = true;
 
   services.pipewire = {
     enable = true;
