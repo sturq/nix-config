@@ -106,6 +106,32 @@
       "kded6"."display"                = "Meta+P";   # Win+P display switch
     };
 
+    # Battery applet inside the systemtray: show percentage next to icon.
+    # The applet's containment ID is dynamic, so we discover it at startup.
+    startup.startupScript."sturq-battery-percentage" = {
+      text = ''
+        cfg="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
+        [ -f "$cfg" ] || exit 0
+        # For every battery applet inside any systemtray containment, set
+        # showPercentage=true via kwriteconfig.
+        grep -B2 "plugin=org.kde.plasma.battery" "$cfg" \
+          | grep -oE "\[Containments\]\[[0-9]+\]\[Applets\]\[[0-9]+\]\[Applets\]\[[0-9]+\]" \
+          | while read header; do
+            c=$(echo "$header" | grep -oE "[0-9]+" | sed -n 1p)
+            a=$(echo "$header" | grep -oE "[0-9]+" | sed -n 2p)
+            b=$(echo "$header" | grep -oE "[0-9]+" | sed -n 3p)
+            kwriteconfig6 --file "$cfg" \
+              --group Containments --group "$c" \
+              --group Applets --group "$a" \
+              --group Applets --group "$b" \
+              --group Configuration --group General \
+              --key showPercentage true
+          done
+      '';
+      runAlways = true;
+      restartServices = [ "plasma-plasmashell" ];
+    };
+
     configFile = {
       # Fonts: Roboto Flex everywhere in Plasma, DejaVu Sans Mono for fixed.
       kdeglobals."General" = {
