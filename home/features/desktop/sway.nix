@@ -29,7 +29,7 @@ in
         "${modifier}+Return"       = "exec foot";                  # Win+Enter → terminal
         "${modifier}+r"            = "exec fuzzel";             # Win+R → run
         "${modifier}+e"            = "exec foot -e yazi";          # Win+E → files
-        "${modifier}+Ctrl+l"       = "exec swaylock -f";           # Win+Ctrl+L → lock (Win+L is system-reserved on Windows)
+        "${modifier}+l"            = "exec swaylock -f";           # Win+L → lock
         "${modifier}+q"            = "kill";                       # Win+Q → close window
         "Mod1+F4"                  = "kill";                       # Alt+F4 → close window
         "${modifier}+Shift+q"      = "exit";                       # Win+Shift+Q → logout sway

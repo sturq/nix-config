@@ -143,7 +143,7 @@ home/
 | Win + Enter | Foot terminal |
 | Win + R | fuzzel launcher |
 | Win + E | yazi file manager (in foot) |
-| Win + Ctrl + L | swaylock (Win+L alone is system-reserved on Windows) |
+| Win + L | swaylock (Windows handles Win+L natively; same UX on both) |
 | Win + Q · Alt + F4 | Close window |
 | Win + Shift + Q | Exit Sway |
 | Win + Tab · Alt + Tab | Focus next window |
