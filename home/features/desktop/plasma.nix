@@ -38,9 +38,11 @@
         {
           name = "org.kde.plasma.systemtray";
           config.General = {
-            # Win11-style notification area: only battery, audio, wifi pinned
-            # visible. Everything else lives behind the overflow arrow (and
-            # SNI apps like Steam land there too).
+            # Win11-style notification area: battery, audio, wifi pinned
+            # always visible (shownItems overrides Passive state, e.g.
+            # battery at 100% on AC). Everything else lives behind the
+            # overflow arrow — SNI apps like Steam land there too.
+            shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
             hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
           };
         }
