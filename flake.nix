@@ -151,7 +151,7 @@
         # ---- Installer variants (for nixos-anywhere + disko) ----
         hp250-install = mkInstaller "hp250" { device = "/dev/nvme0n1"; };
         vivobook-install = mkInstaller "vivobook" { device = "/dev/nvme0n1"; };
-        vm-install = mkInstaller "vm" { device = "/dev/vda"; };
+        vm-install = mkInstaller "vm" { device = "/dev/sda"; };  # Proxmox virtio-scsi defaults to sda
       };
 
       darwinConfigurations = {
