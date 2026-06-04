@@ -1,13 +1,11 @@
-{ pkgs, lib, ... }: {
+{ ... }: {
+  # HP 250 G9 — Intel laptop, Windows dual-boot, Steam + Sober for gaming.
   imports = [
-    # hardware-configuration.nix imported by flake (mkHost / mkInstaller)
-    ../../modules/base.nix
-    ../../modules/plasma6
-    ../../modules/plasma6/autologin.nix  # dev convenience — skip SDDM prompt
-    ../../modules/intel-laptop.nix
-    ../../modules/stylix.nix
-    ../../modules/tailscale.nix
+    ../../modules/profiles/laptop.nix
+    ../../modules/intel-laptop.nix       # i915 PSR/FBC, deep S3, thermald
   ];
+
+  networking.hostName = "hp250";
 
   # GRUB + os-prober — detects Windows dual-boot automatically.
   boot.loader.systemd-boot.enable = false;
@@ -17,34 +15,20 @@
     efiSupport = true;
     useOSProber = true;     # scan + add Windows etc. to GRUB menu
     configurationLimit = 10;
-    # Always boot the newest NixOS generation. We do *not* use `saved` here
-    # because the saved-choice can drift to an old gen during rollback testing.
+    # Always boot the newest gen — `saved` drifts during rollback testing.
     default = 0;
   };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
-  # Allow os-prober to read other-OS partitions for boot-menu generation.
-  nixpkgs.config.allowUnfree = true;
 
-  networking.hostName = "hp250";
-
-  # Dev machine — never auto-suspend, ignore lid close.
+  # Dev override of the laptop default (which suspends on lid-close):
+  # this machine stays on always.
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
-    HandleLidSwitchExternalPower = "ignore";
     IdleAction = "ignore";
   };
 
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = true;
-    settings.PermitRootLogin = "yes";
-  };
-
-  users.users.sturq.initialPassword = "install";
-  users.users.root.initialPassword = "install";
-
-  # Steam (with all the NixOS-magic: wrapping, fonts, native libs)
+  # Steam (with all the NixOS magic: wrapping, fonts, native libs).
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -53,9 +37,5 @@
 
   # Sober (Roblox via Vinegar) — declarative Flatpak install.
   services.flatpak.enable = true;
-  services.flatpak.packages = [
-    "org.vinegarhq.Sober"
-  ];
-
-  system.stateVersion = "25.11";
+  services.flatpak.packages = [ "org.vinegarhq.Sober" ];
 }

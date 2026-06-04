@@ -157,10 +157,16 @@
         hp250 = mkHost "hp250" {};
         wsl = mkWsl "wsl";
 
+        # ---- Generic profiles (deploy to any laptop/desktop on the fly) ----
+        laptop = mkHost "laptop" {};
+        desktop = mkHost "desktop" {};
+
         # ---- Installer variants (for nixos-anywhere + disko) ----
         hp250-install = mkInstaller "hp250" { device = "/dev/nvme0n1"; };
         vivobook-install = mkInstaller "vivobook" { device = "/dev/nvme0n1"; };
         vm-install = mkInstaller "vm" { device = "/dev/sda"; };  # Proxmox virtio-scsi defaults to sda
+        laptop-install = mkInstaller "laptop" { device = "/dev/nvme0n1"; };
+        desktop-install = mkInstaller "desktop" { device = "/dev/nvme0n1"; };
       };
 
       darwinConfigurations = {
