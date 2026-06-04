@@ -20,7 +20,7 @@
       floating = false;
       height = 44;
       widgets = [
-        "org.kde.plasma.panelspacer"
+        { name = "org.kde.plasma.panelspacer"; config.General.expanding = true; }
         "org.kde.plasma.kickoff"
         {
           name = "org.kde.plasma.icontasks";
@@ -30,7 +30,7 @@
             showOnlyCurrentDesktop = "true";
           };
         }
-        "org.kde.plasma.panelspacer"
+        { name = "org.kde.plasma.panelspacer"; config.General.expanding = true; }
         "org.kde.plasma.systemtray"
         "org.kde.plasma.digitalclock"
         "org.kde.plasma.showdesktop"
