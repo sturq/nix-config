@@ -1,25 +1,23 @@
-{ ... }: {
+{ inputs, ... }: {
   # HP 250 G9 — Intel laptop, Windows dual-boot, Steam + Sober for gaming.
   imports = [
-    ../../modules/profiles/laptop.nix
-    ../../modules/intel-laptop.nix       # i915 PSR/FBC, deep S3, thermald
+    ../../modules/base.nix
+    ../../modules/stylix.nix
+    ../../modules/desktop/plasma6
+    ../../modules/desktop/plasma6/autologin.nix
+    ../../modules/hardware/laptop.nix
+    inputs.nixos-hardware.nixosModules.common-cpu-intel
+    inputs.nixos-hardware.nixosModules.common-gpu-intel
+    inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+    ../../modules/features/tailscale.nix
+    ../../modules/features/dev-defaults.nix
+    ../../modules/features/dualboot-grub.nix
+    ../../modules/features/steam.nix
+    ../../modules/features/flatpak.nix
   ];
 
   networking.hostName = "hp250";
-
-  # GRUB + os-prober — detects Windows dual-boot automatically.
-  boot.loader.systemd-boot.enable = false;
-  boot.loader.grub = {
-    enable = true;
-    device = "nodev";       # EFI, GRUB doesn't go on a partition
-    efiSupport = true;
-    useOSProber = true;     # scan + add Windows etc. to GRUB menu
-    configurationLimit = 10;
-    # Always boot the newest gen — `saved` drifts during rollback testing.
-    default = 0;
-  };
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot";
+  system.stateVersion = "25.11";
 
   # Dev override of the laptop default (which suspends on lid-close):
   # this machine stays on always.
@@ -28,14 +26,5 @@
     IdleAction = "ignore";
   };
 
-  # Steam (with all the NixOS magic: wrapping, fonts, native libs).
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = false;
-  };
-
-  # Sober (Roblox via Vinegar) — declarative Flatpak install.
-  services.flatpak.enable = true;
   services.flatpak.packages = [ "org.vinegarhq.Sober" ];
 }

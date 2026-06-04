@@ -28,6 +28,10 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    # Per-device hardware tuning (common-cpu-intel, common-gpu-amd, model
+    # modules for specific Lenovo/HP/Asus/Framework laptops, etc.).
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+
     # Cross-platform: macOS, Android, WSL
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin";
@@ -45,7 +49,8 @@
   };
 
   outputs = { self, nixpkgs, home-manager, nix-flatpak, disko, stylix,
-              plasma-manager, nix-darwin, nix-on-droid, nixos-wsl, ... }@inputs:
+              plasma-manager, nixos-hardware, nix-darwin, nix-on-droid,
+              nixos-wsl, ... }@inputs:
     let
       # ---- Full NixOS host (Linux, KDE Plasma 6 Wayland desktop) ----
       # hwConfig: defaults to ./hosts/${hostName}/hardware-configuration.nix.
