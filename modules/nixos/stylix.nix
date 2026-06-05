@@ -11,22 +11,24 @@
     polarity = "dark";
 
     base16Scheme = {
-      base00 = "060709";  # mantle    — default bg (OLED-friendly)
-      base01 = "2A3042";  # base      — lighter bg
-      base02 = "384058";  # surface0  — selection
-      base03 = "46506E";  # surface1  — comments
-      base04 = "9CA7CE";  # overlay2  — dim fg
-      base05 = "FFFFFF";  # text      — default fg
-      base06 = "D8DCE9";  # subtext1
-      base07 = "C2CAE5";  # subtext0
-      base08 = "EEB9BD";  # red
-      base09 = "EECFB9";  # peach
-      base0A = "EEE5B9";  # yellow
-      base0B = "B9EEB9";  # green
-      base0C = "B9EEE5";  # teal
-      base0D = "B9C5EE";  # lavender / primary
-      base0E = "DCB9EE";  # mauve
-      base0F = "EEC0B9";  # maroon
+      # Surfaces — OLED-friendly dark ramp, fg = Termux bright-white.
+      base00 = "000000";  # mantle    — pure black (matches Termux bg)
+      base01 = "1c1c1c";  # base      — lighter bg / status line
+      base02 = "2A3042";  # surface0  — selection / navy tint
+      base03 = "7f7f7f";  # surface1  — comments (Termux bright-black)
+      base04 = "b2b2b2";  # overlay2  — dim foreground
+      base05 = "e5e5e5";  # text      — default fg (Termux white)
+      base06 = "f5f5f5";  # subtext1
+      base07 = "ffffff";  # subtext0  — brightest fg
+      # Accents — Termux default ANSI.
+      base08 = "cd0000";  # red       — Termux red
+      base09 = "cd5c00";  # orange    — interpolated red↔yellow
+      base0A = "cdcd00";  # yellow    — Termux yellow
+      base0B = "00cd00";  # green     — Termux green
+      base0C = "00cdcd";  # cyan      — Termux cyan
+      base0D = "0000ee";  # blue      — Termux blue (primary accent)
+      base0E = "cd00cd";  # magenta   — Termux magenta
+      base0F = "800000";  # maroon    — darker red
     };
 
     # Wallpaper — solid sturq-palette base (#2A3042, midnight navy).

@@ -155,7 +155,7 @@
     configFile = {
       # Fonts: Roboto Flex everywhere in Plasma, DejaVu Sans Mono for fixed.
       kdeglobals."General" = {
-        AccentColor = "185,197,238";
+        AccentColor = "0,0,238";   # #0000EE — sturq-palette primary (Termux blue)
         font = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         menuFont = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         toolBarFont = "Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
