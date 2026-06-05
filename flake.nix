@@ -88,7 +88,7 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/${hostName}
-          ./modules/disko.nix
+          ./modules/nixos/disko.nix
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
           nix-flatpak.nixosModules.nix-flatpak

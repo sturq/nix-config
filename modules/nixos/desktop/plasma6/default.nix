@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   # KDE Plasma 6 (Wayland) + SDDM. Per-user Plasma configuration (theme,
   # panel, hotkeys, kdeglobals) is owned by plasma-manager — see
-  # home/features/plasma6/config.nix.
+  # modules/home/plasma6/config.nix.
 
   services.desktopManager.plasma6.enable = true;
 

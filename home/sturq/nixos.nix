@@ -1,8 +1,8 @@
 { ... }: {
   # Full Linux desktop — CLI + KDE Plasma 6 (Wayland).
   imports = [
-    ../features/cli
-    ../features/plasma6
+    ../../modules/home/cli
+    ../../modules/home/plasma6
   ];
 
   home.username = "sturq";

@@ -1,16 +1,16 @@
 { inputs, ... }: {
   # ASUS Vivobook S 14 M5406WA — AMD Strix Point laptop.
   imports = [
-    ../../modules/base.nix
-    ../../modules/stylix.nix
-    ../../modules/desktop/plasma6
-    ../../modules/desktop/plasma6/autologin.nix
-    ../../modules/hardware/laptop.nix
+    ../../modules/nixos/base.nix
+    ../../modules/nixos/stylix.nix
+    ../../modules/nixos/desktop/plasma6
+    ../../modules/nixos/desktop/plasma6/autologin.nix
+    ../../modules/nixos/hardware/laptop.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-    ../../modules/features/tailscale.nix
-    ../../modules/features/dev-defaults.nix
+    ../../modules/nixos/features/tailscale.nix
+    ../../modules/nixos/features/dev-defaults.nix
   ];
 
   networking.hostName = "vivobook";

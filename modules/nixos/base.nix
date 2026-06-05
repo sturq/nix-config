@@ -24,6 +24,8 @@
   # Nix settings: flakes + nix-command everywhere
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
+  # ventoy-full is flagged insecure (bundles old WebKit upstream).
+  nixpkgs.config.permittedInsecurePackages = [ "ventoy-1.1.12" ];
 
   # dconf needed for any host with home-manager dconf.settings
   programs.dconf.enable = true;

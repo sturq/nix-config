@@ -104,37 +104,29 @@ hosts/                         Per-machine config. Imports modules directly,
   macbook/                     nix-darwin.
   phone/                       nix-on-droid.
 
-modules/                       Reusable system modules.
-  base.nix                     Boot loader, network, locale, user, nix.
-  stylix.nix                   sturq-palette via Stylix (wallpaper + cursor +
+modules/                       Reusable modules. Single home for everything.
+  nixos/                       NixOS-system layer.
+    base.nix                   Boot loader, network, locale, user, nix.
+    stylix.nix                 sturq-palette via Stylix (wallpaper + cursor +
                                fonts + downstream Firefox/Konsole theming).
-  disko.nix                    Generic BTRFS layout for mkInstaller.
-  desktop/
-    plasma6/
-      default.nix              Plasma 6 + SDDM + pipewire + xdg-portal-kde.
-      autologin.nix            Optional: SDDM autologin straight into Plasma.
-  hardware/
-    laptop.nix                 Opinionated laptop tweaks (TLP, lid, brightness).
-    desktop.nix                Opinionated desktop tweaks (perf governor, no idle).
-  features/
-    tailscale.nix              Tailscale service.
-    flatpak.nix                Generic Flatpak support via nix-flatpak.
-    steam.nix                  Steam + remote-play firewall opening.
-    dualboot-grub.nix          Swap systemd-boot for GRUB + os-prober.
-    dev-defaults.nix           SSH passwords + initial sturq/root passwords.
+    disko.nix                  Generic BTRFS layout for mkInstaller.
+    desktop/plasma6/           Plasma 6 + SDDM + pipewire + portal-kde,
+                               with an optional autologin.nix.
+    hardware/                  laptop.nix (TLP, lid, brightness)
+                               desktop.nix (perf governor, no idle).
+    features/                  tailscale / flatpak / steam / dualboot-grub /
+                               dev-defaults.
+  home/                        home-manager layer.
+    cli/                       shell, git, ssh, direnv, tools, nix, claude-code.
+    plasma6/                   default.nix (GUI apps) + config.nix
+                               (plasma-manager: panel, hotkeys, kdeglobals,
+                                lockscreen, powerdevil).
 
-home/                          home-manager configs.
-  sturq/                       Per-platform entry points.
-    nixos.nix                  Linux: imports cli + plasma6 features.
-    cli.nix                    CLI-only: just cli features (WSL/servers).
+home/                          home-manager user entry points.
+  sturq/
+    nixos.nix                  Linux: imports cli + plasma6.
+    cli.nix                    CLI-only (WSL/servers).
     darwin.nix                 macOS: cli + Mac bits.
-  features/
-    cli/                       Shared CLI — shell, git, ssh, direnv, tools,
-                               nix-cli, claude-code. Used on every platform.
-    plasma6/
-      default.nix              Imports config.nix + adds GUI apps.
-      config.nix               plasma-manager: panel layout, hotkeys, kdeglobals,
-                               lockscreen, powerdevil.
 ```
 
 ---
