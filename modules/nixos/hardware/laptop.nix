@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   # Opinionated laptop bits on top of whatever common-* / device modules
   # nixos-hardware provides. Power-profiles-daemon out, TLP in, brightness
   # keys, lid → suspend on battery / ignore on AC.
@@ -11,8 +11,8 @@
   environment.systemPackages = [ pkgs.brightnessctl ];
 
   services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitch = lib.mkDefault "suspend";
+    HandleLidSwitchExternalPower = lib.mkDefault "ignore";
   };
 
   # AC vs battery TLP defaults that work well on every laptop we've tried.
