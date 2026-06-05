@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   # Declarative KDE Plasma 6 — panels, shortcuts, kdeglobals, power, lock.
   programs.plasma = {
     enable = true;
@@ -35,24 +35,35 @@
           };
         }
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
-        # Tray-1 (left): overflow-only — loads everything except the 3 status
-        # icons via extraItems and hides them all, so it renders just the ^.
+        # Single systemtray. battery/volume/network pinned visible; every
+        # other plasmoid + SNI app (Steam, Discord, etc.) goes into the
+        # overflow popup behind the ^. (Two trays caused SNI duplication.)
         {
           name = "org.kde.plasma.systemtray";
           config.General = {
-            extraItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
-            shownItems = "";
-            hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
-          };
-        }
-        # Tray-2 (right): only the 3 status icons via extraItems. Empty
-        # hiddenItems means no overflow arrow renders here.
-        {
-          name = "org.kde.plasma.systemtray";
-          config.General = {
-            extraItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
             shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
-            hiddenItems = "";
+            hiddenItems = lib.concatStringsSep "," [
+              # Plasmoid extras we don't want pinned
+              "org.kde.plasma.brightness"
+              "org.kde.plasma.bluetooth"
+              "org.kde.plasma.clipboard"
+              "org.kde.plasma.notifications"
+              "org.kde.plasma.keyboardlayout"
+              "org.kde.plasma.keyboardindicator"
+              "org.kde.plasma.devicenotifier"
+              "org.kde.plasma.weather"
+              "org.kde.kscreen"
+              "org.kde.kdeconnect"
+              "org.kde.plasma.cameraindicator"
+              "org.kde.plasma.manage-inputmethod"
+              "org.kde.plasma.mediacontroller"
+              # Status-Notifier-Item app IDs that should auto-collapse into
+              # the overflow (Win11-style notification area).
+              "Steam"
+              "discord"
+              "spotify"
+              "vinegarhq.Sober"
+            ];
           };
         }
         {
