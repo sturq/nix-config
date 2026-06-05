@@ -58,11 +58,13 @@
               "org.kde.plasma.manage-inputmethod"
               "org.kde.plasma.mediacontroller"
               # Status-Notifier-Item app IDs that should auto-collapse into
-              # the overflow (Win11-style notification area).
-              "Steam"
+              # the overflow (Win11-style notification area). SNI matches
+              # the last path segment of the registered DBus item, which
+              # is the application's own service name (usually lowercase).
+              "steam"
               "discord"
               "spotify"
-              "vinegarhq.Sober"
+              "sober"
             ];
           };
         }
