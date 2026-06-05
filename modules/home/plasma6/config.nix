@@ -35,37 +35,29 @@
           };
         }
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
-        # Single systemtray. battery/volume/network pinned visible; every
-        # other plasmoid + SNI app (Steam, Discord, etc.) goes into the
-        # overflow popup behind the ^. (Two trays caused SNI duplication.)
+        # Two systemtrays — Win11-style: overflow ^ on the LEFT, then the
+        # 3 status icons. SNI duplication is prevented by giving each tray
+        # an explicit extraItems list, and putting SNI app IDs in tray-1's
+        # hiddenItems + tray-2's disabledStatusNotifiers.
+        # Tray-1: overflow-only. Plasmoid extras + SNI apps land here, all
+        # hidden so only the ^ renders.
         {
           name = "org.kde.plasma.systemtray";
           config.General = {
+            extraItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
+            shownItems = "";
+            hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller,steam,discord,spotify,sober";
+          };
+        }
+        # Tray-2: only the 3 status icons. SNI apps explicitly disabled here
+        # so they don't double up.
+        {
+          name = "org.kde.plasma.systemtray";
+          config.General = {
+            extraItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
             shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
-            hiddenItems = lib.concatStringsSep "," [
-              # Plasmoid extras we don't want pinned
-              "org.kde.plasma.brightness"
-              "org.kde.plasma.bluetooth"
-              "org.kde.plasma.clipboard"
-              "org.kde.plasma.notifications"
-              "org.kde.plasma.keyboardlayout"
-              "org.kde.plasma.keyboardindicator"
-              "org.kde.plasma.devicenotifier"
-              "org.kde.plasma.weather"
-              "org.kde.kscreen"
-              "org.kde.kdeconnect"
-              "org.kde.plasma.cameraindicator"
-              "org.kde.plasma.manage-inputmethod"
-              "org.kde.plasma.mediacontroller"
-              # Status-Notifier-Item app IDs that should auto-collapse into
-              # the overflow (Win11-style notification area). SNI matches
-              # the last path segment of the registered DBus item, which
-              # is the application's own service name (usually lowercase).
-              "steam"
-              "discord"
-              "spotify"
-              "sober"
-            ];
+            hiddenItems = "";
+            disabledStatusNotifiers = "steam,discord,spotify,sober";
           };
         }
         {
