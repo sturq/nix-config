@@ -6,7 +6,9 @@
   services.power-profiles-daemon.enable = false;
   services.tlp.enable = true;
 
-  programs.light.enable = true;
+  # Brightness keys: brightnessctl (light was removed from nixpkgs).
+  hardware.acpilight.enable = true;
+  environment.systemPackages = [ pkgs.brightnessctl ];
 
   services.logind.settings.Login = {
     HandleLidSwitch = "suspend";
