@@ -40,27 +40,32 @@
         import org.kde.plasma.plasma5support as P5Support
 
         PlasmoidItem {
-            // The panel renders compactRepresentation (and falls back
-            // to Plasmoid.icon if none is given — that's the yellow
-            // moon we were seeing). Provide an empty MouseArea instead.
             toolTipMainText: ""
             toolTipSubText: ""
 
-            P5Support.DataSource {
-                id: shell
-                engine: "executable"
-                connectedSources: []
-                onNewData: (sourceName) => disconnectSource(sourceName)
-                function exec(cmd) { connectSource(cmd); }
-            }
-
+            // DataSource has to live INSIDE compactRepresentation —
+            // compactRepresentation is its own Component scope and can't
+            // reach ids declared on the PlasmoidItem root, so a shell
+            // declared up here would resolve to undefined when the
+            // MouseArea handler fires (silent JS error, click looks dead).
             compactRepresentation: MouseArea {
-                Layout.minimumWidth: 6
-                Layout.maximumWidth: 6
+                Layout.minimumWidth: 12
+                Layout.maximumWidth: 12
                 Layout.fillHeight: true
                 acceptedButtons: Qt.LeftButton
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                P5Support.DataSource {
+                    id: shell
+                    engine: "executable"
+                    connectedSources: []
+                    onNewData: (sourceName) => disconnectSource(sourceName)
+                    function exec(cmd) { connectSource(cmd); }
+                }
+
                 onClicked: shell.exec(
-                    "qdbus6 org.kde.kglobalaccel /component/kwin invokeShortcut 'Show Desktop'"
+                    "qdbus6 org.kde.KWin /KWin showDesktop true"
                 )
             }
         }
