@@ -6,13 +6,10 @@ let
   # OLED pure black regardless of palette, same rule as the lockscreen.
   # Accent + text still follow the palette so the boot screen reads as
   # "this user's palette on a black canvas".
-  bg      = "#000000";
-  fg      = "#${palette.base16Scheme.base05}";
-  dim     = "#${palette.base16Scheme.base03}";
-  accent  =
-    if palette.palette != null
-    then palette.palette.core.primary
-    else "#${palette.base16Scheme.base0D}";
+  bg     = palette.roles.lockscreen;
+  accent = palette.roles.accent;
+  fg     = "#${palette.base16Scheme.base05}";
+  dim    = "#${palette.base16Scheme.base03}";
 
   # GRUB renders pre-X, so the theme is a few PNGs + a layout file. Stylix
   # ships its own dark theme but doesn't expose the selection colour, so we

@@ -1,8 +1,17 @@
-{ pkgs, lib, ... }: {
-  imports = [ ./config.nix ./konsole.nix ];
+{ pkgs, ... }: {
+  # KDE Plasma 6 (user-level). Theme + panel + shortcuts + session split
+  # across siblings so each file is a single concern. Konsole keeps its
+  # own file because the colourscheme generation has no overlap with the
+  # plasma-manager surface.
+  imports = [
+    ./theme.nix
+    ./panel.nix
+    ./shortcuts.nix
+    ./session.nix
+    ./konsole.nix
+  ];
 
-  # User-level Plasma 6 config: just apps. Everything else (theme, panel,
-  # shortcuts, kdeglobals, lockscreen, power) lives in ./config.nix.
+  programs.plasma.enable = true;
 
   home.packages = with pkgs; [
     firefox

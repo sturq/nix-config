@@ -8,12 +8,15 @@
 #   format         "json" or "base16"
 #   hexToRgb       "#RRGGBB" -> "r,g,b"
 #   stripHash      "#rrggbb" -> "rrggbb"
+#   roles          { accent; wallpaper; lockscreen; }
+#                  Named UI surfaces, palette-aware with base16 fallbacks
+#                  so any base16 repo works without further wiring.
 #
 # Two layouts are supported. Repos that ship a structured palette under
 # formats/palette.json get full token resolution; anything with a flat
 # base16.yaml at the root works too. Drop in whichever palette repo you
 # like, both shapes resolve to the same base16Scheme so every consumer
-# (Stylix, Konsole, etc.) just keeps working.
+# (Stylix, Konsole, GRUB, plasma-manager) just keeps working.
 
 let
   inherit (builtins)
@@ -86,7 +89,28 @@ let
     else throw "lib/palette.nix: ${src} has no formats/palette.json or base16.yaml";
 
   base16Scheme = if format == "json" then jsonBase16 else yamlBase16;
+
+  # Prefer a structured palette token if the repo provides one, otherwise
+  # fall back to the equivalent base16 slot — keeps semantic role names
+  # working against any palette repo.
+  pickToken = jsonValue: slot:
+    if json != null && jsonValue != null
+    then jsonValue
+    else "#${base16Scheme.${slot}}";
+
+  roles = {
+    accent = pickToken
+      (if json != null then json.core.primary else null)
+      "base0D";
+
+    wallpaper = pickToken
+      (if json != null then json.surfaces.surface0 else null)
+      "base02";
+
+    # Lockscreen + GRUB stay OLED-black regardless of palette.
+    lockscreen = "#000000";
+  };
 in {
-  inherit base16Scheme hexToRgb stripHash format;
+  inherit base16Scheme hexToRgb stripHash format roles;
   palette = json;
 }

@@ -22,6 +22,7 @@
 
     # Dev workflow
     just              # task runner
+    claude-code
 
     # Crypto
     age

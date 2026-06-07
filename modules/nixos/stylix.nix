@@ -2,23 +2,6 @@
 
 let
   palette = import ../../lib/palette.nix { src = inputs.sturq-palette; };
-
-  # A role names a UI surface; the value names which palette token paints it.
-  # Roles fall back to base16 slots when the source palette doesn't ship the
-  # extended JSON tree, so any palette repo works without further wiring.
-  pickToken = jsonPath: slot:
-    if palette.palette != null && jsonPath != null
-    then jsonPath
-    else "#${palette.base16Scheme.${slot}}";
-
-  roles = {
-    wallpaper = pickToken
-      (if palette.palette != null then palette.palette.surfaces.surface0 else null)
-      "base02";
-
-    # Lockscreen stays pure black regardless of palette.
-    lockscreen = "#000000";
-  };
 in {
   stylix = {
     enable = true;
@@ -27,7 +10,7 @@ in {
 
     image = pkgs.runCommand "wallpaper.png" {
       buildInputs = [ pkgs.imagemagick ];
-    } "magick -size 1920x1080 xc:'${roles.wallpaper}' $out";
+    } "magick -size 1920x1080 xc:'${palette.roles.wallpaper}' $out";
 
     cursor = {
       package = pkgs.bibata-cursors;

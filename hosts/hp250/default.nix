@@ -4,7 +4,6 @@
     ../../modules/nixos/base.nix
     ../../modules/nixos/stylix.nix
     ../../modules/nixos/desktop/plasma6
-    ../../modules/nixos/desktop/plasma6/autologin.nix
     ../../modules/nixos/hardware/laptop.nix
     inputs.nixos-hardware.nixosModules.common-cpu-intel
     inputs.nixos-hardware.nixosModules.common-gpu-intel
@@ -24,6 +23,12 @@
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
     IdleAction = "ignore";
+  };
+
+  # Skip the SDDM greeter on this dev box.
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "sturq";
   };
 
   services.flatpak.packages = [ "org.vinegarhq.Sober" ];
