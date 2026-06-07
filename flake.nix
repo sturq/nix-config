@@ -32,6 +32,11 @@
     # modules for specific Lenovo/HP/Asus/Framework laptops, etc.).
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    # Single source of truth for the sturq OLED palette. Exposes a Nix
+    # `palette` tree and a Stylix-ready `base16Scheme` so modules/nixos/
+    # stylix.nix doesn't have to re-declare hexes.
+    sturq-palette.url = "github:sturq/sturq-palette";
+
     # Cross-platform: macOS, Android, WSL
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin";

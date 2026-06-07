@@ -1,4 +1,16 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, inputs, ... }: let
+  p = inputs.sturq-palette.palette;
+  # "#RRGGBB" → "R,G,B" decimal triplet (KDE configs want comma-separated ints).
+  hexToRgb = hex: let
+    s = builtins.substring 1 6 hex;
+    h2d = c: let
+      m = { "0"=0; "1"=1; "2"=2; "3"=3; "4"=4; "5"=5; "6"=6; "7"=7; "8"=8; "9"=9;
+            "a"=10; "b"=11; "c"=12; "d"=13; "e"=14; "f"=15;
+            "A"=10; "B"=11; "C"=12; "D"=13; "E"=14; "F"=15; };
+    in m.${c};
+    byte = i: 16 * (h2d (builtins.substring i 1 s)) + (h2d (builtins.substring (i+1) 1 s));
+  in "${toString (byte 0)},${toString (byte 2)},${toString (byte 4)}";
+in {
   # Declarative KDE Plasma 6 — panels, shortcuts, kdeglobals, power, lock.
   programs.plasma = {
     enable = true;
@@ -149,7 +161,8 @@
     configFile = {
       # Fonts: Roboto Flex everywhere in Plasma, DejaVu Sans Mono for fixed.
       kdeglobals."General" = {
-        AccentColor = "0,0,238";   # #0000EE — sturq-palette primary (Termux blue)
+        # sturq-palette primary (lavender) drives the Plasma accent.
+        AccentColor = hexToRgb p.core.primary;
         font = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         menuFont = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         toolBarFont = "Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
@@ -190,7 +203,8 @@
         Timeout = 10;
       };
       kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";
-      kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = "6,7,9";
+      # OLED-mantle lockscreen — pure black from sturq-palette.surfaces.crust.
+      kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = hexToRgb p.surfaces.crust;
 
       # Lockscreen clock respects the system locale's time format. Force a
       # 24h locale so the SDDM/kscreenlocker clock drops AM/PM. de_AT uses
