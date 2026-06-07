@@ -24,5 +24,12 @@
     IdleAction = "ignore";
   };
 
+  # intel_oc_wdt (Intel Over-Clocking Watchdog) on Alder Lake doesn't
+  # release at shutdown — kernel logs "watchdog did not stop!" and the
+  # reboot syscall hangs until the user holds the power button. Drop
+  # the module entirely; we don't need a hardware watchdog on a desktop
+  # workstation.
+  boot.blacklistedKernelModules = [ "intel_oc_wdt" ];
+
   services.flatpak.packages = [ "org.vinegarhq.Sober" ];
 }
