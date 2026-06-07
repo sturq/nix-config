@@ -67,6 +67,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
+          ./hosts/common/global
           ./hosts/${hostName}
           hwConfig
           nix-flatpak.nixosModules.nix-flatpak
@@ -95,8 +96,9 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
+          ./hosts/common/global
           ./hosts/${hostName}
-          ./modules/nixos/disko.nix
+          ./hosts/common/optional/disko.nix
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
           nix-flatpak.nixosModules.nix-flatpak

@@ -1,4 +1,11 @@
 { config, pkgs, lib, ... }: {
+  # Defaults every NixOS host in this flake gets. Auto-imported by every
+  # mkHost call in flake.nix — no host has to ask for the boot loader,
+  # the sturq user, the Vienna time zone or the en_GB locale.
+  imports = [
+    ./stylix.nix
+  ];
+
   # Boot loader: every host gets systemd-boot unless overridden.
   boot.loader.systemd-boot.enable = lib.mkDefault true;
   boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
