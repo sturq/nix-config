@@ -7,8 +7,15 @@
   # paints each KDE surface. Change a line to repaint that surface only.
   roles = {
     accent     = p.core.primary;       # lavender → Plasma accent + selection
+    wallpaper  = p.surfaces.surface0;  # midnight navy desktop wallpaper
     lockscreen = p.surfaces.crust;     # OLED black lock background
   };
+
+  # Solid wallpaper built from the role colour. Stylix's KDE target is
+  # off (it forces a light scheme), so plasma-manager owns the wallpaper.
+  wallpaperImage = pkgs.runCommand "wallpaper.png" {
+    buildInputs = [ pkgs.imagemagick ];
+  } "magick -size 1920x1080 xc:'${roles.wallpaper}' $out";
 in {
   # Declarative KDE Plasma 6 — panels, shortcuts, kdeglobals, power, lock.
   programs.plasma = {
@@ -18,6 +25,7 @@ in {
       colorScheme = "BreezeDark";
       lookAndFeel = "org.kde.breezedark.desktop";
       iconTheme = "Tela-circle-dark";
+      wallpaper = "${wallpaperImage}";
       cursor = {
         theme = "Bibata-Modern-Classic";
         size = 24;
