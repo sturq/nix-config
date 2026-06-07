@@ -40,6 +40,15 @@
       flake = false;
     };
 
+    # Declarative Steam per-app config: Proton/compat tool + launch
+    # options + env vars per appid. Doesn't touch UI/Downloads/Privacy
+    # (Steam owns those mutably) — see home/sturq/optional/steam.nix
+    # for the actual app entries.
+    steam-config-nix = {
+      url = "github:different-name/steam-config-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Cross-platform: macOS, Android, WSL
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin";
@@ -74,6 +83,7 @@
           ./hosts/${hostName}
           nix-flatpak.nixosModules.nix-flatpak
           stylix.nixosModules.stylix
+          inputs.steam-config-nix.nixosModules.steam-config-nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {

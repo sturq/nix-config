@@ -75,6 +75,7 @@
       EOF
     '';
 
-  # No GUI apps — bare desktop. Add what you actually use back later.
-  home.packages = [ ];
+  home.packages = with pkgs; [
+    keepassxc
+  ];
 }

@@ -4,6 +4,7 @@
   # when you decide you actually want them.
   imports = [
     ./tools.nix
+    ./git.nix
   ];
 
   home.stateVersion = "25.11";
