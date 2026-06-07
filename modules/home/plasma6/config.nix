@@ -9,9 +9,10 @@
     else "#${sp.base16Scheme.${slot}}";
 
   roles = {
-    accent     = pick (if sp.palette != null then sp.palette.core.primary       else null) "base0D";
-    wallpaper  = pick (if sp.palette != null then sp.palette.surfaces.surface0  else null) "base02";
-    lockscreen = pick (if sp.palette != null then sp.palette.surfaces.crust     else null) "base00";
+    accent     = pick (if sp.palette != null then sp.palette.core.primary      else null) "base0D";
+    wallpaper  = pick (if sp.palette != null then sp.palette.surfaces.surface0 else null) "base02";
+    # Lockscreen is hard-pinned to OLED black — palette-independent on purpose.
+    lockscreen = "#000000";
   };
 
   # Solid wallpaper built from the role colour. Stylix's KDE target is

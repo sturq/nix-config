@@ -15,8 +15,8 @@
     # selection-tier surface — feels right for a desktop bg in every
     # base16 scheme (navy in sturq, surface0 in catppuccin, gray in gruvbox).
     wallpaper  = pick (if sp.palette != null then sp.palette.surfaces.surface0 else null) "base02";
-    # primary background — always the darkest slot in dark schemes.
-    lockscreen = pick (if sp.palette != null then sp.palette.surfaces.crust    else null) "base00";
+    # Lockscreen is hard-pinned to OLED black — palette-independent on purpose.
+    lockscreen = "#000000";
   };
 in {
   # Stylix → system-wide theming. One scheme + one wallpaper that all
