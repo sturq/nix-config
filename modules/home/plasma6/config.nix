@@ -230,8 +230,13 @@ in {
       kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";
       kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = rgb roles.lockscreen;
 
-      # System LANG=en_GB.UTF-8 already gives the greeter 24h via QLocale,
-      # so plasma-localerc just inherits the default.
+      # Plasma exports LANG from this file into the session env at login;
+      # a stale en_US entry left over from System Settings was making the
+      # lockscreen greeter render 12h despite the system locale being en_GB.
+      plasma-localerc.Formats = {
+        LANG = "en_GB.UTF-8";
+        useDetailed = true;
+      };
     };
   };
 }
