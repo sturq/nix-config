@@ -2,6 +2,13 @@
   sp = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
   p = sp.palette;
   hexToRgb = sp.hexToRgb;
+
+  # Plasma's surface roles — kept here so it's obvious which palette token
+  # paints each KDE surface. Change a line to repaint that surface only.
+  roles = {
+    accent     = p.core.primary;       # lavender → Plasma accent + selection
+    lockscreen = p.surfaces.crust;     # OLED black lock background
+  };
 in {
   # Declarative KDE Plasma 6 — panels, shortcuts, kdeglobals, power, lock.
   programs.plasma = {
@@ -153,8 +160,7 @@ in {
     configFile = {
       # Fonts: Roboto Flex everywhere in Plasma, DejaVu Sans Mono for fixed.
       kdeglobals."General" = {
-        # sturq-palette primary (lavender) drives the Plasma accent.
-        AccentColor = hexToRgb p.core.primary;
+        AccentColor = hexToRgb roles.accent;
         font = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         menuFont = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         toolBarFont = "Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
@@ -195,8 +201,7 @@ in {
         Timeout = 10;
       };
       kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";
-      # OLED-mantle lockscreen — pure black from sturq-palette.surfaces.crust.
-      kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = hexToRgb p.surfaces.crust;
+      kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = hexToRgb roles.lockscreen;
 
       # Lockscreen clock respects the system locale's time format. Force a
       # 24h locale so the SDDM/kscreenlocker clock drops AM/PM. de_AT uses

@@ -1,29 +1,35 @@
 { pkgs, inputs, ... }: let
   sp = import ../../lib/palette.nix { src = inputs.sturq-palette; };
   palette = sp.palette;
+
+  # ---- Role assignment ----------------------------------------------------
+  # sturq-palette is a generic palette repo — it ships colour tokens, not
+  # UI roles. nix-config decides which token paints which surface. Edit
+  # here if you want the wallpaper, lockscreen, etc. to use a different
+  # token. The palette repo itself stays project-agnostic.
+  roles = {
+    wallpaper  = palette.surfaces.surface0;  # midnight navy desktop bg
+    lockscreen = palette.surfaces.crust;     # pure OLED black
+    terminal   = palette.surfaces.crust;     # Termux-style black bg
+  };
 in {
-  # Stylix → system-wide theming. One color scheme + one wallpaper that
-  # downstream Stylix targets pick up. Plasma + GTK targets are off (handled
-  # by plasma-manager), so Stylix here owns wallpaper, cursor, fonts,
-  # the base16 palette source, and downstream targets (Firefox, Konsole, …).
-  # Scheme: sturq-palette OLED (https://github.com/sturq/sturq-palette).
-  # Everything comes from the palette flake — edit the repo, rebuild here.
+  # Stylix → system-wide theming. One scheme + one wallpaper that all
+  # Stylix targets pick up. Plasma + GTK targets are off (handled by
+  # plasma-manager), so Stylix here owns wallpaper, cursor, fonts, the
+  # base16 source and downstream targets (Firefox, Konsole, …).
 
   stylix = {
     enable = true;
     polarity = "dark";
 
-    # base16Scheme is pre-mapped in the palette flake (Termux ANSI accents,
-    # OLED surfaces, white-ramp text). Pull it whole — no hexes in this file.
+    # base16Scheme comes from lib/palette.nix (Termux ANSI accents,
+    # OLED surfaces, white-ramp text). No hexes in this file.
     base16Scheme = sp.base16Scheme;
 
-    # Wallpaper — solid sturq-palette base (midnight navy). Matches the
-    # Android home-screen wallpaper. Primary lavender shows up as the
-    # Plasma accent instead.
     image = pkgs.runCommand "wallpaper.png" {
       buildInputs = [ pkgs.imagemagick ];
     } ''
-      magick -size 1920x1080 xc:'${palette.surfaces.surface0}' $out
+      magick -size 1920x1080 xc:'${roles.wallpaper}' $out
     '';
 
     cursor = {

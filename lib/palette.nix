@@ -14,7 +14,7 @@
 
   base16Scheme = builtins.mapAttrs (_: stripHash) {
     base00 = palette.surfaces.crust;
-    base01 = palette.surfaces.base;
+    base01 = palette.surfaces.dim;
     base02 = palette.surfaces.surface0;
     base03 = "#7F7F7F";
     base04 = palette.text.overlay2;
