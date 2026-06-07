@@ -46,10 +46,6 @@ in {
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
         "org.kde.plasma.kickoff"
         {
-          name = "org.kde.plasma.pager";
-          config.General.showWindowIcons = "true";
-        }
-        {
           name = "org.kde.plasma.icontasks";
           config.General = {
             launchers = "";
