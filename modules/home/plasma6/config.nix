@@ -121,7 +121,11 @@ in {
       "kwin"."Window Minimize"       = "Meta+Down";
       "kwin"."Window Quick Tile Left"  = "Meta+Left";
       "kwin"."Window Quick Tile Right" = "Meta+Right";
-      "kwin"."Overview"              = "Meta+Tab";   # Win11 Task View
+      # Win11 Task View = a grid of every virtual desktop. KWin's "Grid View"
+      # is the match; KWin's "Overview" is more like a GNOME-style current-
+      # desktop picker, so it's off Meta+Tab.
+      "kwin"."Grid View"             = "Meta+Tab";
+      "kwin"."Overview"              = "none";
       "kwin"."Walk Through Windows"  = "Alt+Tab";
 
       # Lock / power
