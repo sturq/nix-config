@@ -17,7 +17,7 @@
   # User-level config (analog to home-manager.users.X on NixOS).
   home-manager.config = { ... }: {
     imports = [
-      ../../modules/home/cli
+      ../../home/sturq/global
     ];
 
     home.username = "nix-on-droid";

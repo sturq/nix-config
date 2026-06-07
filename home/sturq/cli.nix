@@ -1,6 +1,6 @@
 { ... }: {
   # CLI-only — for WSL, servers, headless boxes.
-  imports = [ ../../modules/home/cli ];
+  imports = [ ./global ];
 
   home.username = "sturq";
   home.homeDirectory = "/home/sturq";

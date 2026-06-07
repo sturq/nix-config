@@ -150,14 +150,15 @@ hosts/
   macbook/                    nix-darwin.
   phone/                      nix-on-droid.
 
-modules/home/                 home-manager (user level).
-  cli/                        shell, git, ssh, direnv, tools, nix.
-  plasma6/                    theme, panel, shortcuts, session, konsole.
-
-home/sturq/                   home-manager entry points per platform.
-  nixos.nix                   Linux: imports cli + plasma6.
-  cli.nix                     CLI-only (WSL, headless).
-  darwin.nix                  macOS: cli only.
+home/sturq/                   home-manager (user level), symmetric with
+                              hosts/common/{global,optional}.
+  global/                     Auto-imported by every entry point below.
+    shell.nix, git.nix, ssh.nix, direnv.nix, tools.nix, nix.nix
+  optional/
+    plasma6/                  theme, panel, shortcuts, session, konsole.
+  nixos.nix                   Linux entry: global + optional/plasma6.
+  cli.nix                     CLI-only entry (WSL, headless).
+  darwin.nix                  macOS entry: global only.
 ```
 
 ---

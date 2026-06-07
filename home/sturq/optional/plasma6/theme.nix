@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 
 let
-  palette = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
   rgb = palette.hexToRgb;
 
   # plasma-manager owns the wallpaper because Stylix's KDE target forced a

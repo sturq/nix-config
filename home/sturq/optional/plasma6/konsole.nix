@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 
 let
-  palette = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
 
   rgb = key: palette.hexToRgb "#${palette.base16Scheme.${key}}";
 
