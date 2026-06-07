@@ -3,6 +3,7 @@
   imports = [
     ./global
     ./optional/plasma6
+    ./optional/steam.nix
   ];
 
   home.username = "sturq";
