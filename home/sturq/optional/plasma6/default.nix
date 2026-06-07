@@ -40,8 +40,11 @@
         import org.kde.plasma.plasma5support as P5Support
 
         PlasmoidItem {
-            Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
-            Plasmoid.constraintHints: Plasmoid.CanFillArea
+            // The panel renders compactRepresentation (and falls back
+            // to Plasmoid.icon if none is given — that's the yellow
+            // moon we were seeing). Provide an empty MouseArea instead.
+            toolTipMainText: ""
+            toolTipSubText: ""
 
             P5Support.DataSource {
                 id: shell
@@ -51,7 +54,7 @@
                 function exec(cmd) { connectSource(cmd); }
             }
 
-            fullRepresentation: MouseArea {
+            compactRepresentation: MouseArea {
                 Layout.minimumWidth: 6
                 Layout.maximumWidth: 6
                 Layout.fillHeight: true
