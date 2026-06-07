@@ -88,6 +88,27 @@ sudo nixos-rebuild --rollback switch
 
 ---
 
+## Colours
+
+Every colour comes from [sturq-palette](https://github.com/sturq/sturq-palette),
+pulled as `flake = false` and parsed in [`lib/palette.nix`](./lib/palette.nix).
+The palette repo only ships tokens — this repo decides which token paints which
+surface:
+
+| Surface | Token |
+|---|---|
+| desktop wallpaper | `surfaces.surface0` (midnight navy) |
+| terminal background (via Stylix base00) | `surfaces.crust` (OLED black) |
+| Plasma accent / selection | `core.primary` (lavender) |
+| lockscreen | `surfaces.crust` (OLED black) |
+| ANSI accents (red/green/blue/…) | `accents.*` (Termux defaults) |
+
+The role mapping lives at the top of [`modules/nixos/stylix.nix`](./modules/nixos/stylix.nix)
+and [`modules/home/plasma6/config.nix`](./modules/home/plasma6/config.nix).
+Want a different colour for the wallpaper? Change one line.
+
+---
+
 ## Layout
 
 ```
