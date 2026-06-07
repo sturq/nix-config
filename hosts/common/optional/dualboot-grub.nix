@@ -1,12 +1,11 @@
 { pkgs, ... }: {
-  # GRUB + os-prober for dual-boot. Theme is owned by Stylix (writes a
-  # palette-derived dark theme into /boot/theme). Custom-rolled themes
-  # broke on this hardware — Intel GOP rejects gfxmode=auto on some
-  # resolutions and grub-mkfont .pf2 files we shipped wouldn't load,
-  # dropping GRUB into text-mode-blue with an "any key to continue"
-  # prompt. Stylix's grub target is what other multi-host nix-config
-  # repos use and is proven on this exact chipset family.
+  # GRUB + os-prober for dual-boot. No theme — both our custom roll
+  # AND Stylix's grub target produce broken PNGs (132 bytes each, GRUB
+  # rejects them and shows an 'any key to continue' prompt). Plain
+  # text menu on a black background is uglier but actually works on
+  # this hardware family.
   boot.loader.systemd-boot.enable = false;
+  stylix.targets.grub.enable = false;
 
   boot.loader.grub = {
     enable = true;
@@ -16,6 +15,10 @@
     configurationLimit = 10;
     default = 0;
     timeoutStyle = "menu";
+
+    # Empty splash so NixOS doesn't ship the broken Stylix-generated
+    # PNG. Plain black text-mode GRUB.
+    splashImage = null;
 
     memtest86.enable = true;
 
