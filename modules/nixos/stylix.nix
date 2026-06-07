@@ -1,16 +1,22 @@
 { pkgs, inputs, ... }: let
   sp = import ../../lib/palette.nix { src = inputs.sturq-palette; };
-  palette = sp.palette;
 
   # ---- Role assignment ----------------------------------------------------
-  # sturq-palette is a generic palette repo — it ships colour tokens, not
-  # UI roles. nix-config decides which token paints which surface. Edit
-  # here if you want the wallpaper, lockscreen, etc. to use a different
-  # token. The palette repo itself stays project-agnostic.
+  # sturq-palette ships colour tokens; nix-config decides which token
+  # paints which surface. Roles map to base16 slots so any palette repo
+  # works — point the input at a different base16 scheme and the desktop
+  # repaints. If an extended sturq-format palette is present we prefer
+  # its semantic tokens (e.g. surfaces.surface0 over a raw base16 slot).
+  pick = jsonPath: slot:
+    if sp.palette != null && jsonPath != null then jsonPath
+    else "#${sp.base16Scheme.${slot}}";
+
   roles = {
-    wallpaper  = palette.surfaces.surface0;  # midnight navy desktop bg
-    lockscreen = palette.surfaces.crust;     # pure OLED black
-    terminal   = palette.surfaces.crust;     # Termux-style black bg
+    # selection-tier surface — feels right for a desktop bg in every
+    # base16 scheme (navy in sturq, surface0 in catppuccin, gray in gruvbox).
+    wallpaper  = pick (if sp.palette != null then sp.palette.surfaces.surface0 else null) "base02";
+    # primary background — always the darkest slot in dark schemes.
+    lockscreen = pick (if sp.palette != null then sp.palette.surfaces.crust    else null) "base00";
   };
 in {
   # Stylix → system-wide theming. One scheme + one wallpaper that all

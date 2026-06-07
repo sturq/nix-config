@@ -1,14 +1,17 @@
 { pkgs, lib, inputs, ... }: let
   sp = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
-  p = sp.palette;
   hexToRgb = sp.hexToRgb;
 
-  # Plasma's surface roles — kept here so it's obvious which palette token
-  # paints each KDE surface. Change a line to repaint that surface only.
+  # Roles map to base16 slots so any palette repo works; sturq-format
+  # palettes can still expose their richer tokens (core.primary as accent).
+  pick = jsonPath: slot:
+    if sp.palette != null && jsonPath != null then jsonPath
+    else "#${sp.base16Scheme.${slot}}";
+
   roles = {
-    accent     = p.core.primary;       # lavender → Plasma accent + selection
-    wallpaper  = p.surfaces.surface0;  # midnight navy desktop wallpaper
-    lockscreen = p.surfaces.crust;     # OLED black lock background
+    accent     = pick (if sp.palette != null then sp.palette.core.primary       else null) "base0D";
+    wallpaper  = pick (if sp.palette != null then sp.palette.surfaces.surface0  else null) "base02";
+    lockscreen = pick (if sp.palette != null then sp.palette.surfaces.crust     else null) "base00";
   };
 
   # Solid wallpaper built from the role colour. Stylix's KDE target is
