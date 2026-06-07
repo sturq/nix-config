@@ -119,9 +119,10 @@ in {
       "kwin"."Window Quick Tile Left"  = "Meta+Left";
       "kwin"."Window Quick Tile Right" = "Meta+Right";
       # Win11 Task View = a grid of every virtual desktop. KWin's "Grid View"
-      # is the match; KWin's "Overview" is more like a GNOME-style current-
-      # desktop picker, so it's off Meta+Tab.
-      "kwin"."Grid View"             = "Meta+Tab";
+      # is the match; "Overview" is more like a GNOME-style current-desktop
+      # picker. plasma-manager writes the kglobalshortcutsrc field without
+      # the user-visible label, which on Plasma 6.6 stops the keypress from
+      # dispatching — we set the full triplet via configFile below instead.
       "kwin"."Overview"              = "none";
       "kwin"."Walk Through Windows"  = "Alt+Tab";
 
@@ -170,6 +171,11 @@ in {
     };
 
     configFile = {
+      # KWin Grid View (Win11 Task View). plasma-manager writes the entry
+      # with empty 2nd/3rd fields which Plasma 6.6 ignores at keypress
+      # dispatch time. Full triplet here = "shortcut,default,user-name".
+      kglobalshortcutsrc."kwin"."Grid View" = "Meta+Tab,Meta+Tab,Toggle Grid View";
+
       # Fonts: Roboto Flex everywhere in Plasma, DejaVu Sans Mono for fixed.
       kdeglobals."General" = {
         AccentColor = hexToRgb roles.accent;
