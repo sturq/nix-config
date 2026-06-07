@@ -7,9 +7,15 @@
   # Networking
   networking.networkmanager.enable = true;
 
-  # Locale (sturq is in Vienna)
+  # Vienna time, English UI, 24h clock everywhere (incl. SDDM/kscreenlocker
+  # greeter, which reads LC_TIME from the system, not the user session).
   time.timeZone = "Europe/Vienna";
   i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_TIME    = "de_AT.UTF-8";
+    LC_NUMERIC = "de_AT.UTF-8";
+    LC_PAPER   = "de_AT.UTF-8";
+  };
   console.keyMap = "de";
 
   # User (declarative)
