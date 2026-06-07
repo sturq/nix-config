@@ -3,7 +3,10 @@
 let
   palette = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
 
-  bg      = "#${palette.base16Scheme.base00}";
+  # OLED pure black regardless of palette, same rule as the lockscreen.
+  # Accent + text still follow the palette so the boot screen reads as
+  # "this user's palette on a black canvas".
+  bg      = "#000000";
   fg      = "#${palette.base16Scheme.base05}";
   dim     = "#${palette.base16Scheme.base03}";
   accent  =
