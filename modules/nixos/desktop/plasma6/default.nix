@@ -24,6 +24,7 @@
 
   # Drop KDE defaults we don't want.
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    discover         # app store — pointless on NixOS
     elisa            # music player
     khelpcenter      # help docs
     oxygen           # legacy theme
