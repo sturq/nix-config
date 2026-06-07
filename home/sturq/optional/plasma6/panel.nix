@@ -87,9 +87,11 @@ in {
       }
 
       # Thin show-desktop strip at the right edge — Win11-style invisible
-      # button. panelspacer is passive (no click target); the dedicated
-      # showdesktop applet renders the same way but actually fires.
-      "org.kde.plasma.showdesktop"
+      # button. The stock org.kde.plasma.showdesktop applet always
+      # renders a visible "user-desktop" icon; this is a minimal custom
+      # plasmoid (declared via home.file in default.nix) that draws
+      # nothing but forwards clicks to KWin's Show Desktop action.
+      "sturq.invisible-showdesktop"
     ];
   }];
 

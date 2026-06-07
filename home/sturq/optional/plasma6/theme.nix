@@ -15,7 +15,7 @@ in {
     workspace = {
       colorScheme = "BreezeDark";
       lookAndFeel = "org.kde.breezedark.desktop";
-      iconTheme   = "Papirus-Dark";
+      iconTheme   = "Tela-circle-dark";
       wallpaper   = "${wallpaperImage}";
       cursor = { theme = "Bibata-Modern-Classic"; size = 24; };
     };

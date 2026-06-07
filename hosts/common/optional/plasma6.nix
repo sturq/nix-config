@@ -18,11 +18,8 @@
     kdePackages.konsole       # palette-themed via Stylix
     kdePackages.partitionmanager
     fastfetch                 # palette-themed via terminal ANSI
-    # Papirus default — muted blue-grey folders. The violet override read
-    # as "everything is purple" combined with the lavender accent; this
-    # variant stays out of the way and lets the accent be the only
-    # palette-coloured surface in the UI.
-    papirus-icon-theme
+    # Tela-circle-dark — back to the original choice per user request.
+    tela-circle-icon-theme
   ];
 
   # Drop KDE defaults we don't want.
