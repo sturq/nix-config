@@ -15,9 +15,13 @@
 
   # Tiny custom plasmoid: an invisible click target that fires KWin's
   # "Show Desktop" shortcut. Used in panel.nix as the right-edge strip.
-  home.file = {
-    ".local/share/plasma/plasmoids/sturq.invisible-showdesktop/metadata.json".text =
-      builtins.toJSON {
+  # Packaged as a single derivation so the whole plasmoid directory is
+  # one symlink — plasmashell rejects per-file home.file symlinks with
+  # "path traversal attempt" because each file resolves to a different
+  # /nix/store path outside the plasmoid dir.
+  home.file.".local/share/plasma/plasmoids/sturq.invisible-showdesktop".source =
+    let
+      metadata = builtins.toJSON {
         KPackageStructure = "Plasma/Applet";
         KPlugin = {
           Id = "sturq.invisible-showdesktop";
@@ -29,37 +33,44 @@
         };
         X-Plasma-API-Minimum-Version = "6.0";
       };
+      mainQml = ''
+        import QtQuick
+        import QtQuick.Layouts
+        import org.kde.plasma.plasmoid
+        import org.kde.plasma.plasma5support as P5Support
 
-    ".local/share/plasma/plasmoids/sturq.invisible-showdesktop/contents/ui/main.qml".text = ''
-      import QtQuick
-      import QtQuick.Layouts
-      import org.kde.plasma.plasmoid
-      import org.kde.plasma.plasma5support as P5Support
+        PlasmoidItem {
+            Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
+            Plasmoid.constraintHints: Plasmoid.CanFillArea
 
-      PlasmoidItem {
-          Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
-          Plasmoid.constraintHints: Plasmoid.CanFillArea
+            P5Support.DataSource {
+                id: shell
+                engine: "executable"
+                connectedSources: []
+                onNewData: (sourceName) => disconnectSource(sourceName)
+                function exec(cmd) { connectSource(cmd); }
+            }
 
-          P5Support.DataSource {
-              id: shell
-              engine: "executable"
-              connectedSources: []
-              onNewData: (sourceName) => disconnectSource(sourceName)
-              function exec(cmd) { connectSource(cmd); }
-          }
-
-          fullRepresentation: MouseArea {
-              Layout.minimumWidth: 6
-              Layout.maximumWidth: 6
-              Layout.fillHeight: true
-              acceptedButtons: Qt.LeftButton
-              onClicked: shell.exec(
-                "qdbus6 org.kde.kglobalaccel /component/kwin invokeShortcut 'Show Desktop'"
-              )
-          }
-      }
+            fullRepresentation: MouseArea {
+                Layout.minimumWidth: 6
+                Layout.maximumWidth: 6
+                Layout.fillHeight: true
+                acceptedButtons: Qt.LeftButton
+                onClicked: shell.exec(
+                    "qdbus6 org.kde.kglobalaccel /component/kwin invokeShortcut 'Show Desktop'"
+                )
+            }
+        }
+      '';
+    in pkgs.runCommand "sturq-invisible-showdesktop" { } ''
+      mkdir -p $out/contents/ui
+      cat > $out/metadata.json <<'EOF'
+      ${metadata}
+      EOF
+      cat > $out/contents/ui/main.qml <<'EOF'
+      ${mainQml}
+      EOF
     '';
-  };
 
   home.packages = with pkgs; [
     firefox
