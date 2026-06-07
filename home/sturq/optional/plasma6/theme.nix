@@ -68,5 +68,16 @@ in {
         --file "$HOME/.config/kdeglobals" \
         --group "Colors:Header" --group "Inactive" \
         --key ForegroundActive "${accentRgb}"
+
+      # Clean up the stale Win11-style Meta+Down entry from when we ran
+      # the chained KWin script. plasma-manager only adds/updates keys,
+      # never deletes them, so we sweep the leftover binding ourselves.
+      run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file "$HOME/.config/kglobalshortcutsrc" \
+        --group "kwin" --key "Win11-style Meta+Down (tile / minimise)" --delete
+      run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file "$HOME/.config/kglobalshortcutsrc" \
+        --group "kwin" --key "win11-meta-down" --delete
+      run rm -f "$HOME/.config/kglobalshortcutsrc.lock"
     '';
 }

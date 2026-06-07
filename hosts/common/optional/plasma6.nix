@@ -18,10 +18,11 @@
     kdePackages.konsole       # palette-themed via Stylix
     kdePackages.partitionmanager
     fastfetch                 # palette-themed via terminal ANSI
-    # Papirus folders tinted violet to match the lavender accent.
-    # nixpkgs ships only blue/dark/light variants of Tela-circle which
-    # clashed with the rest of the palette.
-    (papirus-icon-theme.override { color = "violet"; })
+    # Papirus default — muted blue-grey folders. The violet override read
+    # as "everything is purple" combined with the lavender accent; this
+    # variant stays out of the way and lets the accent be the only
+    # palette-coloured surface in the UI.
+    papirus-icon-theme
   ];
 
   # Drop KDE defaults we don't want.
