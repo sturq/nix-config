@@ -1,5 +1,5 @@
 { pkgs, lib, ... }: {
-  imports = [ ./config.nix ];
+  imports = [ ./config.nix ./konsole.nix ];
 
   # User-level Plasma 6 config: just apps. Everything else (theme, panel,
   # shortcuts, kdeglobals, lockscreen, power) lives in ./config.nix.
