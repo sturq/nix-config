@@ -74,11 +74,11 @@ in {
     targets.kmscon.enable = false;
   };
 
-  # Disable Stylix's KDE target so Plasma keeps the stock BreezeDark look —
-  # Stylix maps base05=white into a near-white KDE Color background, which
-  # produced a light panel even with polarity=dark. GTK target stays on
-  # so libadwaita / GTK3 apps get sturq-palette via Stylix.
+  # Stylix's KDE target generates a Plasma colour scheme from base16,
+  # so Plasma windows (titlebars, headers, sidebars, Dolphin chrome,
+  # Konsole, …) follow the palette. Plasma-manager still owns the
+  # workspace lookAndFeel + accent — see modules/home/plasma6/config.nix.
   home-manager.sharedModules = [
-    { stylix.targets.kde.enable = false; }
+    { stylix.targets.kde.enable = true; }
   ];
 }

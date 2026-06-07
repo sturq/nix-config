@@ -15,7 +15,9 @@
     kdePackages.kcalc
     kdePackages.filelight
     kdePackages.kate
+    kdePackages.konsole       # palette-themed via Stylix
     kdePackages.partitionmanager
+    fastfetch                 # palette-themed via terminal ANSI
     # Pixel-style circular icon set used by Plasma.
     tela-circle-icon-theme
   ];
@@ -24,7 +26,6 @@
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     elisa            # music player
     khelpcenter      # help docs
-    konsole          # we use Konsole built-in but exclude duplicate
     oxygen           # legacy theme
     plasma-browser-integration
   ];
