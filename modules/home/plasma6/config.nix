@@ -191,6 +191,15 @@
       };
       kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";
       kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = "6,7,9";
+
+      # Lockscreen clock respects the system locale's time format. Force a
+      # 24h locale so the SDDM/kscreenlocker clock drops AM/PM. de_AT uses
+      # 24h by default; LC_TIME alone is enough to flip the clock widget.
+      plasma-localerc."Formats" = {
+        LANG = "en_US.UTF-8";
+        LC_TIME = "de_AT.UTF-8";
+        useDetailed = true;
+      };
     };
   };
 }
