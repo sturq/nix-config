@@ -75,14 +75,6 @@
       EOF
     '';
 
-  home.packages = with pkgs; [
-    firefox
-    keepassxc
-    yazi
-    helix
-    zathura
-    mpv
-    imv
-    ventoy-full   # write multi-ISO USB sticks (GUI)
-  ];
+  # No GUI apps — bare desktop. Add what you actually use back later.
+  home.packages = [ ];
 }

@@ -10,25 +10,32 @@
     wayland.enable = true;
   };
 
+  # Bare desktop — Konsole only. Everything else gets added back on
+  # request so we know exactly what's installed.
   environment.systemPackages = with pkgs; [
-    kdePackages.kdeconnect-kde
-    kdePackages.kcalc
-    kdePackages.filelight
-    kdePackages.kate
-    kdePackages.konsole       # palette-themed via Stylix
-    kdePackages.partitionmanager
-    fastfetch                 # palette-themed via terminal ANSI
-    # Tela-circle-dark — back to the original choice per user request.
-    tela-circle-icon-theme
+    kdePackages.konsole
+    tela-circle-icon-theme    # theming dep, not a user-facing app
   ];
 
-  # Drop KDE defaults we don't want.
+  # Drop KDE defaults we don't want. Bare desktop — add apps back
+  # explicitly via systemPackages or home.packages later.
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     discover         # app store — pointless on NixOS
     elisa            # music player
     khelpcenter      # help docs
     oxygen           # legacy theme
     plasma-browser-integration
+    kate             # editor
+    kcalc            # calculator
+    kwalletmanager   # wallet UI
+    spectacle        # screenshot tool (we keep it as a dep for testing)
+    okular           # PDF viewer
+    ark              # archive tool
+    gwenview         # image viewer
+    kfind            # search
+    kcharselect      # char picker
+    print-manager    # printer settings panel
+    kmenuedit        # menu editor
   ];
 
   services.pipewire = {
@@ -58,11 +65,6 @@
   };
 
   hardware.graphics.enable = true;
-
-  # ydotool — Wayland-native keyboard/mouse synthesis (xdotool replacement).
-  # Useful for debug-testing KWin scripts (Meta+Down chains etc) when
-  # spectacle + D-Bus invokeShortcut isn't enough.
-  programs.ydotool.enable = true;
 
   fonts.packages = with pkgs; [
     dejavu_fonts
