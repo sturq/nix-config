@@ -74,11 +74,16 @@ in {
     targets.kmscon.enable = false;
   };
 
-  # Stylix's KDE target generates a Plasma colour scheme from base16,
-  # so Plasma windows (titlebars, headers, sidebars, Dolphin chrome,
-  # Konsole, …) follow the palette. Plasma-manager still owns the
-  # workspace lookAndFeel + accent — see modules/home/plasma6/config.nix.
+  # Per-target overrides applied to every home-manager user. Both kde
+  # (Plasma window chrome) and konsole (terminal ANSI ramp + colour
+  # scheme) read the palette through Stylix. fastfetch inherits the
+  # colours from the terminal automatically — no target needed.
   home-manager.sharedModules = [
-    { stylix.targets.kde.enable = true; }
+    {
+      stylix.targets = {
+        kde.enable = true;
+        konsole.enable = true;
+      };
+    }
   ];
 }
