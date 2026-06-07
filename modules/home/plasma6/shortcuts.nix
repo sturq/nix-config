@@ -12,7 +12,6 @@
     "kwin"."Window Quick Tile Left"   = "Meta+Left";
     "kwin"."Window Quick Tile Right"  = "Meta+Right";
     "kwin"."Overview"                 = "none";
-    "kwin"."Walk Through Windows"     = "Alt+Tab";
 
     "ksmserver"."Lock Session" = [ "Meta+L" "Screensaver" ];
 
@@ -28,9 +27,19 @@
     "kded6"."display" = "Meta+P";
   };
 
-  # plasma-manager's shortcut writer leaves the user-visible name field
-  # empty, which Plasma 6.6 needs to actually dispatch the keypress for
-  # Grid View. Writing the full triplet directly.
-  programs.plasma.configFile.kglobalshortcutsrc."kwin"."Grid View" =
-    "Meta+Tab,Meta+Tab,Toggle Grid View";
+  # Win11 Task View parity: Meta+Tab opens the Grid View overview (all
+  # virtual desktops side-by-side with draggable window thumbnails).
+  #
+  # plasma-manager's shortcuts API only writes the active key; KWin's
+  # baked-in defaults for "Walk Through Windows" include BOTH Alt+Tab
+  # *and* Meta+Tab, and KGlobalAccel resolves the collision in TabBox's
+  # favour because it registers first at session start. The fix is to
+  # rewrite kglobalshortcutsrc directly with the full triplet, including
+  # an overridden defaults field that drops Meta+Tab from the TabBox
+  # walker. Format: "current_key,default_keys,friendly_name".
+  programs.plasma.configFile.kglobalshortcutsrc.kwin = {
+    "Grid View"                     = "Meta+Tab,Meta+Tab,Toggle Grid View";
+    "Walk Through Windows"          = "Alt+Tab,Alt+Tab,Walk Through Windows";
+    "Walk Through Windows (Reverse)" = "Alt+Shift+Tab,Alt+Shift+Tab,Walk Through Windows (Reverse)";
+  };
 }
