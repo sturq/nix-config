@@ -62,14 +62,16 @@
     let
       # ---- Full NixOS host (Linux, KDE Plasma 6 Wayland desktop) ----
       # hwConfig: defaults to ./hosts/${hostName}/hardware-configuration.nix.
-      # Pass an explicit path for hosts that share hardware with another host.
-      mkHost = hostName: { hwConfig ? ./hosts/${hostName}/hardware-configuration.nix }: nixpkgs.lib.nixosSystem {
+      # Pass null for installer variants where disko owns the partitioning.
+      mkHost = hostName: {
+        hwConfig ? ./hosts/${hostName}/hardware-configuration.nix,
+        extraModules ? [],
+      }: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/common/global
           ./hosts/${hostName}
-          hwConfig
           nix-flatpak.nixosModules.nix-flatpak
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
@@ -83,37 +85,20 @@
               backupFileExtension = "hm-backup";
             };
           }
-        ];
+        ] ++ nixpkgs.lib.optional (hwConfig != null) hwConfig ++ extraModules;
       };
 
       # ---- Installer variant (Disko + nixos-anywhere) ----
-      # Same as mkHost but swaps hardware-configuration for a generic disko
-      # layout (1G ESP + 16G swap + ext4 root). Pass `device` for the target's
-      # disk path (defaults to /dev/sda — overrides: nvme0n1, vda, mmcblk0…).
+      # mkHost with disko swapped in for hardware-configuration. `device`
+      # is the target disk path (overrides: nvme0n1, vda, mmcblk0…).
       # Deploy from any machine (even one running NixOS — kexec is used):
       #   nix run github:nix-community/nixos-anywhere -- --flake .#hp250-install root@<ip>
-      mkInstaller = hostName: { device ? "/dev/sda" }: nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/common/global
-          ./hosts/${hostName}
+      mkInstaller = hostName: { device ? "/dev/sda" }: mkHost hostName {
+        hwConfig = null;
+        extraModules = [
           ./hosts/common/optional/disko.nix
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
-          nix-flatpak.nixosModules.nix-flatpak
-          stylix.nixosModules.stylix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit inputs; };
-              sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
-              users.sturq = import ./home/sturq/nixos.nix;
-              backupFileExtension = "hm-backup";
-            };
-          }
         ];
       };
 

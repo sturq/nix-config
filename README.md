@@ -59,7 +59,7 @@ nix run github:nix-community/nixos-anywhere -- \
   root@<target-ip>
 ```
 
-Disko applies the layout from `modules/disko.nix`:
+Disko applies the layout from `hosts/common/optional/disko.nix`:
 1 G ESP + BTRFS root with subvolumes `@root @home @nix @snap @swap` +
 zstd compression + 16 G swapfile. No LUKS.
 
@@ -103,51 +103,61 @@ surface:
 | lockscreen | `surfaces.crust` (OLED black) |
 | ANSI accents (red/green/blue/…) | `accents.*` (Termux defaults) |
 
-The role mapping lives at the top of [`modules/nixos/stylix.nix`](./modules/nixos/stylix.nix)
-and [`modules/home/plasma6/config.nix`](./modules/home/plasma6/config.nix).
-Want a different colour for the wallpaper? Change one line.
+The role mapping lives in [`lib/palette.nix`](./lib/palette.nix) as a single
+`roles` attrset — every consumer (Stylix, plasma-manager theme, Konsole, GRUB)
+reads from the same source. Want a different colour for the wallpaper? Change
+one line in `lib/palette.nix`.
 
 ---
 
 ## Layout
 
+Misterio77-style split: `hosts/common/global/` is auto-imported by every
+NixOS host (no `enable` flag, just file imports), `hosts/common/optional/`
+is opted into per host.
+
 ```
-flake.nix                      Composition root. Inputs + mkHost/mkInstaller/...
+flake.nix                     Composition root. Inputs + mkHost/mkInstaller/...
+lib/palette.nix               Parser for sturq-palette → base16 + semantic
+                              roles (accent / wallpaper / lockscreen) used
+                              everywhere downstream.
 
-hosts/                         Per-machine config. Imports modules directly,
-                               adds host-specific bits (hostname, dual-boot, …).
-  hp250/                       HP 250 G9 — Intel laptop, Windows dual-boot.
-  vivobook/                    ASUS Vivobook S 14 — AMD Strix Point laptop.
-  vm/                          Proxmox test VM.
-  laptop/  desktop/            Generic hosts for fresh nixos-anywhere installs
-                               on any laptop / desktop tower.
-  wsl/                         NixOS-WSL.
-  macbook/                     nix-darwin.
-  phone/                       nix-on-droid.
+hosts/
+  common/
+    global/                   Auto-imported by every NixOS host.
+      default.nix             Boot loader, network, locale, user, nix.
+      stylix.nix              Palette → Stylix (kdeglobals colours, cursor,
+                              GTK theme, console ANSI, fonts).
+    optional/                 Per-host opt-in via plain imports.
+      plasma6.nix             Plasma 6 + SDDM + pipewire + portal-kde.
+      autologin.nix           Skip the SDDM greeter.
+      steam.nix               programs.steam + firewall.
+      flatpak.nix             services.flatpak (hosts add their own packages).
+      tailscale.nix           Tailscale + DNS reverse-path tweak.
+      dualboot-grub.nix       GRUB + os-prober + palette-themed boot menu +
+                              memtest / UEFI / reboot / power-off entries.
+      dev-defaults.nix        OpenSSH + initial passwords for dev boxes.
+      disko.nix               Generic BTRFS layout used by mkInstaller.
+      hardware/
+        laptop.nix            TLP, lid, brightness.
+        desktop.nix           perf governor, no idle.
 
-modules/                       Reusable modules. Single home for everything.
-  nixos/                       NixOS-system layer.
-    base.nix                   Boot loader, network, locale, user, nix.
-    stylix.nix                 sturq-palette via Stylix (wallpaper + cursor +
-                               fonts + downstream Firefox/Konsole theming).
-    disko.nix                  Generic BTRFS layout for mkInstaller.
-    desktop/plasma6/           Plasma 6 + SDDM + pipewire + portal-kde,
-                               with an optional autologin.nix.
-    hardware/                  laptop.nix (TLP, lid, brightness)
-                               desktop.nix (perf governor, no idle).
-    features/                  tailscale / flatpak / steam / dualboot-grub /
-                               dev-defaults.
-  home/                        home-manager layer.
-    cli/                       shell, git, ssh, direnv, tools, nix, claude-code.
-    plasma6/                   default.nix (GUI apps) + config.nix
-                               (plasma-manager: panel, hotkeys, kdeglobals,
-                                lockscreen, powerdevil).
+  hp250/                      HP 250 G9 — Intel laptop, Windows dual-boot.
+  vivobook/                   ASUS Vivobook S 14 — AMD Strix Point.
+  vm/                         Proxmox test VM.
+  laptop/  desktop/           Generic hosts for fresh nixos-anywhere installs.
+  wsl/                        NixOS-WSL.
+  macbook/                    nix-darwin.
+  phone/                      nix-on-droid.
 
-home/                          home-manager user entry points.
-  sturq/
-    nixos.nix                  Linux: imports cli + plasma6.
-    cli.nix                    CLI-only (WSL/servers).
-    darwin.nix                 macOS: cli + Mac bits.
+modules/home/                 home-manager (user level).
+  cli/                        shell, git, ssh, direnv, tools, nix.
+  plasma6/                    theme, panel, shortcuts, session, konsole.
+
+home/sturq/                   home-manager entry points per platform.
+  nixos.nix                   Linux: imports cli + plasma6.
+  cli.nix                     CLI-only (WSL, headless).
+  darwin.nix                  macOS: cli only.
 ```
 
 ---
