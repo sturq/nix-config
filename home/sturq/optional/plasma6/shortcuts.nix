@@ -6,18 +6,16 @@
     "services/org.kde.spectacle.desktop"."_launch"            = "Meta+Shift+S";
     "services/org.kde.plasma-systemmonitor.desktop"."_launch" = "Ctrl+Shift+Escape";
 
-    # Win11-style snap layout. Plain Quick Tile Bottom is one-shot — KWin
-    # 6.6's built-in action re-binds Meta+Down at every start and beats
-    # any KWin script trying to chain (tested with ydotool + journal logs
-    # — KGlobalAccel resolves the collision in the C++ action's favour
-    # because it registers first). Live with one-shot tile; minimise has
-    # its own chord.
+    # Win11-style snap layout (one-shot tile, no chain — KWin 6.6's
+    # built-in Quick Tile Bottom always wins Meta+Down at startup and
+    # there's no clean way to layer a "tile then minimise" chain on top
+    # without forking KWin).
     "kwin"."Show Desktop"             = "Meta+D";
     "kwin"."Window Maximize"          = "Meta+Up";
     "kwin"."Window Quick Tile Bottom" = "Meta+Down";
     "kwin"."Window Quick Tile Left"   = "Meta+Left";
     "kwin"."Window Quick Tile Right"  = "Meta+Right";
-    "kwin"."Window Minimize"          = "Meta+H";
+    "kwin"."Window Minimize"          = "none";
 
     "ksmserver"."Lock Session" = [ "Meta+L" "Screensaver" ];
 

@@ -1,8 +1,9 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 
 let
   palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
   rgb = palette.hexToRgb;
+  accentRgb = rgb palette.roles.accent;
 
   # plasma-manager owns the wallpaper because Stylix's KDE target forced a
   # light scheme on us before; the solid PNG goes through workspace.wallpaper.
@@ -34,6 +35,11 @@ in {
       };
       kdeglobals."WM"."activeFont" = "Roboto Flex,11,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
 
+      # (Stylix leaves [Colors:Header][Inactive] on Plasma's default blue.
+      # Fixed via home.activation below — plasma-manager's INI writer
+      # escapes the second pair of brackets into \x5d\x5b, creating a
+      # broken section name instead of KDE's multi-group syntax.)
+
       # Plasma exports LANG from this file into the session env at login;
       # a stale en_US entry left over from System Settings was making the
       # lockscreen greeter render 12h despite the system locale being en_GB.
@@ -43,4 +49,24 @@ in {
       };
     };
   };
+
+  # Force lavender into [Colors:Header][Inactive] (Stylix leaves it on
+  # Plasma's default blue). plasma-manager's INI writer can't express
+  # KDE's multi-group bracket syntax, so we patch via kwriteconfig6
+  # which handles --group ... --group ... natively.
+  home.activation.fixHeaderInactiveAccent =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file "$HOME/.config/kdeglobals" \
+        --group "Colors:Header" --group "Inactive" \
+        --key DecorationFocus "${accentRgb}"
+      run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file "$HOME/.config/kdeglobals" \
+        --group "Colors:Header" --group "Inactive" \
+        --key DecorationHover "${accentRgb}"
+      run ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file "$HOME/.config/kdeglobals" \
+        --group "Colors:Header" --group "Inactive" \
+        --key ForegroundActive "${accentRgb}"
+    '';
 }
