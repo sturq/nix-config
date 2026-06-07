@@ -1,50 +1,76 @@
-{ pkgs, lib, inputs, ... }: let
-  sp = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
-  hexToRgb = sp.hexToRgb;
+{ pkgs, lib, inputs, ... }:
 
-  # Roles map to base16 slots so any palette repo works; sturq-format
-  # palettes can still expose their richer tokens (core.primary as accent).
-  pick = jsonPath: slot:
-    if sp.palette != null && jsonPath != null then jsonPath
-    else "#${sp.base16Scheme.${slot}}";
+let
+  palette = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
+
+  pickToken = jsonPath: slot:
+    if palette.palette != null && jsonPath != null
+    then jsonPath
+    else "#${palette.base16Scheme.${slot}}";
 
   roles = {
-    accent     = pick (if sp.palette != null then sp.palette.core.primary      else null) "base0D";
-    wallpaper  = pick (if sp.palette != null then sp.palette.surfaces.surface0 else null) "base02";
-    # Lockscreen is hard-pinned to OLED black — palette-independent on purpose.
+    accent = pickToken
+      (if palette.palette != null then palette.palette.core.primary else null)
+      "base0D";
+
+    wallpaper = pickToken
+      (if palette.palette != null then palette.palette.surfaces.surface0 else null)
+      "base02";
+
     lockscreen = "#000000";
   };
 
-  # Solid wallpaper built from the role colour. Stylix's KDE target is
-  # off (it forces a light scheme), so plasma-manager owns the wallpaper.
+  # plasma-manager owns the wallpaper because Stylix's KDE target forced a
+  # light scheme on us before; the solid PNG goes through workspace.wallpaper.
   wallpaperImage = pkgs.runCommand "wallpaper.png" {
     buildInputs = [ pkgs.imagemagick ];
   } "magick -size 1920x1080 xc:'${roles.wallpaper}' $out";
+
+  rgb = palette.hexToRgb;
+
+  systrayHidden = builtins.concatStringsSep "," [
+    "org.kde.plasma.brightness"
+    "org.kde.plasma.bluetooth"
+    "org.kde.plasma.clipboard"
+    "org.kde.plasma.notifications"
+    "org.kde.plasma.keyboardlayout"
+    "org.kde.plasma.keyboardindicator"
+    "org.kde.plasma.devicenotifier"
+    "org.kde.plasma.weather"
+    "org.kde.kscreen"
+    "org.kde.kdeconnect"
+    "org.kde.plasma.cameraindicator"
+    "org.kde.plasma.manage-inputmethod"
+    "org.kde.plasma.mediacontroller"
+  ];
+
+  # SNI ids of apps we want to drop into the overflow popup instead of the
+  # visible tray (Plasma 6 hard-codes the overflow arrow on the right).
+  sniOverflow = "steam,discord,spotify,sober";
 in {
-  # Declarative KDE Plasma 6 — panels, shortcuts, kdeglobals, power, lock.
   programs.plasma = {
     enable = true;
 
     workspace = {
       colorScheme = "BreezeDark";
       lookAndFeel = "org.kde.breezedark.desktop";
-      iconTheme = "Tela-circle-dark";
-      wallpaper = "${wallpaperImage}";
-      cursor = {
-        theme = "Bibata-Modern-Classic";
-        size = 24;
-      };
+      iconTheme   = "Tela-circle-dark";
+      wallpaper   = "${wallpaperImage}";
+      cursor = { theme = "Bibata-Modern-Classic"; size = 24; };
     };
 
-    # Windows-11-style panel: Start + pager + tasks centered as a group
-    # via flanking expanding spacers, right cluster pinned to the right.
+    # Bottom panel laid out Win11-style: kickoff + tasks centred between two
+    # expanding spacers; the status cluster pinned to the right uses two
+    # systemtrays so the overflow arrow ends up on the LEFT of the icons.
     panels = [{
       location = "bottom";
-      floating = true;       # stock-KDE float; auto-hides on fullscreen apps
+      floating = true;
       height = 44;
       widgets = [
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
+
         "org.kde.plasma.kickoff"
+
         {
           name = "org.kde.plasma.icontasks";
           config.General = {
@@ -53,137 +79,121 @@ in {
             showOnlyCurrentDesktop = "true";
           };
         }
+
         { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
-        # Two systemtrays — Win11-style: overflow ^ on the LEFT, then the
-        # 3 status icons. SNI duplication is prevented by giving each tray
-        # an explicit extraItems list, and putting SNI app IDs in tray-1's
-        # hiddenItems + tray-2's disabledStatusNotifiers.
-        # Tray-1: overflow-only. Plasmoid extras + SNI apps land here, all
-        # hidden so only the ^ renders.
+
+        # Overflow-only tray. Every plasmoid extra + SNI app is listed here
+        # so they exist, then hidden so the only visible thing is the arrow.
         {
           name = "org.kde.plasma.systemtray";
           config.General = {
-            extraItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller";
-            shownItems = "";
-            hiddenItems = "org.kde.plasma.brightness,org.kde.plasma.bluetooth,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.devicenotifier,org.kde.plasma.weather,org.kde.kscreen,org.kde.kdeconnect,org.kde.plasma.cameraindicator,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller,steam,discord,spotify,sober";
+            extraItems  = "${systrayHidden},${sniOverflow}";
+            shownItems  = "";
+            hiddenItems = "${systrayHidden},${sniOverflow}";
           };
         }
-        # Tray-2: only the 3 status icons. SNI apps explicitly disabled here
-        # so they don't double up.
+
+        # Visible status icons. SNI apps are disabled here so Steam/Discord
+        # don't double up next to the battery/volume/network triplet.
         {
           name = "org.kde.plasma.systemtray";
           config.General = {
             extraItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
             shownItems = "org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.networkmanagement";
             hiddenItems = "";
-            disabledStatusNotifiers = "steam,discord,spotify,sober";
+            disabledStatusNotifiers = sniOverflow;
           };
         }
+
         {
           name = "org.kde.plasma.digitalclock";
           config.Appearance = {
-            use24hFormat = "2";              # 2 = 24h
-            showSeconds = "2";               # 2 = always in panel
-            showDate = "true";
-            dateFormat = "custom";
-            customDateFormat = "d/M/yyyy";   # 5/6/2026
-            autoFontAndSize = "false";
-            fontFamily = "Roboto Flex";
-            fontWeight = "400";
-            boldText = "false";
-            italicText = "false";
-            fontSize = "9";
+            use24hFormat     = "2";
+            showSeconds      = "2";
+            showDate         = "true";
+            dateFormat       = "custom";
+            customDateFormat = "d/M/yyyy";
+            autoFontAndSize  = "false";
+            fontFamily       = "Roboto Flex";
+            fontWeight       = "400";
+            boldText         = "false";
+            italicText       = "false";
+            fontSize         = "9";
           };
         }
-        # Win11-style "Show Desktop" sliver at the right edge: a thin
-        # non-expanding spacer that's just narrow enough to look like the
-        # invisible strip on Windows 11. Click action via the Meta+D
-        # global shortcut (see `shortcuts` below).
+
+        # Thin show-desktop strip at the right edge, mirrors the Win11
+        # invisible-strip behaviour. Click is wired to Meta+D below.
         { name = "org.kde.plasma.panelspacer"; config.General = { expanding = "false"; length = "6"; }; }
       ];
     }];
 
-    # Windows-style global shortcuts — modelled on Windows 11 defaults.
     shortcuts = {
-      # App launchers
-      "services/org.kde.dolphin.desktop"."_launch"           = "Meta+E";
-      "services/org.kde.krunner.desktop"."_launch"           = [ "Meta+R" "Meta+S" ];
-      "services/systemsettings.desktop"."_launch"            = "Meta+I";
-      "services/org.kde.spectacle.desktop"."_launch"         = "Meta+Shift+S";
+      "services/org.kde.dolphin.desktop"."_launch"              = "Meta+E";
+      "services/org.kde.krunner.desktop"."_launch"              = [ "Meta+R" "Meta+S" ];
+      "services/systemsettings.desktop"."_launch"               = "Meta+I";
+      "services/org.kde.spectacle.desktop"."_launch"            = "Meta+Shift+S";
       "services/org.kde.plasma-systemmonitor.desktop"."_launch" = "Ctrl+Shift+Escape";
 
-      # Windows / KWin
-      "kwin"."Show Desktop"          = "Meta+D";
-      "kwin"."Window Maximize"       = "Meta+Up";
-      "kwin"."Window Minimize"       = "Meta+Down";
-      "kwin"."Window Quick Tile Left"  = "Meta+Left";
-      "kwin"."Window Quick Tile Right" = "Meta+Right";
-      # Win11 Task View = a grid of every virtual desktop. KWin's "Grid View"
-      # is the match; "Overview" is more like a GNOME-style current-desktop
-      # picker. plasma-manager writes the kglobalshortcutsrc field without
-      # the user-visible label, which on Plasma 6.6 stops the keypress from
-      # dispatching — we set the full triplet via configFile below instead.
-      "kwin"."Overview"              = "none";
-      "kwin"."Walk Through Windows"  = "Alt+Tab";
+      "kwin"."Show Desktop"             = "Meta+D";
+      "kwin"."Window Maximize"          = "Meta+Up";
+      "kwin"."Window Minimize"          = "Meta+Down";
+      "kwin"."Window Quick Tile Left"   = "Meta+Left";
+      "kwin"."Window Quick Tile Right"  = "Meta+Right";
+      "kwin"."Overview"                 = "none";
+      "kwin"."Walk Through Windows"     = "Alt+Tab";
 
-      # Lock / power
       "ksmserver"."Lock Session" = [ "Meta+L" "Screensaver" ];
 
-      # Plasma extras
       "plasmashell"."show emoji selector" = "Meta+.";
       "plasmashell"."manage activities"   = "Meta+Q";
       "plasmashell"."clipboard_action"    = "Meta+V";
 
-      # Virtual desktops — Win11 bindings
       "kwin"."Switch One Desktop to the Left"  = "Meta+Ctrl+Left";
       "kwin"."Switch One Desktop to the Right" = "Meta+Ctrl+Right";
       "kwin"."Add Virtual Desktop"             = "Meta+Ctrl+D";
       "kwin"."Remove Virtual Desktop"          = "Meta+Ctrl+F4";
 
-      # Display
-      "kded6"."display"                = "Meta+P";   # Win+P display switch
+      "kded6"."display" = "Meta+P";
     };
 
-    # Battery applet inside the systemtray: show percentage next to icon.
-    # The applet's containment ID is dynamic, so we discover it at startup.
-    startup.startupScript."sturq-battery-percentage" = {
+    # The systemtray containment ids are generated at first run, so the
+    # battery applet's showPercentage flag is set lazily at session start.
+    startup.startupScript."battery-percentage" = {
+      runAlways = true;
+      restartServices = [ "plasma-plasmashell" ];
       text = ''
         cfg="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
         [ -f "$cfg" ] || exit 0
-        # For every battery applet inside any systemtray containment, set
-        # showPercentage=true via kwriteconfig.
         grep -B2 "plugin=org.kde.plasma.battery" "$cfg" \
           | grep -oE "\[Containments\]\[[0-9]+\]\[Applets\]\[[0-9]+\]\[Applets\]\[[0-9]+\]" \
           | while read header; do
-            c=$(echo "$header" | grep -oE "[0-9]+" | sed -n 1p)
-            a=$(echo "$header" | grep -oE "[0-9]+" | sed -n 2p)
-            b=$(echo "$header" | grep -oE "[0-9]+" | sed -n 3p)
-            kwriteconfig6 --file "$cfg" \
-              --group Containments --group "$c" \
-              --group Applets --group "$a" \
-              --group Applets --group "$b" \
-              --group Configuration --group General \
-              --key showPercentage true
-          done
+              c=$(echo "$header" | grep -oE "[0-9]+" | sed -n 1p)
+              a=$(echo "$header" | grep -oE "[0-9]+" | sed -n 2p)
+              b=$(echo "$header" | grep -oE "[0-9]+" | sed -n 3p)
+              kwriteconfig6 --file "$cfg" \
+                --group Containments --group "$c" \
+                --group Applets --group "$a" \
+                --group Applets --group "$b" \
+                --group Configuration --group General \
+                --key showPercentage true
+            done
       '';
-      runAlways = true;
-      restartServices = [ "plasma-plasmashell" ];
     };
 
     configFile = {
-      # KWin Grid View (Win11 Task View). plasma-manager writes the entry
-      # with empty 2nd/3rd fields which Plasma 6.6 ignores at keypress
-      # dispatch time. Full triplet here = "shortcut,default,user-name".
+      # plasma-manager's shortcut writer leaves the user-visible name field
+      # empty, which Plasma 6.6 needs to actually dispatch the keypress for
+      # Grid View. Writing the full triplet directly.
       kglobalshortcutsrc."kwin"."Grid View" = "Meta+Tab,Meta+Tab,Toggle Grid View";
 
-      # Fonts: Roboto Flex everywhere in Plasma, DejaVu Sans Mono for fixed.
       kdeglobals."General" = {
-        AccentColor = hexToRgb roles.accent;
-        font = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-        menuFont = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-        toolBarFont = "Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+        AccentColor          = rgb roles.accent;
+        font                 = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+        menuFont             = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+        toolBarFont          = "Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         smallestReadableFont = "Roboto Flex,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-        fixed = "DejaVu Sans Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,0";
+        fixed                = "DejaVu Sans Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,0";
       };
       kdeglobals."KDE" = {
         SingleClick = false;
@@ -191,7 +201,7 @@ in {
       };
       kdeglobals."WM"."activeFont" = "Roboto Flex,11,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
 
-      # Power policy — AC: lock only, no sleep; battery: sleep+lock.
+      # Power: AC locks only; battery sleeps after 15min and locks.
       powerdevilrc."AC/SuspendAndShutdown" = {
         AutoSuspendAction = 0;
         LidAction = 0;
@@ -212,21 +222,19 @@ in {
         AutoSuspendIdleTimeoutSec = 300;
       };
 
-      # Lockscreen = solid OLED-mantle #060709.
       kscreenlockerrc.Daemon = {
-        Autolock = true;
+        Autolock     = true;
         LockOnResume = true;
-        Timeout = 10;
+        Timeout      = 10;
       };
       kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";
-      kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = hexToRgb roles.lockscreen;
+      kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = rgb roles.lockscreen;
 
-      # Lockscreen clock respects the system locale's time format. Force a
-      # 24h locale so the SDDM/kscreenlocker clock drops AM/PM. de_AT uses
-      # 24h by default; LC_TIME alone is enough to flip the clock widget.
+      # The lockscreen clock follows the system locale; LC_TIME=de_AT.UTF-8
+      # is the cheapest 24h-default we can pick without changing LANG.
       plasma-localerc."Formats" = {
-        LANG = "en_US.UTF-8";
-        LC_TIME = "de_AT.UTF-8";
+        LANG        = "en_US.UTF-8";
+        LC_TIME     = "de_AT.UTF-8";
         useDetailed = true;
       };
     };
