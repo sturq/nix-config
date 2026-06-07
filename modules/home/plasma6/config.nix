@@ -1,15 +1,7 @@
 { pkgs, lib, inputs, ... }: let
-  p = inputs.sturq-palette.palette;
-  # "#RRGGBB" → "R,G,B" decimal triplet (KDE configs want comma-separated ints).
-  hexToRgb = hex: let
-    s = builtins.substring 1 6 hex;
-    h2d = c: let
-      m = { "0"=0; "1"=1; "2"=2; "3"=3; "4"=4; "5"=5; "6"=6; "7"=7; "8"=8; "9"=9;
-            "a"=10; "b"=11; "c"=12; "d"=13; "e"=14; "f"=15;
-            "A"=10; "B"=11; "C"=12; "D"=13; "E"=14; "F"=15; };
-    in m.${c};
-    byte = i: 16 * (h2d (builtins.substring i 1 s)) + (h2d (builtins.substring (i+1) 1 s));
-  in "${toString (byte 0)},${toString (byte 2)},${toString (byte 4)}";
+  sp = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
+  p = sp.palette;
+  hexToRgb = sp.hexToRgb;
 in {
   # Declarative KDE Plasma 6 — panels, shortcuts, kdeglobals, power, lock.
   programs.plasma = {

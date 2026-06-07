@@ -1,5 +1,6 @@
 { pkgs, inputs, ... }: let
-  palette = inputs.sturq-palette.palette;
+  sp = import ../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = sp.palette;
 in {
   # Stylix → system-wide theming. One color scheme + one wallpaper that
   # downstream Stylix targets pick up. Plasma + GTK targets are off (handled
@@ -14,7 +15,7 @@ in {
 
     # base16Scheme is pre-mapped in the palette flake (Termux ANSI accents,
     # OLED surfaces, white-ramp text). Pull it whole — no hexes in this file.
-    base16Scheme = inputs.sturq-palette.base16Scheme;
+    base16Scheme = sp.base16Scheme;
 
     # Wallpaper — solid sturq-palette base (midnight navy). Matches the
     # Android home-screen wallpaper. Primary lavender shows up as the
