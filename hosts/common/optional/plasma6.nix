@@ -61,6 +61,11 @@
 
   hardware.graphics.enable = true;
 
+  # ydotool — Wayland-native keyboard/mouse synthesis (xdotool replacement).
+  # Useful for debug-testing KWin scripts (Meta+Down chains etc) when
+  # spectacle + D-Bus invokeShortcut isn't enough.
+  programs.ydotool.enable = true;
+
   fonts.packages = with pkgs; [
     dejavu_fonts
     nerd-fonts.roboto-mono
