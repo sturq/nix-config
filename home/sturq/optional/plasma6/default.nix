@@ -9,6 +9,7 @@
     ./shortcuts.nix
     ./session.nix
     ./konsole.nix
+    ./kwin-scripts.nix
   ];
 
   programs.plasma.enable = true;

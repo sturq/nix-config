@@ -6,13 +6,13 @@
     "services/org.kde.spectacle.desktop"."_launch"            = "Meta+Shift+S";
     "services/org.kde.plasma-systemmonitor.desktop"."_launch" = "Ctrl+Shift+Escape";
 
-    # Win11-style snap layout: Up = maximize, Down = tile bottom half,
-    # Left/Right = tile left/right half. Plain Window Minimize on Meta+Down
-    # made the window disappear; Quick Tile Bottom puts it in the lower
-    # half like Win11 does.
+    # Win11-style snap layout: Up = maximize, Left/Right = tile left/right.
+    # Meta+Down is handled by the win11-meta-down KWin script (chains
+    # tile-bottom → minimise on second press, like Win11) — see
+    # kwin-scripts.nix. The built-in Window Quick Tile Bottom shortcut
+    # is unset so it doesn't double-fire on the same key.
     "kwin"."Show Desktop"             = "Meta+D";
     "kwin"."Window Maximize"          = "Meta+Up";
-    "kwin"."Window Quick Tile Bottom" = "Meta+Down";
     "kwin"."Window Quick Tile Left"   = "Meta+Left";
     "kwin"."Window Quick Tile Right"  = "Meta+Right";
     "kwin"."Window Minimize"          = "none";
@@ -41,10 +41,22 @@
   # Meta+Tab, so KGlobalAccel resolves the collision in TabBox's favour
   # unless we strip Meta+Tab from the default field directly. Format:
   # "current_key,default_keys,friendly_name".
-  programs.plasma.configFile.kglobalshortcutsrc.kwin = {
-    "Overview"                       = "Meta+Tab,Meta+W,Toggle Overview";
-    "Grid View"                      = "Meta+G,Meta+G,Toggle Grid View";
-    "Walk Through Windows"           = "Alt+Tab,Alt+Tab,Walk Through Windows";
-    "Walk Through Windows (Reverse)" = "Alt+Shift+Tab,Alt+Shift+Tab,Walk Through Windows (Reverse)";
+  programs.plasma.configFile.kglobalshortcutsrc = {
+    kwin = {
+      "Overview"                       = "Meta+Tab,Meta+W,Toggle Overview";
+      "Grid View"                      = "Meta+G,Meta+G,Toggle Grid View";
+      "Walk Through Windows"           = "Alt+Tab,Alt+Tab,Walk Through Windows";
+      "Walk Through Windows (Reverse)" = "Alt+Shift+Tab,Alt+Shift+Tab,Walk Through Windows (Reverse)";
+
+      # Free Meta+Down from the built-in Quick Tile so the win11-meta-down
+      # KWin script can grab it; the script chains tile-bottom → minimise
+      # on second press (see kwin-scripts.nix).
+      "Window Quick Tile Bottom"       = "none,none,Quick Tile Window to the Bottom";
+    };
+
+    # The script lives in its own component because KWin scripts register
+    # their shortcuts under the script's plugin id.
+    win11-meta-down."Win11-style Meta+Down (tile / minimise)" =
+      "Meta+Down,none,Win11-style Meta+Down (tile / minimise)";
   };
 }
