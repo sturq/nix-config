@@ -21,10 +21,10 @@
     extraGroups = [ "wheel" ];
   };
 
-  # No need for the full base.nix (it sets boot loader etc which WSL ignores)
-  # but we DO want common settings:
+  # WSL skips hosts/common/global (boot loader, networkmanager etc don't
+  # apply inside WSL) — replicate just the bits that do.
   time.timeZone = "Europe/Vienna";
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "en_GB.UTF-8";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;

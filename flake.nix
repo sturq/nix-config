@@ -56,9 +56,9 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-flatpak, disko, stylix,
-              plasma-manager, nixos-hardware, nix-darwin, nix-on-droid,
-              nixos-wsl, ... }@inputs:
+  outputs = { nixpkgs, home-manager, nix-flatpak, disko, stylix,
+              plasma-manager, nix-darwin, nix-on-droid, nixos-wsl,
+              ... }@inputs:
     let
       # ---- Full NixOS host (Linux, KDE Plasma 6 Wayland desktop) ----
       # hwConfig: defaults to ./hosts/${hostName}/hardware-configuration.nix.

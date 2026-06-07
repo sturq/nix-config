@@ -3,7 +3,6 @@
     ./shell.nix
     ./git.nix
     ./ssh.nix
-    ./direnv.nix
     ./tools.nix
     ./nix.nix
   ];
