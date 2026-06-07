@@ -11,13 +11,13 @@ let
   fg     = "#${palette.base16Scheme.base05}";
   dim    = "#${palette.base16Scheme.base03}";
 
-  # GRUB renders pre-X, so the theme is a few PNGs + a layout file. Stylix
-  # ships its own dark theme but doesn't expose the selection colour, so we
-  # build a small one ourselves out of the same palette tokens that drive
-  # Plasma — selection bar in accent, progress fill in accent, everything
-  # else from base16.
+  # GRUB renders pre-X, so the theme is a few PNGs + a layout file.
+  # Generate font sizes alongside the PNGs — referencing a font name
+  # (e.g. "DejaVu Sans Bold 20") only works if a .pf2 with that exact
+  # name + size is loaded; without it GRUB falls back to text mode and
+  # the whole theme silently skips.
   grubTheme = pkgs.runCommand "grub-theme-palette" {
-    buildInputs = [ pkgs.imagemagick ];
+    buildInputs = [ pkgs.imagemagick pkgs.grub2 pkgs.dejavu_fonts ];
   } ''
     mkdir -p $out
 
@@ -26,13 +26,19 @@ let
     magick -size 4x40     xc:'${accent}' $out/select_w.png
     magick -size 4x40     xc:'${accent}' $out/select_e.png
 
+    # Convert TTF → .pf2 at every size theme.txt references. -n is the
+    # font name GRUB looks up; must match the theme.txt strings exactly.
+    DEJAVU=${pkgs.dejavu_fonts}/share/fonts/truetype
+    grub-mkfont -s 20 -n "DejaVu Sans Bold 20"    -o $out/dejavu-bold-20.pf2    $DEJAVU/DejaVuSans-Bold.ttf
+    grub-mkfont -s 14 -n "DejaVu Sans Regular 14" -o $out/dejavu-regular-14.pf2 $DEJAVU/DejaVuSans.ttf
+    grub-mkfont -s 11 -n "DejaVu Sans Regular 11" -o $out/dejavu-regular-11.pf2 $DEJAVU/DejaVuSans.ttf
+
     cat > $out/theme.txt <<EOF
     title-text: ""
     desktop-image: "background.png"
     desktop-color: "${bg}"
     message-color: "${fg}"
     message-bg-color: "${bg}"
-    terminal-font: "DejaVu Sans Regular 12"
 
     + label {
       left = 50%-120
@@ -91,6 +97,12 @@ in {
 
     theme = grubTheme;
     splashImage = "${grubTheme}/background.png";
+
+    # The auto mode sometimes fails on Intel GOP (HP 250 G9) and GRUB
+    # drops to text mode (the bright-blue console default). Pin a known
+    # native resolution so gfxterm always succeeds.
+    gfxmodeEfi = "1920x1080";
+    gfxpayloadEfi = "keep";
 
     memtest86.enable = true;
 

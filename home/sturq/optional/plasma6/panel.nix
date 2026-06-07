@@ -86,9 +86,10 @@ in {
         };
       }
 
-      # Thin show-desktop strip at the right edge, mirrors the Win11
-      # invisible-strip behaviour. Click is wired to Meta+D below.
-      { name = "org.kde.plasma.panelspacer"; config.General = { expanding = "false"; length = "6"; }; }
+      # Thin show-desktop strip at the right edge — Win11-style invisible
+      # button. panelspacer is passive (no click target); the dedicated
+      # showdesktop applet renders the same way but actually fires.
+      "org.kde.plasma.showdesktop"
     ];
   }];
 
