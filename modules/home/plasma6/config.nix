@@ -239,4 +239,16 @@ in {
       };
     };
   };
+
+  # Plasma sources every *.sh under plasma-workspace/env at session start.
+  # Exporting LC_TIME here means the kscreenlocker daemon (and the greeter
+  # it spawns) inherit 24h — Qt's QLocale reads LC_TIME on process startup,
+  # so just setting plasma-localerc isn't enough on its own.
+  xdg.configFile."plasma-workspace/env/locale.sh" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      export LC_TIME=de_AT.UTF-8
+    '';
+  };
 }
