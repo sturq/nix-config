@@ -7,15 +7,11 @@
   # Networking
   networking.networkmanager.enable = true;
 
-  # Vienna time, English UI, 24h clock everywhere (incl. SDDM/kscreenlocker
-  # greeter, which reads LC_TIME from the system, not the user session).
+  # Vienna time, English UI, 24h clock. en_GB gives Qt6 the 24h hint the
+  # kscreenlocker greeter needs (LC_TIME alone isn't enough — Qt only reads
+  # LANG for QLocale defaults). Day-first dates fall out for free.
   time.timeZone = "Europe/Vienna";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_TIME    = "de_AT.UTF-8";
-    LC_NUMERIC = "de_AT.UTF-8";
-    LC_PAPER   = "de_AT.UTF-8";
-  };
+  i18n.defaultLocale = "en_GB.UTF-8";
   console.keyMap = "de";
 
   # User (declarative)

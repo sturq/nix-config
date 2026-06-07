@@ -230,25 +230,8 @@ in {
       kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";
       kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color = rgb roles.lockscreen;
 
-      # The lockscreen clock follows the system locale; LC_TIME=de_AT.UTF-8
-      # is the cheapest 24h-default we can pick without changing LANG.
-      plasma-localerc."Formats" = {
-        LANG        = "en_US.UTF-8";
-        LC_TIME     = "de_AT.UTF-8";
-        useDetailed = true;
-      };
+      # System LANG=en_GB.UTF-8 already gives the greeter 24h via QLocale,
+      # so plasma-localerc just inherits the default.
     };
-  };
-
-  # Plasma sources every *.sh under plasma-workspace/env at session start.
-  # Exporting LC_TIME here means the kscreenlocker daemon (and the greeter
-  # it spawns) inherit 24h — Qt's QLocale reads LC_TIME on process startup,
-  # so just setting plasma-localerc isn't enough on its own.
-  xdg.configFile."plasma-workspace/env/locale.sh" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      export LC_TIME=de_AT.UTF-8
-    '';
   };
 }
