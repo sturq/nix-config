@@ -74,16 +74,10 @@ in {
     targets.kmscon.enable = false;
   };
 
-  # Per-target overrides applied to every home-manager user. Both kde
-  # (Plasma window chrome) and konsole (terminal ANSI ramp + colour
-  # scheme) read the palette through Stylix. fastfetch inherits the
-  # colours from the terminal automatically — no target needed.
+  # Stylix's kde target generates a Plasma colour scheme from the palette
+  # (it also covers Konsole — Konsole uses the active KDE scheme via Qt).
+  # plasma-manager still owns workspace lookAndFeel + accent.
   home-manager.sharedModules = [
-    {
-      stylix.targets = {
-        kde.enable = true;
-        konsole.enable = true;
-      };
-    }
+    { stylix.targets.kde.enable = true; }
   ];
 }
