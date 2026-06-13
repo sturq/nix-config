@@ -2,7 +2,6 @@
   # ASUS Vivobook S 14 M5406WA — AMD Strix Point laptop.
   imports = [
     ../common/optional/plasma6.nix
-    ../common/optional/autologin.nix
     ../common/optional/hardware/laptop.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
