@@ -1,9 +1,9 @@
-{ pkgs, ... }: {
+{ ... }: {
   programs.git = {
     enable = true;
-    userName = "sturq";
-    userEmail = "sturq@users.noreply.github.com";
-    extraConfig = {
+    settings = {
+      user.name = "sturq";
+      user.email = "sturq@users.noreply.github.com";
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
