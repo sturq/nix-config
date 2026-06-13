@@ -22,7 +22,7 @@
       overviewEnabled           = false;
     };
     "Effect-blur" = {
-      BlurStrength  = 15;     # heavy blur, iOS-glass thickness
+      BlurStrength  = 18;     # max — full iOS-glass thickness
       NoiseStrength = 0;
     };
     Compositing.AnimationSpeed = 2;  # default-ish, not jerky-fast

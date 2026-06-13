@@ -20,12 +20,12 @@ let
   '';
 in {
   programs.plasma = {
-    # Stock BreezeDark — windows / Dolphin / system settings keep
-    # KDE's stock look. The only thing the palette injects is the
-    # accent colour, written via kdeglobals.General.AccentColor below.
+    # BreezeDark colour-scheme only. lookAndFeel left to Plasma's own
+    # modern default — Breeze's lookAndFeel forced an older opaque
+    # panel theme that defeated KWin Blur, the default lookAndFeel
+    # ships a translucent panel SVG that actually lets Blur work.
     workspace = {
       colorScheme = "BreezeDark";
-      lookAndFeel = "org.kde.breezedark.desktop";
       wallpaper   = "${wallpaperImage}";
       cursor      = { theme = "Bibata-Modern-Classic"; size = 24; };
     };
@@ -50,8 +50,7 @@ in {
         SingleClick = false;
         AnimationDurationFactor = 0.5;
       };
-      # Window titles in the display serif — same call as the site hero.
-      kdeglobals."WM"."activeFont" = "Cormorant Garamond,12,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
+      kdeglobals."WM"."activeFont" = "DejaVu Sans,11,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
 
       # Plasma exports LANG from this file into the session env at login;
       # a stale en_US entry left over from System Settings was making the

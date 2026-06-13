@@ -73,8 +73,8 @@ in {
 
     opacity = {
       terminal = 0.92;
-      desktop  = 0.78;   # panel + plasma surfaces — let KWin Blur show through
-      popups   = 0.85;   # menus / kickoff / notifications — frosted glass
+      desktop  = 0.65;   # panel + plasma surfaces — heavy frosted glass
+      popups   = 0.75;   # menus / kickoff / notifications
     };
     targets.kmscon.enable = false;
   };
