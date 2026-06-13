@@ -7,6 +7,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Declarative flatpak: services.flatpak.packages list deployed per
+    # host. Used by HP250 for Sober (Roblox via Vinegar).
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
     # Declarative disk layouts (used by nixos-anywhere for fresh installs).
     disko = {
       url = "github:nix-community/disko";
@@ -49,7 +53,7 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, disko, stylix,
+  outputs = { nixpkgs, home-manager, nix-flatpak, disko, stylix,
               plasma-manager, nix-darwin, nixos-wsl,
               ... }@inputs:
     let
@@ -65,6 +69,7 @@
         modules = [
           ./hosts/common/global
           ./hosts/${hostName}
+          nix-flatpak.nixosModules.nix-flatpak
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           {
