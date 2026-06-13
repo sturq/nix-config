@@ -13,8 +13,6 @@
   networking.hostName = "vivobook";
   system.stateVersion = "25.11";
 
-  boot.loader.systemd-boot.enable = true;
+  # global already enables systemd-boot + canTouchEfiVariables.
   boot.loader.systemd-boot.configurationLimit = 3;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot";
 }

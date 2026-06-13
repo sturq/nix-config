@@ -10,6 +10,9 @@
     wayland.enable = true;
   };
 
+  # plasma-manager writes dconf for some KDE bits — needs dconf enabled.
+  programs.dconf.enable = true;
+
   # Bare desktop — Konsole only. Everything else gets added back on
   # request so we know exactly what's installed.
   environment.systemPackages = with pkgs; [
@@ -43,14 +46,6 @@
     alsa.enable = true;
     pulse.enable = true;
   };
-
-  # Force legacy snd_hda_intel driver instead of Sound Open Firmware on
-  # Intel chipsets that ship SOF-capable codecs but no matching firmware
-  # topology — Alder Lake laptops (HP 250 G9, Vivobook etc) regress to
-  # "no soundcards" if SOF can't finish init. dsp_driver=1 == HDA-only.
-  boot.extraModprobeConfig = ''
-    options snd-intel-dspcfg dsp_driver=1
-  '';
 
   # rtkit gives PipeWire realtime scheduling — without it PW logs a flood
   # of "RTKit error: ServiceUnknown" at session start.
