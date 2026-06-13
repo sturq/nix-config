@@ -162,31 +162,28 @@
       # On Fedora/Arch/Debian/whatever: install Nix (Determinate installer),
       # then:
       #   nix run home-manager/master -- switch --flake .#sturq
-      # You get the full `home/sturq/global/` CLI layer on any distro.
-      homeConfigurations = {
-        # Linux: CLI only — shell, git, tools. Same layer that WSL gets.
-        sturq = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [ ./home/sturq/cli.nix ];
-        };
-        sturq-aarch64 = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.aarch64-linux;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [ ./home/sturq/cli.nix ];
-        };
+      # You get the full home/sturq/common/global CLI layer on any distro.
+      homeConfigurations =
+        let
+          # Standalone HM doesn't inherit NixOS-side nixpkgs.config —
+          # has to bring its own allowUnfree (claude-code is unfree).
+          pkgsFor = system: import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          mkHome = system: entrypoint: home-manager.lib.homeManagerConfiguration {
+            pkgs = pkgsFor system;
+            extraSpecialArgs = { inherit inputs; };
+            modules = [ entrypoint ];
+          };
+        in {
+          # Linux: CLI only — shell, git, tools. Same layer that WSL gets.
+          sturq          = mkHome "x86_64-linux"   ./home/sturq/cli.nix;
+          sturq-aarch64  = mkHome "aarch64-linux"  ./home/sturq/cli.nix;
 
-        # macOS standalone (if you're not using nix-darwin for system).
-        sturq-mac = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [ ./home/sturq/darwin.nix ];
+          # macOS standalone (if you're not using nix-darwin for system).
+          sturq-mac       = mkHome "aarch64-darwin" ./home/sturq/darwin.nix;
+          sturq-mac-intel = mkHome "x86_64-darwin"  ./home/sturq/darwin.nix;
         };
-        sturq-mac-intel = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-darwin;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [ ./home/sturq/darwin.nix ];
-        };
-      };
     };
 }
