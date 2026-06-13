@@ -58,7 +58,7 @@ in {
     #   --mono-font:    "JetBrains Mono"        — code + UI labels
     #   --ui-font:      system-ui sans-serif    — body text (DejaVu sans = close)
     fonts = {
-      monospace = { package = pkgs.jetbrains-mono; name = "JetBrains Mono"; };
+      monospace = { package = pkgs.google-fonts;   name = "JetBrains Mono"; };
       sansSerif = { package = pkgs.dejavu_fonts;   name = "DejaVu Sans";    };
       # Cormorant Garamond ships with Google's mega-pack; Stylix only
       # needs the name to resolve, so the bundle is the simplest source.
