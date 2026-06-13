@@ -37,9 +37,15 @@ in {
   # Bottom panel laid out Win11-style: kickoff + tasks centred between two
   # expanding spacers; the status cluster pinned to the right uses two
   # systemtrays so the overflow arrow ends up on the LEFT of the icons.
+  #
+  # NOT floating — the panel hugs the screen edge so the right-hand
+  # invisible-showdesktop strip sits at the actual bottom-right corner
+  # (Win11 corner-fling). With floating=true the strip stays at the
+  # floating-bar edge, with empty space between it and the screen
+  # corner, so the corner-mash gesture misses.
   programs.plasma.panels = [{
     location = "bottom";
-    floating = true;
+    floating = false;
     height = 44;
     widgets = [
       { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
