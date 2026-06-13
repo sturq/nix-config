@@ -58,16 +58,15 @@
                 cursorShape: Qt.PointingHandCursor
 
                 // Win11 ships a near-invisible separator hint on the
-                // show-desktop strip so you can find it. 1px periwinkle
-                // line at the left edge of the strip, dimmer when idle,
-                // brighter on hover.
+                // show-desktop strip so you can find it. 2px periwinkle
+                // line at the left edge of the strip, brightens on hover.
                 Rectangle {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    width: 1
-                    height: parent.height * 0.5
-                    color: parent.containsMouse ? "#B9C5EE" : "#586384"
-                    opacity: parent.containsMouse ? 1.0 : 0.6
+                    width: 2
+                    height: parent.height * 0.55
+                    color: parent.containsMouse ? "#B9C5EE" : "#9CA7CE"
+                    opacity: parent.containsMouse ? 1.0 : 0.75
                 }
 
                 P5Support.DataSource {
