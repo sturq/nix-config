@@ -32,7 +32,11 @@ in {
       };
     };
 
-    opacity.terminal = 0.95;
+    opacity = {
+      terminal = 0.95;
+      desktop  = 0.75;   # panel + plasma surfaces — let KWin Blur show through
+      popups   = 0.85;
+    };
     targets.kmscon.enable = false;
   };
 
