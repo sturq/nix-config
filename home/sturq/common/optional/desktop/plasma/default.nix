@@ -9,7 +9,6 @@
     ./shortcuts.nix
     ./session.nix
     ./konsole.nix
-    ./blur.nix
   ];
 
   programs.plasma.enable = true;
