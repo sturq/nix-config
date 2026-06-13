@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }: {
+{ ... }: {
   # NixOS-WSL host: runs inside Windows Subsystem for Linux 2.
   # No boot loader (Windows boots), no display manager, mostly CLI.
 

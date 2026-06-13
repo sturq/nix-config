@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ ... }: {
   # GRUB + os-prober for dual-boot. No theme — both our custom roll
   # AND Stylix's grub target produce broken PNGs (132 bytes each, GRUB
   # rejects them and shows an 'any key to continue' prompt). Plain
