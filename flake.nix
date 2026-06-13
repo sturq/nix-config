@@ -85,7 +85,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs; };
-              sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
+              sharedModules = [ plasma-manager.homeModules.plasma-manager ];
               users.sturq = import ./home/sturq/nixos.nix;
               backupFileExtension = "hm-backup";
             };

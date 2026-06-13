@@ -42,7 +42,12 @@ in {
     ];
   };
 
-  home-manager.sharedModules = [
-    { stylix.targets.kde.enable = true; }
-  ];
+  # Stylix's Qt target only supports qtct — KDE handles its own colour
+  # management natively via plasma-manager, so we disable qt instead of
+  # forcing qtct. KDE target stays on for the parts plasma-manager
+  # doesn't cover (lock screen, splash, kvantum).
+  home-manager.sharedModules = [{
+    stylix.targets.kde.enable = true;
+    stylix.targets.qt.enable = false;
+  }];
 }
