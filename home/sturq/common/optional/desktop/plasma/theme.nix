@@ -3,21 +3,20 @@
 let
   palette = import ../../../../../../lib/palette.nix { src = inputs.sturq-palette; };
 
-  # Wallpaper: pure-black OLED canvas with a large palette-tinted Λ
-  # in the bottom-right corner, partly clipped off-screen. Same
-  # polygon points as the kickoff icon / site logo.
+  # Wallpaper: palette-base canvas with a primary-tinted Λ tucked into
+  # the bottom-right corner (same polygon as the kickoff icon).
   wallpaperImage = pkgs.runCommand "wallpaper.png" {
     buildInputs = [ pkgs.imagemagick ];
   } ''
     cat > lambda.svg <<'EOF'
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
       <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48"
-               fill="#586384"/>
+               fill="#B9C5EE"/>
     </svg>
     EOF
-    magick -background none -size 900x1080 lambda.svg lambda.png
-    magick -size 1920x1080 xc:'#000000' \
-      lambda.png -gravity SouthEast -geometry -180-100 -composite \
+    magick -background none -size 420x504 lambda.svg lambda.png
+    magick -size 1920x1080 xc:'#2A3042' \
+      lambda.png -gravity SouthEast -geometry -80-60 -composite \
       $out
   '';
 in {
