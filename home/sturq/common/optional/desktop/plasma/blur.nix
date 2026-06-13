@@ -29,16 +29,25 @@
     text = ''
       cfg="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
       [ -f "$cfg" ] || exit 0
-      # Find every panel containment and force translucent opaque mode (1).
-      # Walking [Containments][N][General] entries: panels are
-      # formfactor=2 (horizontal) or 3 (vertical), desktop containments
-      # are formfactor=0 — only touch the panels.
-      for c in $(grep -B1 "^formfactor=[23]$" "$cfg" \
-                 | grep -oE "\[Containments\]\[[0-9]+\]" \
-                 | grep -oE "[0-9]+" | sort -u); do
+      # Walk every [Containments][N] section; if its formfactor is 2
+      # (horizontal panel) or 3 (vertical), set opaqueMode=1 to make
+      # KWin's Blur effect actually kick in behind it.
+      #
+      # awk tracks the current containment id between section headers
+      # and the next key/value lines (formfactor lives a few lines down
+      # from the header, so a plain grep -B1 misses it).
+      for c in $(awk '
+        /^\[Containments\]\[[0-9]+\]/ {
+          line = $0
+          sub(/.*\[/, "", line)
+          sub(/\].*/, "", line)
+          current = line
+        }
+        /^formfactor=[23]$/ { print current }
+      ' "$cfg" | sort -u); do
         kwriteconfig6 --file "$cfg" \
-          --group Containments --group "$c" --group General \
-          --key opaqueMode 1
+          --group Containments --group "$c" \
+          --key opaqueMode --type int 1
       done
     '';
   };

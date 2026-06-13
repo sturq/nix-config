@@ -2,10 +2,14 @@
 
 let
   # Same Λ as the sturq.github.io top-bar logo: polygon points lifted
-  # verbatim from the site SVG. White so it pops on the dark panel.
+  # verbatim from the site SVG. Scaled to ~65% inside the same viewBox
+  # so plasma renders it smaller than the panel height (less assertive
+  # than a button filling the whole bar).
   lambdaIcon = pkgs.writeText "sturq-lambda.svg" ''
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
-      <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="#FFFFFF"/>
+      <g transform="translate(17.5,21) scale(0.65)">
+        <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="#FFFFFF"/>
+      </g>
     </svg>
   '';
 
