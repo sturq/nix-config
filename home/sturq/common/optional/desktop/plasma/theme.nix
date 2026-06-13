@@ -3,12 +3,7 @@
 let
   palette = import ../../../../../../lib/palette.nix { src = inputs.sturq-palette; };
 
-  # Wallpaper: same body-background recipe as sturq.github.io —
-  #   base #2A3042
-  #   + top-centre periwinkle glow (90% × 50% ellipse, ~8% in CSS)
-  #   + bottom-centre surface1 glow (80% × 40% ellipse, ~50% in CSS)
-  #   + the Λ accent in the bottom-right corner
-  # Blurred ellipses approximate the CSS radial-gradient fades.
+  # Wallpaper: solid palette base + Λ accent bottom-right.
   wallpaperImage = pkgs.runCommand "wallpaper.png" {
     buildInputs = [ pkgs.imagemagick ];
   } ''
@@ -19,25 +14,7 @@ let
     </svg>
     EOF
     magick -background none -size 600x720 lambda.svg lambda.png
-
-    # Alphas match the site CSS exactly: 0x14 = 0.08 (top, periwinkle),
-    # 0x80 = 0.50 (bottom, surface2). Tighter blur (0x40) keeps the
-    # glows from washing out the base — base #2A3042 stays dominant.
-    magick -size 1920x1080 xc:none \
-      -fill '#B9C5EE14' \
-      -draw 'ellipse 960,0 864,270 0,360' \
-      -blur 0x40 \
-      top-glow.png
-
-    magick -size 1920x1080 xc:none \
-      -fill '#40466180' \
-      -draw 'ellipse 960,1080 768,216 0,360' \
-      -blur 0x40 \
-      bottom-glow.png
-
     magick -size 1920x1080 xc:'#2A3042' \
-      top-glow.png -composite \
-      bottom-glow.png -composite \
       lambda.png -gravity SouthEast -geometry -100-80 -composite \
       $out
   '';
