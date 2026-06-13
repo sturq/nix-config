@@ -49,15 +49,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Cross-platform: macOS, Android, WSL
+    # Cross-platform: macOS + WSL
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-on-droid = {
-      url = "github:nix-community/nix-on-droid";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
@@ -66,7 +61,7 @@
   };
 
   outputs = { nixpkgs, home-manager, nix-flatpak, disko, stylix,
-              plasma-manager, nix-darwin, nix-on-droid, nixos-wsl,
+              plasma-manager, nix-darwin, nixos-wsl,
               ... }@inputs:
     let
       # ---- Full NixOS host (Linux, KDE Plasma 6 Wayland desktop) ----
@@ -112,26 +107,6 @@
         ];
       };
 
-      # ---- WSL host (NixOS-WSL, no GUI, CLI only) ----
-      mkWsl = hostName: nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/${hostName}
-          nixos-wsl.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit inputs; };
-              users.sturq = import ./home/sturq/cli.nix;
-              backupFileExtension = "hm-backup";
-            };
-          }
-        ];
-      };
-
       # ---- macOS host (nix-darwin) ----
       mkDarwin = hostName: system: nix-darwin.lib.darwinSystem {
         inherit system;
@@ -151,20 +126,28 @@
         ];
       };
 
-      # ---- Android host (nix-on-droid) ----
-      mkAndroid = hostName: nix-on-droid.lib.nixOnDroidConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-linux;
+      # ---- WSL host (NixOS-WSL, no GUI, CLI only) ----
+      mkWsl = hostName: nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
         modules = [
           ./hosts/${hostName}
+          nixos-wsl.nixosModules.default
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = { inherit inputs; };
+              users.sturq = import ./home/sturq/cli.nix;
+              backupFileExtension = "hm-backup";
+            };
+          }
         ];
-        home-manager-path = home-manager.outPath;
-        extraSpecialArgs = { inherit inputs; };
       };
     in {
       nixosConfigurations = {
-        vm = mkHost "vm" {};
         vivobook = mkHost "vivobook" {};
-        hp250 = mkHost "hp250" {};
         wsl = mkWsl "wsl";
 
         # ---- Generic profiles (deploy to any laptop/desktop on the fly) ----
@@ -172,9 +155,7 @@
         desktop = mkHost "desktop" {};
 
         # ---- Installer variants (for nixos-anywhere + disko) ----
-        hp250-install = mkInstaller "hp250" { device = "/dev/nvme0n1"; };
         vivobook-install = mkInstaller "vivobook" { device = "/dev/nvme0n1"; };
-        vm-install = mkInstaller "vm" { device = "/dev/sda"; };  # Proxmox virtio-scsi defaults to sda
         laptop-install = mkInstaller "laptop" { device = "/dev/nvme0n1"; };
         desktop-install = mkInstaller "desktop" { device = "/dev/nvme0n1"; };
       };
@@ -184,10 +165,6 @@
         macbook-intel = mkDarwin "macbook" "x86_64-darwin";  # Intel Macs
         # Same host config, different system arch. If you want
         # truly different per-arch hosts: make hosts/macbook-intel/.
-      };
-
-      nixOnDroidConfigurations = {
-        phone = mkAndroid "phone";
       };
     };
 }
