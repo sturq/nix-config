@@ -5,8 +5,6 @@
   wsl = {
     enable = true;
     defaultUser = "sturq";
-    # Allow WSL to start systemd
-    nativeSystemd = true;
     # Friendly hostname inside WSL
     wslConf.network.hostname = "wsl";
     # Don't shoot yourself: keep Windows interop
