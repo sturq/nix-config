@@ -98,7 +98,9 @@
       };
 
       # ---- macOS host (nix-darwin) ----
-      mkDarwin = hostName: system: nix-darwin.lib.darwinSystem {
+      # Default to Apple Silicon — every new Mac since 2020 is arm64.
+      # If you ever need Intel, pass system explicitly.
+      mkDarwin = hostName: { system ? "aarch64-darwin" }: nix-darwin.lib.darwinSystem {
         inherit system;
         specialArgs = { inherit inputs; };
         modules = [
@@ -152,10 +154,9 @@
       };
 
       darwinConfigurations = {
-        macbook = mkDarwin "macbook" "aarch64-darwin";       # Apple Silicon (M1+)
-        macbook-intel = mkDarwin "macbook" "x86_64-darwin";  # Intel Macs
-        # Same host config, different system arch. If you want
-        # truly different per-arch hosts: make hosts/macbook-intel/.
+        # Apple Silicon by default. For an Intel Mac, override on the
+        # fly:  mkDarwin "macbook" { system = "x86_64-darwin"; }
+        macbook = mkDarwin "macbook" {};
       };
 
       # ---- Standalone home-manager (for non-NixOS distros) ----
@@ -182,8 +183,8 @@
           sturq-aarch64  = mkHome "aarch64-linux"  ./home/sturq/cli.nix;
 
           # macOS standalone (if you're not using nix-darwin for system).
-          sturq-mac       = mkHome "aarch64-darwin" ./home/sturq/darwin.nix;
-          sturq-mac-intel = mkHome "x86_64-darwin"  ./home/sturq/darwin.nix;
+          # Apple Silicon — Intel is a one-line addition if you need it.
+          sturq-mac = mkHome "aarch64-darwin" ./home/sturq/darwin.nix;
         };
     };
 }
