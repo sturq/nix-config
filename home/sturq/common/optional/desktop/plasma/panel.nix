@@ -1,14 +1,13 @@
 { pkgs, ... }:
 
 let
-  # Same Λ as the sturq.github.io top-bar logo: polygon points lifted
-  # verbatim from the site SVG. Scaled to ~50% inside the same viewBox
-  # so plasma renders it well below panel height — quiet accent rather
-  # than a button competing with the panel chrome.
+  # Same Λ as the sturq.github.io top-bar logo. Scaled to ~40% and
+  # filled with primary periwinkle — matches the site's small
+  # bottom-right mascot lambda (periwinkle, ~56px, drop-shadow glow).
   lambdaIcon = pkgs.writeText "sturq-lambda.svg" ''
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
-      <g transform="translate(25,30) scale(0.5)">
-        <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="#FFFFFF"/>
+      <g transform="translate(30,36) scale(0.4)">
+        <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="#B9C5EE"/>
       </g>
     </svg>
   '';
