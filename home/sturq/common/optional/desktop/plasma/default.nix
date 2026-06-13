@@ -50,12 +50,25 @@
             // declared up here would resolve to undefined when the
             // MouseArea handler fires (silent JS error, click looks dead).
             compactRepresentation: MouseArea {
-                Layout.minimumWidth: 12
-                Layout.maximumWidth: 12
+                Layout.minimumWidth: 16
+                Layout.maximumWidth: 16
                 Layout.fillHeight: true
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
+
+                // Win11 ships a near-invisible separator hint on the
+                // show-desktop strip so you can find it. 1px periwinkle
+                // line at the left edge of the strip, dimmer when idle,
+                // brighter on hover.
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 1
+                    height: parent.height * 0.5
+                    color: parent.containsMouse ? "#B9C5EE" : "#586384"
+                    opacity: parent.containsMouse ? 1.0 : 0.6
+                }
 
                 P5Support.DataSource {
                     id: shell
