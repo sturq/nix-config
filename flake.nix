@@ -166,5 +166,36 @@
         # Same host config, different system arch. If you want
         # truly different per-arch hosts: make hosts/macbook-intel/.
       };
+
+      # ---- Standalone home-manager (for non-NixOS distros) ----
+      # On Fedora/Arch/Debian/whatever: install Nix (Determinate installer),
+      # then:
+      #   nix run home-manager/master -- switch --flake .#sturq
+      # You get the full `home/sturq/global/` CLI layer on any distro.
+      homeConfigurations = {
+        # Linux: CLI only — shell, git, tools. Same layer that WSL gets.
+        sturq = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          extraSpecialArgs = { inherit inputs; };
+          modules = [ ./home/sturq/cli.nix ];
+        };
+        sturq-aarch64 = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-linux;
+          extraSpecialArgs = { inherit inputs; };
+          modules = [ ./home/sturq/cli.nix ];
+        };
+
+        # macOS standalone (if you're not using nix-darwin for system).
+        sturq-mac = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          extraSpecialArgs = { inherit inputs; };
+          modules = [ ./home/sturq/darwin.nix ];
+        };
+        sturq-mac-intel = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-darwin;
+          extraSpecialArgs = { inherit inputs; };
+          modules = [ ./home/sturq/darwin.nix ];
+        };
+      };
     };
 }
