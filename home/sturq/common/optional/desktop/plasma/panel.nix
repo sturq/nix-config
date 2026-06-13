@@ -8,7 +8,7 @@ let
   # mascot lambda.
   lambdaIcon = pkgs.writeText "sturq-lambda.svg" ''
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
-      <g transform="translate(30,36) scale(0.4)">
+      <g transform="translate(25,30) scale(0.5)">
         <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="${palette.core.primary}"/>
       </g>
     </svg>
