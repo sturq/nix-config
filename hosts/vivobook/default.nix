@@ -1,12 +1,12 @@
 { inputs, ... }: {
   # ASUS Vivobook S 14 M5406WA — AMD Strix Point laptop.
   imports = [
-    ../common/optional/plasma6.nix
+    ../common/optional/desktop/plasma.nix
     ../common/optional/hardware/laptop.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-    ../common/optional/tailscale.nix
+    ../common/optional/services/tailscale.nix
     ../common/optional/dev-defaults.nix
   ];
 

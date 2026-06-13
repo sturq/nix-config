@@ -101,7 +101,7 @@
       mkInstaller = hostName: { device ? "/dev/sda" }: mkHost hostName {
         hwConfig = null;
         extraModules = [
-          ./hosts/common/optional/disko.nix
+          ./hosts/common/optional/boot/disko.nix
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
         ];
