@@ -20,16 +20,19 @@ let
     EOF
     magick -background none -size 600x720 lambda.svg lambda.png
 
+    # Alphas match the site CSS exactly: 0x14 = 0.08 (top, periwinkle),
+    # 0x80 = 0.50 (bottom, surface2). Tighter blur (0x40) keeps the
+    # glows from washing out the base — base #2A3042 stays dominant.
     magick -size 1920x1080 xc:none \
-      -fill '#B9C5EE40' \
+      -fill '#B9C5EE14' \
       -draw 'ellipse 960,0 864,270 0,360' \
-      -blur 0x70 \
+      -blur 0x40 \
       top-glow.png
 
     magick -size 1920x1080 xc:none \
-      -fill '#404661C0' \
+      -fill '#40466180' \
       -draw 'ellipse 960,1080 768,216 0,360' \
-      -blur 0x70 \
+      -blur 0x40 \
       bottom-glow.png
 
     magick -size 1920x1080 xc:'#2A3042' \
