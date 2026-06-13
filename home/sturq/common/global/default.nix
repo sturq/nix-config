@@ -5,6 +5,7 @@
   imports = [
     ./tools.nix
     ./git.nix
+    ./shell.nix
   ];
 
   home.stateVersion = "25.11";

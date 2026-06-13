@@ -31,7 +31,6 @@
     kate             # editor
     kcalc            # calculator
     kwalletmanager   # wallet UI
-    spectacle        # screenshot tool (we keep it as a dep for testing)
     okular           # PDF viewer
     ark              # archive tool
     gwenview         # image viewer

@@ -1,6 +1,14 @@
-{ ... }:
+{ pkgs, ... }:
 
 let
+  # Same Λ as the sturq.github.io top-bar logo: polygon points lifted
+  # verbatim from the site SVG. White so it pops on the dark panel.
+  lambdaIcon = pkgs.writeText "sturq-lambda.svg" ''
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
+      <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="#FFFFFF"/>
+    </svg>
+  '';
+
   # Built-in plasmoids that ship a tray icon by default but we don't want
   # to see — listed once and routed straight to the overflow popup.
   systrayHidden = builtins.concatStringsSep "," [
@@ -33,7 +41,10 @@ in {
     widgets = [
       { name = "org.kde.plasma.panelspacer"; config.General.expanding = "true"; }
 
-      "org.kde.plasma.kickoff"
+      {
+        name = "org.kde.plasma.kickoff";
+        config.General.icon = "${lambdaIcon}";
+      }
 
       {
         name = "org.kde.plasma.icontasks";

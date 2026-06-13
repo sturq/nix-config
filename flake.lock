@@ -362,11 +362,11 @@
     "sturq-palette": {
       "flake": false,
       "locked": {
-        "lastModified": 1780796436,
-        "narHash": "sha256-3Fjm3rez5OAIe6fzkabCMlauBXSvuBipeIIdS+1rxxY=",
+        "lastModified": 1781360765,
+        "narHash": "sha256-9KQIIWlF69mwqaM5dZM5OfKvIBQKqO4LImguGvbUlDA=",
         "owner": "sturq",
         "repo": "sturq-palette",
-        "rev": "08a401b8c4d24129d35dadbdb65eae4e6cc2f803",
+        "rev": "b6c7b9bc831c5044664d0e99657ea59fb9d95d58",
         "type": "github"
       },
       "original": {
