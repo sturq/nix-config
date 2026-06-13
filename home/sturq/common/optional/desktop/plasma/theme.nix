@@ -10,11 +10,11 @@ let
     cat > lambda.svg <<'EOF'
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
       <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48"
-               fill="#B9C5EE"/>
+               fill="${palette.core.primary}"/>
     </svg>
     EOF
     magick -background none -size 600x720 lambda.svg lambda.png
-    magick -size 1920x1080 xc:'#2A3042' \
+    magick -size 1920x1080 xc:'${palette.core.base}' \
       lambda.png -gravity SouthEast -geometry -100-80 -composite \
       $out
   '';
@@ -30,9 +30,11 @@ in {
     };
 
     configFile = {
-      # Fonts only — colour-related keys (AccentColor etc.) are owned
-      # by stylix so KDE pulls everything from the palette.
+      # Fonts + the one colour key Stylix doesn't reliably re-inject
+      # after a panel reset: AccentColor. Without this Plasma falls
+      # back to Breeze blue, breaking the palette unity.
       kdeglobals."General" = {
+        AccentColor          = palette.hexToRgb palette.core.primary;
         font                 = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         menuFont             = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
         toolBarFont          = "Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";

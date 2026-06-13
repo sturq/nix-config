@@ -14,11 +14,11 @@ in {
       cat > lambda.svg <<'EOF'
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
         <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48"
-                 fill="#B9C5EE"/>
+                 fill="${palette.core.primary}"/>
       </svg>
       EOF
       magick -background none -size 600x720 lambda.svg lambda.png
-      magick -size 1920x1080 xc:'#2A3042' \
+      magick -size 1920x1080 xc:'${palette.core.base}' \
         lambda.png -gravity SouthEast -geometry -100-80 -composite \
         $out
     '';

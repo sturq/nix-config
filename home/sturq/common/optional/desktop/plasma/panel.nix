@@ -1,13 +1,15 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
+  palette = import ../../../../../../lib/palette.nix { src = inputs.sturq-palette; };
+
   # Same Λ as the sturq.github.io top-bar logo. Scaled to ~40% and
-  # filled with primary periwinkle — matches the site's small
-  # bottom-right mascot lambda (periwinkle, ~56px, drop-shadow glow).
+  # filled with palette primary — matches the site's small bottom-right
+  # mascot lambda.
   lambdaIcon = pkgs.writeText "sturq-lambda.svg" ''
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
       <g transform="translate(30,36) scale(0.4)">
-        <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="#B9C5EE"/>
+        <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48" fill="${palette.core.primary}"/>
       </g>
     </svg>
   '';
