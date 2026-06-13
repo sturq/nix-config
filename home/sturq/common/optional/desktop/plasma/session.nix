@@ -27,8 +27,8 @@ in {
     };
 
     kscreenlockerrc.Daemon = {
-      Autolock     = true;
-      LockOnResume = true;
+      Autolock     = false;
+      LockOnResume = false;
       Timeout      = 30;
     };
     kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";

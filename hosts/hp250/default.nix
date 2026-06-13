@@ -6,6 +6,7 @@
     ../laptop                                             # generic laptop profile
     ../common/optional/hardware/intel.nix                 # snd-intel-dspcfg quirk
     ../common/optional/boot/dualboot-grub.nix             # Windows + NixOS via GRUB
+    ../common/optional/autologin.nix                      # skip SDDM greeter
     inputs.nixos-hardware.nixosModules.common-cpu-intel
     inputs.nixos-hardware.nixosModules.common-gpu-intel
     inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
