@@ -102,12 +102,11 @@ in {
         };
       }
 
-      # Thin show-desktop strip at the right edge — Win11-style invisible
-      # button. The stock org.kde.plasma.showdesktop applet always
-      # renders a visible "user-desktop" icon; this is a minimal custom
-      # plasmoid (declared via home.file in default.nix) that draws
-      # nothing but forwards clicks to KWin's Show Desktop action.
-      "sturq.invisible-showdesktop"
+      # Win11-style show-desktop button at the far right — Plasma's
+      # stock org.kde.plasma.showdesktop renders as a thin vertical
+      # separator line by default, exactly like the Win11 affordance.
+      # Click to minimise everything, click again to restore.
+      "org.kde.plasma.showdesktop"
     ];
   }];
 
