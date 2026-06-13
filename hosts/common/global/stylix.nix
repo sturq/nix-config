@@ -41,7 +41,11 @@ in {
       };
     };
 
-    opacity.terminal = 0.95;
+    opacity = {
+      terminal = 0.92;
+      desktop  = 0.78;   # panel + plasma surfaces — let KWin Blur show through
+      popups   = 0.85;   # menus / kickoff / notifications — frosted glass
+    };
     targets.kmscon.enable = false;
   };
 

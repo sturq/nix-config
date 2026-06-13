@@ -9,7 +9,7 @@
     ./shortcuts.nix
     ./session.nix
     ./konsole.nix
-    ./perf.nix
+    ./compositor.nix
   ];
 
   programs.plasma.enable = true;
