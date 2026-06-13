@@ -59,10 +59,15 @@
 
   hardware.graphics.enable = true;
 
+  # Fonts mirrored from sturq.github.io's CSS custom properties:
+  #   --display-font = Cormorant (serif, hero titles)
+  #   --mono-font    = JetBrains Mono
+  #   --ui-font      = system-ui / DejaVu Sans as the fallback
   fonts.packages = with pkgs; [
     dejavu_fonts
-    nerd-fonts.roboto-mono
-    roboto-flex        # used by Plasma via plasma-manager
+    cormorant
+    jetbrains-mono
+    nerd-fonts.jetbrains-mono
     material-symbols   # icon font for apps that want it
   ];
 

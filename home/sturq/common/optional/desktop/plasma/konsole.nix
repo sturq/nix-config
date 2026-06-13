@@ -69,7 +69,7 @@ let
   profile = pkgs.writeText "palette.profile" ''
     [Appearance]
     ColorScheme=palette
-    Font=DejaVu Sans Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+    Font=JetBrains Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 
     [General]
     Name=palette

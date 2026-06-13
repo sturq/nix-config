@@ -34,19 +34,24 @@ in {
       # Fonts + the one colour key Stylix doesn't reliably re-inject
       # after a panel reset: AccentColor. Without this Plasma falls
       # back to Breeze blue, breaking the palette unity.
+      # Font choices match the site CSS:
+      #   --ui-font   → DejaVu Sans (close to system-ui)
+      #   --mono-font → JetBrains Mono (`fixed`)
+      #   AccentColor → palette periwinkle (site --accent)
       kdeglobals."General" = {
         AccentColor          = palette.hexToRgb palette.core.primary;
-        font                 = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-        menuFont             = "Roboto Flex,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-        toolBarFont          = "Roboto Flex,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-        smallestReadableFont = "Roboto Flex,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
-        fixed                = "DejaVu Sans Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,0";
+        font                 = "DejaVu Sans,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+        menuFont             = "DejaVu Sans,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+        toolBarFont          = "DejaVu Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+        smallestReadableFont = "DejaVu Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+        fixed                = "JetBrains Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,0";
       };
       kdeglobals."KDE" = {
         SingleClick = false;
         AnimationDurationFactor = 0.5;
       };
-      kdeglobals."WM"."activeFont" = "Roboto Flex,11,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
+      # Window titles in the display serif — same call as the site hero.
+      kdeglobals."WM"."activeFont" = "Cormorant,12,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
 
       # Plasma exports LANG from this file into the session env at login;
       # a stale en_US entry left over from System Settings was making the
