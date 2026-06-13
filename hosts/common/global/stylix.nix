@@ -10,7 +10,9 @@ in {
 
     image = pkgs.runCommand "wallpaper.png" {
       buildInputs = [ pkgs.imagemagick ];
-    } "magick -size 1920x1080 xc:'${palette.roles.wallpaper}' $out";
+    } ''
+      magick -size 1920x1080 radial-gradient:'#353B50'-'#1F2333' $out
+    '';
 
     cursor = {
       package = pkgs.bibata-cursors;

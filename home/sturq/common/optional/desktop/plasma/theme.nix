@@ -6,10 +6,16 @@ let
   accentRgb = rgb palette.roles.accent;
 
   # plasma-manager owns the wallpaper because Stylix's KDE target forced a
-  # light scheme on us before; the solid PNG goes through workspace.wallpaper.
+  # light scheme on us before. Radial gradient mimics sturq.github.io's
+  # body background: lighter near top-centre (#353B50, the site's
+  # --surface-0) fading out to the deep OLED step (#1F2333, --bg-deep)
+  # at the edges. Gives the KWin Blur effect something to actually blur
+  # behind the bottom panel.
   wallpaperImage = pkgs.runCommand "wallpaper.png" {
     buildInputs = [ pkgs.imagemagick ];
-  } "magick -size 1920x1080 xc:'${palette.roles.wallpaper}' $out";
+  } ''
+    magick -size 1920x1080 radial-gradient:'#353B50'-'#1F2333' $out
+  '';
 in {
   programs.plasma = {
     workspace = {
