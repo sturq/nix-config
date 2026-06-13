@@ -1,7 +1,7 @@
 { pkgs, inputs, lib, ... }:
 
 let
-  palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = import ../../../../../lib/palette.nix { src = inputs.sturq-palette; };
   rgb = palette.hexToRgb;
   accentRgb = rgb palette.roles.accent;
 
