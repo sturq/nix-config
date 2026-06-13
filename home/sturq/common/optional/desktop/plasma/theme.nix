@@ -3,13 +3,22 @@
 let
   palette = import ../../../../../../lib/palette.nix { src = inputs.sturq-palette; };
 
-  # Wallpaper: radial gradient mimicking sturq.github.io's body
-  # background — lighter near top-centre (#353B50, site --surface-0)
-  # fading to the deep OLED step (#1F2333, --bg-deep) at the edges.
+  # Wallpaper: pure-black OLED canvas with a large palette-tinted Λ
+  # in the bottom-right corner, partly clipped off-screen. Same
+  # polygon points as the kickoff icon / site logo.
   wallpaperImage = pkgs.runCommand "wallpaper.png" {
     buildInputs = [ pkgs.imagemagick ];
   } ''
-    magick -size 1920x1080 radial-gradient:'#353B50'-'#1F2333' $out
+    cat > lambda.svg <<'EOF'
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
+      <polygon points="32,0 48,0 95,120 79,120 58,65 22,120 4,120 51,48"
+               fill="#586384"/>
+    </svg>
+    EOF
+    magick -background none -size 900x1080 lambda.svg lambda.png
+    magick -size 1920x1080 xc:'#000000' \
+      lambda.png -gravity SouthEast -geometry -180-100 -composite \
+      $out
   '';
 in {
   programs.plasma = {
