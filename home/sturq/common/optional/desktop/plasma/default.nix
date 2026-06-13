@@ -12,7 +12,13 @@
     ./perf.nix
   ];
 
-  programs.plasma.enable = true;
+  programs.plasma = {
+    enable = true;
+    # Force-overwrite plasma config on every activation so panel /
+    # plasmoid edits in this repo actually land, instead of plasma
+    # treating its existing on-disk state as authoritative.
+    overrideConfig = true;
+  };
 
   # Tiny custom plasmoid: an invisible click target that fires KWin's
   # "Show Desktop" shortcut. Used in panel.nix as the right-edge strip.
