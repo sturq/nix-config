@@ -51,7 +51,7 @@ in {
         AnimationDurationFactor = 0.5;
       };
       # Window titles in the display serif — same call as the site hero.
-      kdeglobals."WM"."activeFont" = "Cormorant,12,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
+      kdeglobals."WM"."activeFont" = "Cormorant Garamond,12,-1,5,500,0,0,0,0,0,0,0,0,0,0,1";
 
       # Plasma exports LANG from this file into the session env at login;
       # a stale en_US entry left over from System Settings was making the

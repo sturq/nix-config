@@ -65,10 +65,10 @@
   #   --ui-font      = system-ui / DejaVu Sans as the fallback
   fonts.packages = with pkgs; [
     dejavu_fonts
-    cormorant
+    google-fonts            # ships Cormorant Garamond (site display font)
     jetbrains-mono
     nerd-fonts.jetbrains-mono
-    material-symbols   # icon font for apps that want it
+    material-symbols        # icon font for apps that want it
   ];
 
   # ---- Light-by-default for every host ----------------------------------

@@ -60,7 +60,9 @@ in {
     fonts = {
       monospace = { package = pkgs.jetbrains-mono; name = "JetBrains Mono"; };
       sansSerif = { package = pkgs.dejavu_fonts;   name = "DejaVu Sans";    };
-      serif     = { package = pkgs.cormorant;      name = "Cormorant";     };
+      # Cormorant Garamond ships with Google's mega-pack; Stylix only
+      # needs the name to resolve, so the bundle is the simplest source.
+      serif     = { package = pkgs.google-fonts;   name = "Cormorant Garamond"; };
       sizes = {
         applications = 11;
         terminal     = 12;
