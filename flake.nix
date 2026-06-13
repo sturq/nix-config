@@ -143,20 +143,22 @@
         hp250 = mkHost "hp250" {};
         wsl = mkWsl "wsl";
 
-        # ---- Generic profiles (deploy to any laptop/desktop on the fly) ----
+        # ---- Generic profiles (deploy to any laptop/desktop/mac on the fly) ----
         laptop = mkHost "laptop" {};
         desktop = mkHost "desktop" {};
+        macbook = mkHost "macbook" {};   # NixOS on Intel Macs (pre-T2)
 
         # ---- Installer variants (for nixos-anywhere + disko) ----
         vivobook-install = mkInstaller "vivobook" { device = "/dev/nvme0n1"; };
         laptop-install = mkInstaller "laptop" { device = "/dev/nvme0n1"; };
         desktop-install = mkInstaller "desktop" { device = "/dev/nvme0n1"; };
+        macbook-install = mkInstaller "macbook" { device = "/dev/nvme0n1"; };
       };
 
       darwinConfigurations = {
         # Apple Silicon by default. For an Intel Mac, override on the
-        # fly:  mkDarwin "macbook" { system = "x86_64-darwin"; }
-        macbook = mkDarwin "macbook" {};
+        # fly:  mkDarwin "macbook-darwin" { system = "x86_64-darwin"; }
+        macbook = mkDarwin "macbook-darwin" {};
       };
 
       # ---- Standalone home-manager (for non-NixOS distros) ----

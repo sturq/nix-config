@@ -1,37 +1,11 @@
-{ ... }: {
-  # nix-darwin host. arch picked by which darwinConfiguration in
-  # flake.nix points here: macbook (aarch64) or macbook-intel (x86_64).
+{ lib, ... }: {
+  # Generic NixOS-on-Mac host — Linux on any Intel MacBook (pre-T2).
+  # Same idea as the generic ./laptop, with the Apple hardware quirks
+  # (mbpfan, applesmc) layered on top.
+  imports = [
+    ../laptop                                      # generic GUI laptop
+    ../common/optional/hardware/apple.nix          # mbpfan + applesmc
+  ];
 
-  system.stateVersion = 5;
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;
-
-  users.users.sturq.home = "/Users/sturq";
-
-  # Touch ID for sudo (Apple Silicon).
-  security.pam.services.sudo_local.touchIdAuth = true;
-
-  system.defaults = {
-    NSGlobalDomain = {
-      AppleShowAllExtensions = true;
-      InitialKeyRepeat = 14;
-      KeyRepeat = 1;
-    };
-    dock = {
-      autohide = true;
-      orientation = "left";
-      mineffect = "scale";
-      show-recents = false;
-    };
-    finder = {
-      AppleShowAllFiles = true;
-      ShowPathbar = true;
-      FXEnableExtensionChangeWarning = false;
-    };
-    screencapture = {
-      location = "~/Pictures/Screenshots";
-      type = "png";
-    };
-  };
+  networking.hostName = lib.mkForce "macbook";
 }
