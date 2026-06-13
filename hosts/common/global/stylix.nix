@@ -53,12 +53,13 @@ in {
     ];
   };
 
-  # Stylix's Qt target only supports qtct — KDE handles its own colour
-  # management natively via plasma-manager, so we disable qt instead of
-  # forcing qtct. KDE target stays on for the parts plasma-manager
-  # doesn't cover (lock screen, splash, kvantum).
+  # Keep KDE's stock Breeze look — Stylix tinting every colour slot
+  # was too much, windows ended up not matching anything else. Only
+  # the accent (kdeglobals.General.AccentColor) is overridden, set
+  # explicitly in home/sturq/common/optional/desktop/plasma/theme.nix
+  # against palette.core.primary.
   home-manager.sharedModules = [{
-    stylix.targets.kde.enable = true;
+    stylix.targets.kde.enable = false;
     stylix.targets.qt.enable = false;
   }];
 }

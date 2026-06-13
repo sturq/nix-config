@@ -20,11 +20,12 @@ let
   '';
 in {
   programs.plasma = {
-    # Don't set workspace.colorScheme — stylix.targets.kde.enable=true
-    # generates a "Stylix" colorscheme from the base16 palette and sets
-    # it as default. Forcing BreezeDark here would overwrite that.
+    # Stock BreezeDark — windows / Dolphin / system settings keep
+    # KDE's stock look. The only thing the palette injects is the
+    # accent colour, written via kdeglobals.General.AccentColor below.
     workspace = {
-      lookAndFeel = "org.kde.breezedark.desktop"; # structural only
+      colorScheme = "BreezeDark";
+      lookAndFeel = "org.kde.breezedark.desktop";
       wallpaper   = "${wallpaperImage}";
       cursor      = { theme = "Bibata-Modern-Classic"; size = 24; };
     };
