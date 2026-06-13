@@ -107,7 +107,7 @@ in {
       # renders a visible "user-desktop" icon; this is a minimal custom
       # plasmoid (declared via home.file in default.nix) that draws
       # nothing but forwards clicks to KWin's Show Desktop action.
-      "sturq.showdesktop-strip"
+      "sturq.invisible-showdesktop"
     ];
   }];
 
