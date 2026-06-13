@@ -17,7 +17,6 @@
   # request so we know exactly what's installed.
   environment.systemPackages = with pkgs; [
     kdePackages.konsole
-    tela-circle-icon-theme    # theming dep, not a user-facing app
   ];
 
   # Drop KDE defaults we don't want. Bare desktop — add apps back
