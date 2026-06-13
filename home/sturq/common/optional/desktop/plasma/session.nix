@@ -34,12 +34,5 @@ in {
     kscreenlockerrc.Greeter.WallpaperPlugin = "org.kde.color";
     kscreenlockerrc."Greeter/Wallpaper/org.kde.color/General".Color =
       rgb palette.roles.lockscreen;
-
-    # Win11-style corner-fling: throw the mouse into the bottom-right
-    # screen corner and KWin triggers Show Desktop. Native KWin
-    # ElectricBorders, no plugins. Pair with the stock
-    # org.kde.plasma.showdesktop widget in the panel for the click
-    # variant — both work, fully vanilla.
-    kwinrc.ElectricBorders.BottomRight = "ShowDesktop";
   };
 }
