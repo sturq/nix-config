@@ -14,9 +14,9 @@ let
                fill="#B9C5EE"/>
     </svg>
     EOF
-    magick -background none -size 420x504 lambda.svg lambda.png
+    magick -background none -size 600x720 lambda.svg lambda.png
     magick -size 1920x1080 xc:'#2A3042' \
-      lambda.png -gravity SouthEast -geometry -80-60 -composite \
+      lambda.png -gravity SouthEast -geometry -100-80 -composite \
       $out
   '';
 in {
