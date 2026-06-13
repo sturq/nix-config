@@ -148,6 +148,7 @@
     in {
       nixosConfigurations = {
         vivobook = mkHost "vivobook" {};
+        hp250 = mkHost "hp250" {};
         wsl = mkWsl "wsl";
 
         # ---- Generic profiles (deploy to any laptop/desktop on the fly) ----
