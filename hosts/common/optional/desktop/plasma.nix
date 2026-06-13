@@ -66,4 +66,22 @@
     roboto-flex        # used by Plasma via plasma-manager
     material-symbols   # icon font for apps that want it
   ];
+
+  # ---- Light-by-default for every host ----------------------------------
+  # Goal: same look on a Core 2 Duo MacBook as on a current laptop, no
+  # idling background load.
+
+  # Baloo file indexing — sits at 200-400 MB after walking a home dir,
+  # Dolphin search falls back to find/locate which is plenty.
+  environment.etc."xdg/baloofilerc".text = ''
+    [Basic Settings]
+    Indexing-Enabled=false
+  '';
+
+  # Conservative VM tuning. swappiness=10 keeps RAM hot, autogroup keeps
+  # foreground apps responsive when something heavy runs in the background.
+  boot.kernel.sysctl = {
+    "kernel.sched_autogroup_enabled" = 1;
+    "vm.swappiness" = 10;
+  };
 }
