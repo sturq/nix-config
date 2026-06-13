@@ -20,12 +20,12 @@
   # one symlink — plasmashell rejects per-file home.file symlinks with
   # "path traversal attempt" because each file resolves to a different
   # /nix/store path outside the plasmoid dir.
-  home.file.".local/share/plasma/plasmoids/sturq.invisible-showdesktop".source =
+  home.file.".local/share/plasma/plasmoids/sturq.showdesktop-strip".source =
     let
       metadata = builtins.toJSON {
         KPackageStructure = "Plasma/Applet";
         KPlugin = {
-          Id = "sturq.invisible-showdesktop";
+          Id = "sturq.showdesktop-strip";
           Name = "Invisible Show Desktop";
           Description = "Empty click target that triggers Show Desktop";
           Authors = [ { Name = "sturq"; } ];
