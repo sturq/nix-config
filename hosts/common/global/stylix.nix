@@ -18,7 +18,22 @@ in {
       </svg>
       EOF
       magick -background none -size 600x720 lambda.svg lambda.png
+
+      magick -size 1920x1080 xc:none \
+        -fill '#B9C5EE40' \
+        -draw 'ellipse 960,0 864,270 0,360' \
+        -blur 0x70 \
+        top-glow.png
+
+      magick -size 1920x1080 xc:none \
+        -fill '#404661C0' \
+        -draw 'ellipse 960,1080 768,216 0,360' \
+        -blur 0x70 \
+        bottom-glow.png
+
       magick -size 1920x1080 xc:'#2A3042' \
+        top-glow.png -composite \
+        bottom-glow.png -composite \
         lambda.png -gravity SouthEast -geometry -100-80 -composite \
         $out
     '';
