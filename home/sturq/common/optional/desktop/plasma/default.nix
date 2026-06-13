@@ -63,15 +63,15 @@
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
 
-                // Win11-style 2px separator hint at the strip's left edge —
-                // brightens to periwinkle on hover.
+                // Win11-style separator hint at the strip's left edge.
                 Rectangle {
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
+                    x: 0
+                    y: (parent.height - height) / 2
                     width: 2
-                    height: parent.height * 0.55
+                    height: 22
                     color: parent.containsMouse ? "#B9C5EE" : "#9CA7CE"
-                    opacity: parent.containsMouse ? 1.0 : 0.75
+                    opacity: parent.containsMouse ? 1.0 : 0.85
+                    visible: true
                 }
 
                 P5Support.DataSource {
