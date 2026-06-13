@@ -29,7 +29,7 @@
           Name = "Invisible Show Desktop";
           Description = "Empty click target that triggers Show Desktop";
           Authors = [ { Name = "sturq"; } ];
-          Version = "1.0";
+          Version = "2.0";
           License = "MIT";
         };
         X-Plasma-API-Minimum-Version = "6.0";
@@ -57,9 +57,15 @@
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
 
+                // Win11-style 2px separator hint at the strip's left edge —
+                // brightens to periwinkle on hover.
                 Rectangle {
-                    anchors.fill: parent
-                    color: "red"
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 2
+                    height: parent.height * 0.55
+                    color: parent.containsMouse ? "#B9C5EE" : "#9CA7CE"
+                    opacity: parent.containsMouse ? 1.0 : 0.75
                 }
 
                 P5Support.DataSource {
