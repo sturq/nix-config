@@ -1,7 +1,8 @@
 { pkgs, ... }: {
-  # CLI essentials. Bare to claude-code only — add tools back here as
-  # you discover what you actually use day-to-day.
   home.packages = with pkgs; [
     claude-code
+    fastfetch    # neofetch successor — system info on shell open
+    htop         # classic process viewer
+    btop         # modern fancy process viewer
   ];
 }
