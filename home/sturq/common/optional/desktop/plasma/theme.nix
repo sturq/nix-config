@@ -26,6 +26,11 @@ in {
     # ships a translucent panel SVG that actually lets Blur work.
     workspace = {
       colorScheme = "BreezeDark";
+      # Plasma's "default" desktop theme ships translucent SVG panel +
+      # popup backgrounds — required for KWin Blur to actually have a
+      # frosted-glass surface to work on. Breeze-dark (the theme that
+      # Stylix/lookAndFeel would otherwise pin) is fully opaque.
+      theme       = "default";
       wallpaper   = "${wallpaperImage}";
       cursor      = { theme = "Bibata-Modern-Classic"; size = 24; };
     };
