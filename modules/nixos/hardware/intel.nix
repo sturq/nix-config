@@ -4,18 +4,16 @@
   # common-gpu-intel modules.
 
   # Sound Open Firmware for Alder Lake codec init.
-  hardware.firmware = [
-    pkgs.sof-firmware
-    pkgs.alsa-ucm-conf       # Use Case Manager profiles SOF machine drivers expect
-  ];
+  hardware.firmware = [ pkgs.sof-firmware ];
 
-  # Force snd-intel-dspcfg to take the SOF path. dsp_driver=4 is
-  # "SOF only" — without the force, modern Alder Lake silicon ships
-  # with snd_soc_avs claiming the device first ("Digital mics found
-  # on Skylake+ platform, using SOF driver"), but the codec machine
-  # driver never finishes binding because avs got in the way.
+  # snd_soc_avs claims the audio controller first on modern kernels
+  # ("Digital mics found on Skylake+ ... using SOF driver"), but
+  # then the SOF machine driver never finishes binding, so
+  # /proc/asound/cards stays empty. Blacklisting avs and forcing
+  # dsp_driver=4 (SOF-only) lets sof-audio-pci-intel-tgl claim the
+  # device cleanly.
+  boot.blacklistedKernelModules = [ "snd_soc_avs" ];
   boot.extraModprobeConfig = ''
     options snd-intel-dspcfg dsp_driver=4
-    blacklist snd_soc_avs
   '';
 }
