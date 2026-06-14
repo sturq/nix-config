@@ -2,9 +2,7 @@
   # Defaults every NixOS host in this flake gets. Auto-imported by every
   # mkHost call in flake.nix — no host has to ask for the boot loader,
   # the sturq user, timezone auto-detection or the en_GB locale.
-  imports = [
-    ./stylix.nix
-  ];
+  # Stylix theming module is pulled in alongside this file by mkHost.
 
   # Boot loader: every host gets systemd-boot unless overridden.
   boot.loader.systemd-boot.enable = lib.mkDefault true;
