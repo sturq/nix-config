@@ -8,13 +8,16 @@
     ../../modules/kernel-tuning.nix
     ../../modules/stylix.nix
     ../../modules/dev-defaults.nix
-    ../../modules/plasma6.nix
-    ../../modules/sddm.nix
+    ../../modules/desktop-environments/plasma6.nix
+    ../../modules/login-managers/sddm.nix
     ../../modules/keepassxc.nix
     ../../modules/tailscale.nix
-    ../../modules/desktop.nix
   ];
 
   networking.hostName = "desktop";
   system.stateVersion = "25.11";
+
+  # ---- Desktop bits ---------------------------------------------------
+  services.logind.settings.Login.IdleAction = "ignore";
+  powerManagement.cpuFreqGovernor = "performance";
 }
