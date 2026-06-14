@@ -63,8 +63,8 @@
       # mac = use /Users/sturq instead of /home/sturq.
       mkUser = { gui ? false, mac ? false }: {
         imports = [
-          ./home/sturq/common/global
-        ] ++ nixpkgs.lib.optional gui ./home/sturq/common/optional/desktop/plasma;
+          ./modules/home-manager/cli
+        ] ++ nixpkgs.lib.optional gui ./modules/home-manager/desktop/plasma;
         home.username = "sturq";
         home.homeDirectory = if mac then "/Users/sturq" else "/home/sturq";
       };
@@ -79,7 +79,8 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/common/global
+          ./hosts/_base.nix
+          ./modules/nixos/theme/stylix.nix
           ./hosts/${hostName}
           nix-flatpak.nixosModules.nix-flatpak
           stylix.nixosModules.stylix
@@ -105,7 +106,7 @@
       mkInstaller = hostName: { device ? "/dev/sda" }: mkHost hostName {
         hwConfig = null;
         extraModules = [
-          ./hosts/common/optional/boot/disko.nix
+          ./modules/nixos/boot/disko.nix
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
         ];

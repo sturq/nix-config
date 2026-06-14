@@ -4,7 +4,7 @@
   # (mbpfan, applesmc) layered on top.
   imports = [
     ../laptop                                      # generic GUI laptop
-    ../common/optional/hardware/apple.nix          # mbpfan + applesmc
+    ../../modules/nixos/hardware/apple.nix          # mbpfan + applesmc
   ];
 
   networking.hostName = lib.mkForce "macbook";

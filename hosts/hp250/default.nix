@@ -4,10 +4,10 @@
   # truly HP-only (iTCO_wdt blacklist) lives here.
   imports = [
     ../laptop                                             # generic laptop profile
-    ../common/optional/hardware/intel.nix                 # snd-intel-dspcfg quirk
-    ../common/optional/boot/dualboot-grub.nix             # Windows + NixOS via GRUB
-    ../common/optional/autologin.nix                      # skip SDDM greeter
-    ../common/optional/apps/flatpak.nix                   # Sober (Roblox)
+    ../../modules/nixos/hardware/intel.nix                 # snd-intel-dspcfg quirk
+    ../../modules/nixos/boot/dualboot-grub.nix             # Windows + NixOS via GRUB
+    ../../modules/nixos/services/autologin.nix                      # skip SDDM greeter
+    ../../modules/nixos/apps/flatpak.nix                   # Sober (Roblox)
     inputs.nixos-hardware.nixosModules.common-cpu-intel
     inputs.nixos-hardware.nixosModules.common-gpu-intel
     inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd

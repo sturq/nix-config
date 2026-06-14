@@ -1,7 +1,7 @@
 { inputs, ... }:
 
 let
-  palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
   primaryRgb = palette.hexToRgb palette.core.primary;
 in {
   # Bash with a periwinkle lambda prompt. λ stands in for both PS1's $
