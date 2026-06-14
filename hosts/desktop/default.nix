@@ -1,12 +1,12 @@
 { ... }: {
   # Generic desktop host — deploy via nixos-anywhere onto any tower.
   imports = [
-    ../../desktop-environment/system
-    ../../display-manager
-    ../../applications
-    ../../modules/nixos/hardware/desktop.nix
-    ../../modules/nixos/services/tailscale.nix
-    ../../modules/nixos/services/dev-defaults.nix
+    ../common/global
+    ../common/optional/plasma6
+    ../common/optional/sddm
+    ../common/optional/applications
+    ../common/optional/hardware/desktop.nix
+    ../common/optional/tailscale.nix
   ];
 
   networking.hostName = "desktop";

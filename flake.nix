@@ -1,5 +1,5 @@
 {
-  description = "sturq's NixOS configs — laptop, desktop, wsl";
+  description = "sturq's NixOS configs — laptop, desktop, wsl (misterio77-style layout)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -46,28 +46,16 @@
               ... }@inputs:
     let
       palette = import ./lib/palette.nix { src = inputs.sturq-palette; };
-
-      # gui = pull the Plasma layer on top of the CLI base.
-      mkUser = { gui ? false }: {
-        imports = [
-          ./cli
-        ] ++ nixpkgs.lib.optional gui ./desktop-environment/user;
-        home.username = "sturq";
-        home.homeDirectory = "/home/sturq";
-      };
+      specialArgs = { inherit inputs palette; };
 
       # Full NixOS host (Plasma 6 Wayland desktop).
-      # hwConfig defaults to ./hosts/${hostName}/hardware-configuration.nix.
-      # Pass null for installer variants where disko owns the partitioning.
       mkHost = hostName: {
         hwConfig ? ./hosts/${hostName}/hardware-configuration.nix,
         extraModules ? [],
       }: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs palette; };
+        inherit specialArgs;
         modules = [
-          ./modules/nixos/system.nix
-          ./modules/nixos/theme/stylix.nix
           ./hosts/${hostName}
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
@@ -75,9 +63,9 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit inputs palette; };
+              extraSpecialArgs = specialArgs;
               sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-              users.sturq = mkUser { gui = true; };
+              users.sturq = import ./home/sturq/${hostName}.nix;
               backupFileExtension = "hm-backup";
             };
           }
@@ -89,16 +77,16 @@
       mkInstaller = hostName: { device ? "/dev/sda" }: mkHost hostName {
         hwConfig = null;
         extraModules = [
-          ./modules/nixos/boot/disko.nix
+          ./hosts/common/optional/disko.nix
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
         ];
       };
 
-      # WSL host (NixOS-WSL, CLI only).
+      # WSL host (NixOS-WSL, CLI only — skips hosts/common/global).
       mkWsl = hostName: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs palette; };
+        inherit specialArgs;
         modules = [
           ./hosts/${hostName}
           nixos-wsl.nixosModules.default
@@ -107,8 +95,8 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit inputs palette; };
-              users.sturq = mkUser {};
+              extraSpecialArgs = specialArgs;
+              users.sturq = import ./home/sturq/${hostName}.nix;
               backupFileExtension = "hm-backup";
             };
           }
@@ -119,8 +107,8 @@
       #   nix run home-manager -- switch --flake .#sturq
       mkHome = system: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-        extraSpecialArgs = { inherit inputs palette; };
-        modules = [ (mkUser {}) ];
+        extraSpecialArgs = specialArgs;
+        modules = [ ./home/sturq/features/cli ];
       };
     in {
       nixosConfigurations = {

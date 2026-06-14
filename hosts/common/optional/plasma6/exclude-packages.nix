@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   # Drop KDE defaults we don't want. Bare desktop — add apps back
-  # explicitly via ../applications/ when something is actually needed.
+  # explicitly via hosts/common/optional/applications when needed.
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     discover         # app store — pointless on NixOS
     elisa            # music player
