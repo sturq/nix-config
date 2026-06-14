@@ -79,7 +79,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/_base.nix
+          ./modules/nixos/system.nix
           ./modules/nixos/theme/stylix.nix
           ./hosts/${hostName}
           nix-flatpak.nixosModules.nix-flatpak
