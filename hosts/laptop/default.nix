@@ -1,45 +1,38 @@
-{ pkgs, lib, ... }: {
+{ ... }: {
   imports = [
-    ../../modules/base.nix
+    # nix
+    ../../modules/nix/flakes.nix
+    ../../modules/nix/allow-unfree.nix
+    # user + locale
+    ../../modules/users/sturq.nix
+    ../../modules/locale/de-keymap.nix
+    ../../modules/locale/en-gb.nix
+    ../../modules/locale/geo-timezone.nix
+    # boot + kernel
     ../../modules/boot/grub.nix
     ../../modules/kernel/latest.nix
     ../../modules/kernel/tuning.nix
+    # hardware
+    ../../modules/hardware/cpu-microcode.nix
+    ../../modules/hardware/graphics.nix
+    ../../modules/hardware/bluetooth.nix
+    ../../modules/hardware/fstrim.nix
+    ../../modules/hardware/laptop.nix
+    # networking
+    ../../modules/networking/networkmanager.nix
+    # services
     ../../modules/services/audio.nix
     ../../modules/services/dev-defaults.nix
     ../../modules/services/tailscale.nix
+    # ui
     ../../modules/theme/fonts.nix
     ../../modules/theme/stylix.nix
     ../../modules/desktop-environments/plasma6.nix
     ../../modules/login-managers/sddm.nix
+    # apps
     ../../modules/applications/keepassxc.nix
   ];
 
   networking.hostName = "laptop";
   system.stateVersion = "25.11";
-
-  # ---- Laptop bits ----------------------------------------------------
-  services.power-profiles-daemon.enable = false;
-  services.tlp.enable = true;
-  services.tlp.settings = {
-    CPU_SCALING_GOVERNOR_ON_AC = "performance";
-    CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-    CPU_BOOST_ON_AC = 1;
-    CPU_BOOST_ON_BAT = 0;
-    PCIE_ASPM_ON_AC = "default";
-    PCIE_ASPM_ON_BAT = "powersupersave";
-    WIFI_PWR_ON_AC = "off";
-    WIFI_PWR_ON_BAT = "on";
-    START_CHARGE_THRESH_BAT0 = 75;
-    STOP_CHARGE_THRESH_BAT0 = 90;
-  };
-
-  # Brightness keys (light was removed from nixpkgs).
-  hardware.acpilight.enable = true;
-  environment.systemPackages = [ pkgs.brightnessctl ];
-
-  # Lid: suspend on battery, ignore when docked on AC.
-  services.logind.settings.Login = {
-    HandleLidSwitch = lib.mkDefault "suspend";
-    HandleLidSwitchExternalPower = lib.mkDefault "ignore";
-  };
 }
