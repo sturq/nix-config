@@ -31,12 +31,15 @@
     "kded6"."display" = "Meta+P";
   };
 
-  # Meta+Tab = Win11 Task View. Overview shows windows tiled + the
-  # virtual-desktop strip across the top (vs. Grid View which is only the
-  # desktops). Grid View moves to Meta+G (its baked-in default).
+  # Meta+Tab = Grid View (virtual desktop manager — all desktops
+  # side-by-side with draggable window thumbnails). Written as a full
+  # triplet because plasma-manager's shortcuts API only writes the
+  # active key; KWin's baked-in defaults for "Walk Through Windows"
+  # include both Alt+Tab AND Meta+Tab, and KGlobalAccel resolves the
+  # collision in TabBox's favour at session start. Overriding the
+  # `defaults` field too is what actually frees Meta+Tab.
   programs.plasma.configFile.kglobalshortcutsrc.kwin = {
-    "Overview"                       = "Meta+Tab,Meta+W,Toggle Overview";
-    "Grid View"                      = "Meta+G,Meta+G,Toggle Grid View";
+    "Grid View"                      = "Meta+Tab,Meta+Tab,Toggle Grid View";
     "Walk Through Windows"           = "Alt+Tab,Alt+Tab,Walk Through Windows";
     "Walk Through Windows (Reverse)" = "Alt+Shift+Tab,Alt+Shift+Tab,Walk Through Windows (Reverse)";
   };
