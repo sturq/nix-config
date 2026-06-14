@@ -1,17 +1,17 @@
 { pkgs, lib, ... }: {
   imports = [
     ../../modules/base.nix
-    ../../modules/grub.nix
-    ../../modules/kernel.nix
-    ../../modules/audio.nix
-    ../../modules/fonts.nix
-    ../../modules/kernel-tuning.nix
-    ../../modules/stylix.nix
-    ../../modules/dev-defaults.nix
+    ../../modules/boot/grub.nix
+    ../../modules/kernel/latest.nix
+    ../../modules/kernel/tuning.nix
+    ../../modules/services/audio.nix
+    ../../modules/services/dev-defaults.nix
+    ../../modules/services/tailscale.nix
+    ../../modules/theme/fonts.nix
+    ../../modules/theme/stylix.nix
     ../../modules/desktop-environments/plasma6.nix
     ../../modules/login-managers/sddm.nix
-    ../../modules/keepassxc.nix
-    ../../modules/tailscale.nix
+    ../../modules/applications/keepassxc.nix
   ];
 
   networking.hostName = "laptop";
