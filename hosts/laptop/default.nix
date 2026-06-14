@@ -1,6 +1,5 @@
 { ... }: {
   # Generic laptop host — deploy via nixos-anywhere onto any Intel/AMD laptop.
-  # Pick CPU/GPU specific common-* modules in a real host (hp250, vivobook).
   imports = [
     ../../modules/nixos/desktop/plasma.nix
     ../../modules/nixos/hardware/laptop.nix

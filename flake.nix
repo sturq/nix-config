@@ -1,17 +1,15 @@
 {
-  description = "sturq's machine configs — NixOS + macOS + WSL + standalone HM";
+  description = "sturq's NixOS configs — laptop, desktop, wsl";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Declarative flatpak: services.flatpak.packages list deployed per
-    # host. Used by HP250 for Sober (Roblox via Vinegar).
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-    # Declarative disk layouts (used by nixos-anywhere for fresh installs).
+    # Declarative disk layouts (used by nixos-anywhere fresh installs).
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,62 +21,43 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Declarative Plasma 6 configuration (panels, shortcuts, kdeglobals…).
+    # Declarative Plasma 6 configuration.
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
 
-    # Per-device hardware tuning (common-cpu-intel, common-gpu-amd, model
-    # modules for specific Lenovo/HP/Asus/Framework laptops, etc.).
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
-
-    # Single source of truth for the sturq palette. Plain data repo —
-    # we treat it as raw source (flake = false) and parse
-    # formats/palette.json ourselves in lib/palette.nix so the repo
-    # stays language-agnostic.
+    # Source of truth for the sturq palette (flake = false → we parse it
+    # ourselves in lib/palette.nix).
     sturq-palette = {
       url = "github:sturq/sturq-palette";
       flake = false;
     };
 
-    # Cross-platform: macOS + WSL.
-    nix-darwin = {
-      url = "github:nix-darwin/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, home-manager, nix-flatpak, disko, stylix,
-              plasma-manager, nix-darwin, nixos-wsl,
+  outputs = { nixpkgs, home-manager, disko, stylix,
+              plasma-manager, nixos-wsl,
               ... }@inputs:
     let
-      # ---- Palette as a first-class specialArg ---------------------------
-      # Modules pull tokens from `palette` directly instead of relative-
-      # importing ./lib/palette.nix. Threaded through every mkHost /
-      # mkDarwin / mkWsl / mkHome via specialArgs + extraSpecialArgs.
-      # (Earlier attempt extended nixpkgs.lib with lib.palette but that
-      # collided with home-manager's own lib.hm.* extensions.)
       palette = import ./lib/palette.nix { src = inputs.sturq-palette; };
 
-      # ---- Shared HM user definition --------------------------------------
-      # gui = pulls the Plasma layer on top of the CLI base.
-      # mac = use /Users/sturq instead of /home/sturq.
-      mkUser = { gui ? false, mac ? false }: {
+      # gui = pull the Plasma layer on top of the CLI base.
+      mkUser = { gui ? false }: {
         imports = [
           ./modules/home-manager/cli
         ] ++ nixpkgs.lib.optional gui ./modules/home-manager/desktop/plasma;
         home.username = "sturq";
-        home.homeDirectory = if mac then "/Users/sturq" else "/home/sturq";
+        home.homeDirectory = "/home/sturq";
       };
 
-      # ---- Full NixOS host (Linux, KDE Plasma 6 Wayland desktop) ----------
-      # hwConfig: defaults to ./hosts/${hostName}/hardware-configuration.nix.
+      # Full NixOS host (Plasma 6 Wayland desktop).
+      # hwConfig defaults to ./hosts/${hostName}/hardware-configuration.nix.
       # Pass null for installer variants where disko owns the partitioning.
       mkHost = hostName: {
         hwConfig ? ./hosts/${hostName}/hardware-configuration.nix,
@@ -90,7 +69,6 @@
           ./modules/nixos/system.nix
           ./modules/nixos/theme/stylix.nix
           ./hosts/${hostName}
-          nix-flatpak.nixosModules.nix-flatpak
           stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           {
@@ -106,11 +84,8 @@
         ] ++ nixpkgs.lib.optional (hwConfig != null) hwConfig ++ extraModules;
       };
 
-      # ---- Installer variant (Disko + nixos-anywhere) ---------------------
-      # mkHost with disko swapped in for hardware-configuration. `device`
-      # is the target disk path (override per host: nvme0n1, vda, mmcblk0…).
-      # Deploy from any machine (even one running NixOS — kexec is used):
-      #   nix run github:nix-community/nixos-anywhere -- --flake .#hp250-install root@<ip>
+      # Installer variant (disko + nixos-anywhere). device is the target
+      # disk path (override per fresh install): /dev/nvme0n1, /dev/vda…
       mkInstaller = hostName: { device ? "/dev/sda" }: mkHost hostName {
         hwConfig = null;
         extraModules = [
@@ -120,27 +95,7 @@
         ];
       };
 
-      # ---- macOS host (nix-darwin) ----------------------------------------
-      # Apple Silicon by default. For an Intel Mac, pass system explicitly.
-      mkDarwin = hostName: { system ? "aarch64-darwin" }: nix-darwin.lib.darwinSystem {
-        inherit system;
-        specialArgs = { inherit inputs palette; };
-        modules = [
-          ./hosts/${hostName}
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit inputs palette; };
-              users.sturq = mkUser { mac = true; };
-              backupFileExtension = "hm-backup";
-            };
-          }
-        ];
-      };
-
-      # ---- WSL host (NixOS-WSL, no GUI, CLI only) -------------------------
+      # WSL host (NixOS-WSL, CLI only).
       mkWsl = hostName: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs palette; };
@@ -153,53 +108,33 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs palette; };
-              users.sturq = mkUser {};   # CLI only
+              users.sturq = mkUser {};
               backupFileExtension = "hm-backup";
             };
           }
         ];
       };
 
-      # ---- Standalone home-manager (any distro / bare macOS) --------------
-      # On Fedora/Arch/Debian/anywhere with Nix:
+      # Standalone home-manager (any distro).
       #   nix run home-manager -- switch --flake .#sturq
-      # Standalone HM brings its own pkgs (allowUnfree because of claude-code).
-      pkgsFor = system: import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      mkHome = system: userArgs: home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor system;
+      mkHome = system: home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         extraSpecialArgs = { inherit inputs palette; };
-        modules = [ (mkUser userArgs) ];
+        modules = [ (mkUser {}) ];
       };
     in {
       nixosConfigurations = {
-        vivobook = mkHost "vivobook" {};
-        hp250    = mkHost "hp250" {};
-        wsl      = mkWsl  "wsl";
-
-        # ---- Generic profiles (deploy to any laptop/desktop/mac) ----------
-        laptop  = mkHost "laptop" {};
+        laptop  = mkHost "laptop"  {};
         desktop = mkHost "desktop" {};
-        macbook = mkHost "macbook" {};   # NixOS on Intel Macs (pre-T2)
+        wsl     = mkWsl  "wsl";
 
-        # ---- Installer variants (nixos-anywhere + disko) ------------------
-        vivobook-install = mkInstaller "vivobook" { device = "/dev/nvme0n1"; };
-        laptop-install   = mkInstaller "laptop"   { device = "/dev/nvme0n1"; };
-        desktop-install  = mkInstaller "desktop"  { device = "/dev/nvme0n1"; };
-        macbook-install  = mkInstaller "macbook"  { device = "/dev/nvme0n1"; };
-      };
-
-      darwinConfigurations = {
-        # Apple Silicon. For Intel:  mkDarwin "macos" { system = "x86_64-darwin"; }
-        macbook = mkDarwin "macos" {};
+        laptop-install  = mkInstaller "laptop"  { device = "/dev/nvme0n1"; };
+        desktop-install = mkInstaller "desktop" { device = "/dev/nvme0n1"; };
       };
 
       homeConfigurations = {
-        sturq         = mkHome "x86_64-linux"   {};
-        sturq-aarch64 = mkHome "aarch64-linux"  {};
-        sturq-mac     = mkHome "aarch64-darwin" { mac = true; };
+        sturq         = mkHome "x86_64-linux";
+        sturq-aarch64 = mkHome "aarch64-linux";
       };
     };
 }
