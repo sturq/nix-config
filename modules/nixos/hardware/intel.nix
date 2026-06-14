@@ -3,10 +3,19 @@
   # from hp250 etc. alongside the nixos-hardware common-cpu-intel /
   # common-gpu-intel modules.
 
-  # Sound Open Firmware: Alder Lake (12th gen Intel) ships an SOF-only
-  # audio codec on PCH HDA bus — the legacy snd_hda_intel path finds the
-  # controller but no codec, resulting in "no soundcards". Loading the
-  # sof-firmware package and letting snd-intel-dspcfg auto-pick the SOF
-  # driver fixes it.
-  hardware.firmware = [ pkgs.sof-firmware ];
+  # Sound Open Firmware for Alder Lake codec init.
+  hardware.firmware = [
+    pkgs.sof-firmware
+    pkgs.alsa-ucm-conf       # Use Case Manager profiles SOF machine drivers expect
+  ];
+
+  # Force snd-intel-dspcfg to take the SOF path. dsp_driver=4 is
+  # "SOF only" — without the force, modern Alder Lake silicon ships
+  # with snd_soc_avs claiming the device first ("Digital mics found
+  # on Skylake+ platform, using SOF driver"), but the codec machine
+  # driver never finishes binding because avs got in the way.
+  boot.extraModprobeConfig = ''
+    options snd-intel-dspcfg dsp_driver=4
+    blacklist snd_soc_avs
+  '';
 }
