@@ -73,8 +73,8 @@ in {
 
     opacity = {
       terminal = 0.92;
-      desktop  = 0.65;   # panel + plasma surfaces — heavy frosted glass
-      popups   = 0.75;   # menus / kickoff / notifications
+      desktop  = 0.78;
+      popups   = 0.85;
     };
     targets.kmscon.enable = false;
   };
