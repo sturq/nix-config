@@ -22,7 +22,7 @@
       overviewEnabled           = false;
     };
     "Effect-blur" = {
-      BlurStrength  = 18;     # max — full iOS-glass thickness
+      BlurStrength  = 12;     # safe iOS-glass thickness (15+ destabilises spectacle/kwin on some hosts)
       NoiseStrength = 0;
     };
     Compositing.AnimationSpeed = 2;  # default-ish, not jerky-fast
