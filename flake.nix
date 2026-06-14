@@ -58,13 +58,22 @@
               plasma-manager, nix-darwin, nixos-wsl,
               ... }@inputs:
     let
+      # ---- Extended nixpkgs.lib with our palette as lib.palette ----------
+      # Modules access tokens as `lib.palette.core.primary` etc. instead
+      # of importing ./lib/palette.nix with a relative path. Mirrors the
+      # convention of lib.mkOption / lib.mkDefault — palette becomes a
+      # first-class lib citizen, available everywhere lib is.
+      lib = nixpkgs.lib.extend (_: _: {
+        palette = import ./lib/palette.nix { src = inputs.sturq-palette; };
+      });
+
       # ---- Shared HM user definition --------------------------------------
       # gui = pulls the Plasma layer on top of the CLI base.
       # mac = use /Users/sturq instead of /home/sturq.
       mkUser = { gui ? false, mac ? false }: {
         imports = [
           ./modules/home-manager/cli
-        ] ++ nixpkgs.lib.optional gui ./modules/home-manager/desktop/plasma;
+        ] ++ lib.optional gui ./modules/home-manager/desktop/plasma;
         home.username = "sturq";
         home.homeDirectory = if mac then "/Users/sturq" else "/home/sturq";
       };
@@ -77,7 +86,7 @@
         extraModules ? [],
       }: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs lib; };
         modules = [
           ./modules/nixos/system.nix
           ./modules/nixos/theme/stylix.nix
@@ -89,13 +98,13 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit inputs; };
+              extraSpecialArgs = { inherit inputs lib; };
               sharedModules = [ plasma-manager.homeModules.plasma-manager ];
               users.sturq = mkUser { gui = true; };
               backupFileExtension = "hm-backup";
             };
           }
-        ] ++ nixpkgs.lib.optional (hwConfig != null) hwConfig ++ extraModules;
+        ] ++ lib.optional (hwConfig != null) hwConfig ++ extraModules;
       };
 
       # ---- Installer variant (Disko + nixos-anywhere) ---------------------
@@ -116,7 +125,7 @@
       # Apple Silicon by default. For an Intel Mac, pass system explicitly.
       mkDarwin = hostName: { system ? "aarch64-darwin" }: nix-darwin.lib.darwinSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs lib; };
         modules = [
           ./hosts/${hostName}
           home-manager.darwinModules.home-manager
@@ -124,7 +133,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit inputs; };
+              extraSpecialArgs = { inherit inputs lib; };
               users.sturq = mkUser { mac = true; };
               backupFileExtension = "hm-backup";
             };
@@ -135,7 +144,7 @@
       # ---- WSL host (NixOS-WSL, no GUI, CLI only) -------------------------
       mkWsl = hostName: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs lib; };
         modules = [
           ./hosts/${hostName}
           nixos-wsl.nixosModules.default
@@ -144,7 +153,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit inputs; };
+              extraSpecialArgs = { inherit inputs lib; };
               users.sturq = mkUser {};   # CLI only
               backupFileExtension = "hm-backup";
             };
@@ -162,7 +171,7 @@
       };
       mkHome = system: userArgs: home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor system;
-        extraSpecialArgs = { inherit inputs; };
+        extraSpecialArgs = { inherit inputs lib; };
         modules = [ (mkUser userArgs) ];
       };
     in {

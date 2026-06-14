@@ -1,8 +1,7 @@
-{ inputs, ... }:
+{ lib, ... }:
 
 let
-  palette = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
-  primaryRgb = palette.hexToRgb palette.core.primary;
+  primaryRgb = lib.palette.hexToRgb lib.palette.core.primary;
 in {
   # Bash with a periwinkle lambda prompt. λ stands in for both PS1's $
   # and the "I/me" identity — same lambda as the kickoff icon and the

@@ -1,7 +1,7 @@
-{ pkgs, inputs, ... }:
+{ pkgs, lib, ... }:
 
 let
-  palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = lib.palette;
 
   # Same Λ as the sturq.github.io top-bar logo. Scaled to ~40% and
   # filled with palette primary — matches the site's small bottom-right

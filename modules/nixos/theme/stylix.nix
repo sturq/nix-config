@@ -1,7 +1,7 @@
-{ pkgs, inputs, ... }:
+{ pkgs, lib, ... }:
 
 let
-  palette = import ../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = lib.palette;
 in {
   stylix = {
     enable = true;

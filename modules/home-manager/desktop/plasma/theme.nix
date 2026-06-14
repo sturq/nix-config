@@ -1,7 +1,7 @@
-{ pkgs, inputs, lib, ... }:
+{ pkgs, lib, ... }:
 
 let
-  palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = lib.palette;
 
   # Wallpaper: solid palette base + Λ accent bottom-right.
   wallpaperImage = pkgs.runCommand "wallpaper.png" {

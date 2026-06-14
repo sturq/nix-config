@@ -1,7 +1,7 @@
-{ inputs, ... }:
+{ lib, ... }:
 
 let
-  palette = import ../../../../lib/palette.nix { src = inputs.sturq-palette; };
+  palette = lib.palette;
   rgb = palette.hexToRgb;
 in {
   programs.plasma.configFile = {
