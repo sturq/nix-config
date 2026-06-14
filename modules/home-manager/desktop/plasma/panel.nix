@@ -1,8 +1,6 @@
-{ pkgs, lib, ... }:
+{ pkgs, palette, ... }:
 
 let
-  palette = lib.palette;
-
   # Same Λ as the sturq.github.io top-bar logo. Scaled to ~40% and
   # filled with palette primary — matches the site's small bottom-right
   # mascot lambda.

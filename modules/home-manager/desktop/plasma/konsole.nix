@@ -1,7 +1,6 @@
-{ pkgs, lib, ... }:
+{ pkgs, palette, ... }:
 
 let
-  palette = lib.palette;
   rgb = key: palette.hexToRgb "#${palette.base16Scheme.${key}}";
 
   colorscheme = pkgs.writeText "palette.colorscheme" ''

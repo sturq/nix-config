@@ -1,7 +1,6 @@
-{ lib, ... }:
+{ palette, ... }:
 
 let
-  palette = lib.palette;
   rgb = palette.hexToRgb;
 in {
   programs.plasma.configFile = {

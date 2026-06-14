@@ -1,8 +1,6 @@
-{ pkgs, lib, ... }:
+{ pkgs, palette, lib, ... }:
 
 let
-  palette = lib.palette;
-
   # Wallpaper: solid palette base + Λ accent bottom-right.
   wallpaperImage = pkgs.runCommand "wallpaper.png" {
     buildInputs = [ pkgs.imagemagick ];

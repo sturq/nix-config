@@ -1,8 +1,4 @@
-{ pkgs, lib, ... }:
-
-let
-  palette = lib.palette;
-in {
+{ pkgs, palette, ... }: {
   stylix = {
     enable = true;
     polarity = "dark";
