@@ -1,13 +1,12 @@
-{ ... }: {
+{ pkgs, ... }: {
   # Intel-specific quirks shared across Intel Linux hosts. Pull this in
-  # from hp250 / vivobook-Intel / hp250-equivalents alongside the
-  # nixos-hardware common-cpu-intel / common-gpu-intel modules.
+  # from hp250 etc. alongside the nixos-hardware common-cpu-intel /
+  # common-gpu-intel modules.
 
-  # Force legacy snd_hda_intel driver instead of Sound Open Firmware on
-  # Intel chipsets that ship SOF-capable codecs but no matching firmware
-  # topology — Alder Lake laptops (HP 250 G9 etc.) regress to "no
-  # soundcards" if SOF can't finish init. dsp_driver=1 == HDA-only.
-  boot.extraModprobeConfig = ''
-    options snd-intel-dspcfg dsp_driver=1
-  '';
+  # Sound Open Firmware: Alder Lake (12th gen Intel) ships an SOF-only
+  # audio codec on PCH HDA bus — the legacy snd_hda_intel path finds the
+  # controller but no codec, resulting in "no soundcards". Loading the
+  # sof-firmware package and letting snd-intel-dspcfg auto-pick the SOF
+  # driver fixes it.
+  hardware.firmware = [ pkgs.sof-firmware ];
 }
