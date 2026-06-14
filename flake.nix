@@ -1,5 +1,5 @@
 {
-  description = "sturq's NixOS configs — laptop, desktop, wsl (misterio77-style layout)";
+  description = "sturq's NixOS configs — laptop, desktop, wsl (flat modules + HM layer)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -9,27 +9,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Declarative disk layouts (used by nixos-anywhere fresh installs).
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # System-wide theming via base16 + wallpaper sampling.
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Declarative Plasma 6 configuration.
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
 
-    # Source of truth for the sturq palette (flake = false → we parse it
-    # ourselves in lib/palette.nix).
     sturq-palette = {
       url = "github:sturq/sturq-palette";
       flake = false;
@@ -48,8 +43,14 @@
       palette = import ./lib/palette.nix { src = inputs.sturq-palette; };
       specialArgs = { inherit inputs palette; };
 
-      # Full NixOS host (Plasma 6 Wayland desktop).
+      # Home-manager modules picked per host. cli is always in; plasma
+      # comes along for graphical hosts.
+      homeModules = { gui }:
+        [ ./home/sturq/cli ]
+        ++ nixpkgs.lib.optional gui ./home/sturq/plasma;
+
       mkHost = hostName: {
+        gui ? true,
         hwConfig ? ./hosts/${hostName}/hardware-configuration.nix,
         extraModules ? [],
       }: nixpkgs.lib.nixosSystem {
@@ -65,25 +66,22 @@
               useUserPackages = true;
               extraSpecialArgs = specialArgs;
               sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-              users.sturq = import ./home/sturq/${hostName}.nix;
+              users.sturq.imports = homeModules { inherit gui; };
               backupFileExtension = "hm-backup";
             };
           }
         ] ++ nixpkgs.lib.optional (hwConfig != null) hwConfig ++ extraModules;
       };
 
-      # Installer variant (disko + nixos-anywhere). device is the target
-      # disk path (override per fresh install): /dev/nvme0n1, /dev/vda…
       mkInstaller = hostName: { device ? "/dev/sda" }: mkHost hostName {
         hwConfig = null;
         extraModules = [
-          ./hosts/common/optional/disko.nix
+          ./modules/disko.nix
           { disko.devices.disk.main.device = device; }
           disko.nixosModules.disko
         ];
       };
 
-      # WSL host (NixOS-WSL, CLI only — skips hosts/common/global).
       mkWsl = hostName: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         inherit specialArgs;
@@ -96,19 +94,17 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = specialArgs;
-              users.sturq = import ./home/sturq/${hostName}.nix;
+              users.sturq.imports = homeModules { gui = false; };
               backupFileExtension = "hm-backup";
             };
           }
         ];
       };
 
-      # Standalone home-manager (any distro).
-      #   nix run home-manager -- switch --flake .#sturq
       mkHome = system: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
         extraSpecialArgs = specialArgs;
-        modules = [ ./home/sturq/features/cli ];
+        modules = [ ./home/sturq/cli ];
       };
     in {
       nixosConfigurations = {

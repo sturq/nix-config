@@ -1,12 +1,18 @@
 { ... }: {
-  # Generic laptop host — deploy via nixos-anywhere onto any Intel/AMD laptop.
   imports = [
-    ../common/global
-    ../common/optional/plasma6
-    ../common/optional/sddm
-    ../common/optional/applications
-    ../common/optional/hardware/laptop.nix
-    ../common/optional/tailscale.nix
+    ../../modules/base.nix
+    ../../modules/grub.nix
+    ../../modules/kernel.nix
+    ../../modules/audio.nix
+    ../../modules/fonts.nix
+    ../../modules/kernel-tuning.nix
+    ../../modules/stylix.nix
+    ../../modules/dev-defaults.nix
+    ../../modules/plasma6.nix
+    ../../modules/sddm.nix
+    ../../modules/keepassxc.nix
+    ../../modules/tailscale.nix
+    ../../modules/laptop.nix
   ];
 
   networking.hostName = "laptop";
