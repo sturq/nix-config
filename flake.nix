@@ -50,8 +50,8 @@
       # gui = pull the Plasma layer on top of the CLI base.
       mkUser = { gui ? false }: {
         imports = [
-          ./modules/home-manager/cli
-        ] ++ nixpkgs.lib.optional gui ./modules/home-manager/desktop/plasma;
+          ./cli
+        ] ++ nixpkgs.lib.optional gui ./desktop-environment/user;
         home.username = "sturq";
         home.homeDirectory = "/home/sturq";
       };
