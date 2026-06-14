@@ -3,8 +3,12 @@
   # mkHost. Stylix theming module is pulled in alongside this file.
 
   # ---- Boot + kernel ----------------------------------------------------
-  boot.loader.systemd-boot.enable = lib.mkDefault true;
-  boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
+  boot.loader.grub = {
+    enable = true;
+    efiSupport = true;
+    device = "nodev";
+  };
+  boot.loader.efi.canTouchEfiVariables = true;
   # Latest mainline kernel — best chance of supporting fresh hardware
   # (audio, GPUs, WiFi, peripherals) without per-host quirks.
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
